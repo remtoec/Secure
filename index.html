@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>依附地形圖 · 依附風格測驗</title>
+<style>
+:root{
+  color-scheme: light;
+  --surface-1:#fcfcfb; --page:#f9f9f7;
+  --ink-1:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10);
+  --accent:#2a78d6; --accent-ink:#ffffff;
+  --s1:#2a78d6; --s2:#008300; --s3:#e87ba4; --s4:#eda100;
+  --s5:#1baf7a; --s6:#eb6834; --s7:#4a3aa7; --s8:#e34948;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --surface-1:#1a1a19; --page:#0d0d0d;
+    --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+    --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
+    --accent:#3987e5;
+    --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
+    --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --surface-1:#1a1a19; --page:#0d0d0d;
+  --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+  --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
+  --accent:#3987e5;
+  --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
+  --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--page); color:var(--ink-1);
+  font-family:system-ui,-apple-system,"Segoe UI","PingFang HK","PingFang TC","Microsoft JhengHei",sans-serif;
+  line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto;padding:16px 16px 96px}
+header.app{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:14px 4px 6px}
+header.app h1{font-size:1.45rem;margin:0;letter-spacing:.02em}
+header.app .sub{color:var(--ink-2);font-size:.85rem}
+#themeBtn{margin-left:auto;border:1px solid var(--ring);background:var(--surface-1);color:var(--ink-2);
+  border-radius:99px;padding:4px 12px;font-size:.8rem;cursor:pointer}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 2px;position:sticky;top:0;background:var(--page);z-index:5}
+nav.tabs button{
+  flex:0 0 auto;border:1px solid var(--ring);background:var(--surface-1);color:var(--ink-2);
+  padding:8px 14px;border-radius:99px;font-size:.9rem;cursor:pointer;white-space:nowrap;
+}
+nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.card{background:var(--surface-1);border:1px solid var(--ring);border-radius:16px;padding:18px 18px;margin:12px 0}
+.card h2{font-size:1.1rem;margin:0 0 6px}
+.card h3{font-size:1rem;margin:14px 0 6px}
+.muted{color:var(--ink-2);font-size:.9rem}
+.tiny{color:var(--ink-3);font-size:.8rem}
+button.primary{
+  background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;
+  padding:12px 20px;font-size:1rem;font-weight:600;cursor:pointer;
+}
+button.ghost{
+  background:transparent;color:var(--ink-2);border:1px solid var(--ring);
+  border-radius:12px;padding:10px 16px;font-size:.9rem;cursor:pointer;
+}
+button:disabled{opacity:.4;cursor:not-allowed}
+.chiprow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{border:1px solid var(--ring);background:var(--page);color:var(--ink-2);
+  border-radius:99px;padding:8px 14px;font-size:.9rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+input[type=text]{
+  width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ring);
+  background:var(--page);color:var(--ink-1);font-size:1rem;
+}
+/* quiz */
+.progress{height:6px;background:var(--grid);border-radius:99px;overflow:hidden;margin:10px 0 18px}
+.progress>div{height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
+.qtext{font-size:1.2rem;font-weight:600;min-height:3.2em;margin:6px 0 4px}
+.scale{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:14px 0 6px}
+.scale button{
+  min-height:52px;border-radius:12px;border:1px solid var(--ring);background:var(--page);
+  color:var(--ink-1);font-size:1.05rem;font-weight:600;cursor:pointer;
+}
+.scale button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.anchors{display:flex;justify-content:space-between;font-size:.78rem;color:var(--ink-3)}
+.quiznav{display:flex;justify-content:space-between;margin-top:18px;gap:10px}
+/* result */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.tile{background:var(--page);border:1px solid var(--ring);border-radius:14px;padding:12px 14px}
+.tile .v{font-size:1.9rem;font-weight:700;line-height:1.2}
+.tile .l{font-size:.82rem;color:var(--ink-2)}
+.badge{display:inline-block;padding:6px 14px;border-radius:99px;font-weight:700;font-size:1rem;color:#fff}
+/* chart */
+.chartbox{overflow-x:auto}
+figure.viz{margin:8px 0}
+figure.viz svg{display:block;max-width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.legend button{display:flex;align-items:center;gap:6px;border:1px solid var(--ring);border-radius:99px;
+  background:var(--page);color:var(--ink-2);padding:5px 12px;font-size:.85rem;cursor:pointer}
+.legend button[aria-pressed="false"]{opacity:.35}
+.legend .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.pointinfo{border:1px dashed var(--axis);border-radius:12px;padding:10px 14px;margin-top:10px;font-size:.9rem;color:var(--ink-2)}
+/* records */
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
+th{color:var(--ink-3);font-weight:600;font-size:.8rem}
+td .del{color:var(--crit);background:none;border:none;cursor:pointer;font-size:.85rem}
+/* checklist */
+.likert5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0 2px}
+.likert5 button{min-height:44px;border-radius:10px;border:1px solid var(--ring);background:var(--page);
+  color:var(--ink-1);font-weight:600;cursor:pointer}
+.likert5 button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.clitem{padding:12px 0;border-bottom:1px solid var(--grid)}
+.clitem p{margin:0 0 4px;font-size:.95rem}
+dialog{border:1px solid var(--ring);border-radius:16px;background:var(--surface-1);color:var(--ink-1);max-width:420px;padding:20px}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.hide{display:none !important}
+footer.app{margin-top:28px;color:var(--ink-3);font-size:.78rem;line-height:1.7}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="app">
+  <h1>依附地形圖</h1>
+  <span class="sub">Attachment Topography · 讀書會版</span>
+  <button id="themeBtn" type="button">🌗 深／淺色</button>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" data-view="home" aria-selected="true">測驗</button>
+  <button role="tab" data-view="map" aria-selected="false">地形圖</button>
+  <button role="tab" data-view="records" aria-selected="false">紀錄</button>
+  <button role="tab" data-view="collab" aria-selected="false">關係檢核</button>
+  <button role="tab" data-view="data" aria-selected="false">資料</button>
+</nav>
+
+<!-- ═════════ 測驗首頁 ═════════ -->
+<section id="view-home">
+  <div class="card">
+    <h2>認識你在每段關係中的依附風格</h2>
+    <p class="muted">依據 Amir Levine《Secure》一書的計分方法：就<strong>某一段特定關係</strong>回答 9 條題目（1–7 分），
+    計算出<strong>焦慮分數</strong>與<strong>迴避分數</strong>，再把這段關係繪畫在「依附地形圖」上。
+    你可以為不同的人分別作答，也可以隔一段時間重測，觀察變化。</p>
+    <h3>1 · 這次評估的是哪一段關係？</h3>
+    <div class="chiprow" id="relTypes"></div>
+    <div id="nameRow">
+      <h3>2 · 為這位對象起個名字或代號</h3>
+      <input type="text" id="personName" maxlength="20" placeholder="例如：媽媽、阿明、太太⋯⋯" autocomplete="off">
+      <p class="tiny">名字只儲存在你自己的裝置上，不會上傳到任何地方。</p>
+    </div>
+    <div id="existingRow" class="hide">
+      <h3>或：為已有的對象重測</h3>
+      <div class="chiprow" id="existingPeople"></div>
+    </div>
+    <p><button class="primary" id="startBtn" type="button">開始作答 →</button></p>
+  </div>
+  <div class="card">
+    <h2>四種依附風格</h2>
+    <p class="muted">
+      <strong>安全型</strong>：低焦慮、低迴避——親密自在，信任對方也信任自己。<br>
+      <strong>焦慮型</strong>：高焦慮、低迴避——渴望親近，卻常擔心對方不夠在乎自己。<br>
+      <strong>迴避型</strong>：低焦慮、高迴避——重視獨立，傾向與人保持情感距離。<br>
+      <strong>恐懼迴避型</strong>：高焦慮、高迴避——既渴望親密又害怕受傷，時近時遠。
+    </p>
+    <p class="tiny">依附風格並非「與生俱來、一成不變」——它會隨關係、隨時間改變。這正是本工具讓你反覆記錄的原因。</p>
+  </div>
+</section>
+
+<!-- ═════════ 作答 ═════════ -->
+<section id="view-quiz" class="hide">
+  <div class="card">
+    <p class="tiny" id="quizWho"></p>
+    <div class="progress"><div id="pbar" style="width:0%"></div></div>
+    <p class="tiny" id="qnum"></p>
+    <p class="qtext" id="qtext"></p>
+    <div class="scale" id="scale7"></div>
+    <div class="anchors"><span>1 非常不同意</span><span>7 非常同意</span></div>
+    <div class="quiznav">
+      <button class="ghost" id="prevBtn" type="button">← 上一題</button>
+      <button class="ghost" id="quitBtn" type="button">放棄</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 結果 ═════════ -->
+<section id="view-result" class="hide">
+  <div class="card" id="resultCard"></div>
+  <div class="card">
+    <h2>你的依附地形圖</h2>
+    <div class="chartbox" id="resultChart"></div>
+    <p class="tiny">虛線（4 分）為象限分界。左下角＝最安全。</p>
+    <p><button class="primary" id="toMapBtn" type="button">查看完整地形圖</button>
+       <button class="ghost" id="againBtn" type="button">再測另一段關係</button></p>
+  </div>
+</section>
+
+<!-- ═════════ 地形圖 ═════════ -->
+<section id="view-map" class="hide">
+  <div class="card">
+    <h2>依附地形圖</h2>
+    <p class="muted">每種顏色代表一位對象；同一對象若有多次紀錄，會以線連接（淡色＝較早，實色＝最新），讓你看到關係隨時間的移動。點按圖上的點可查看詳情。</p>
+    <div class="legend" id="legend"></div>
+    <div class="chartbox" id="mapChart"></div>
+    <div class="pointinfo hide" id="pointInfo"></div>
+    <p class="tiny">書中提示：你可以隨時回到這張圖，加入新的對象，或檢視你與某人的依附風格是否已隨時間改變。</p>
+  </div>
+</section>
+
+<!-- ═════════ 紀錄 ═════════ -->
+<section id="view-records" class="hide">
+  <div class="card">
+    <h2>測驗紀錄</h2>
+    <div id="recordsBody"></div>
+  </div>
+</section>
+
+<!-- ═════════ 關係檢核 ═════════ -->
+<section id="view-collab" class="hide">
+  <div class="card">
+    <h2>這段關係值得投入嗎？——安全關係檢核表</h2>
+    <p class="muted">《Secure》書末的 15 條檢核題（1 非常不同意 – 5 非常同意），幫你檢視一段關係是否
+    <strong>CARRP</strong>——一致（Consistent）、可得（Available）、有回應（Responsive）、可靠（Reliable）、可預測（Predictable）——
+    以及日常微小互動（SIMIs）的品質。</p>
+    <h3>評估對象</h3>
+    <input type="text" id="collabName" maxlength="20" placeholder="這段關係的對象（例如：阿明）" autocomplete="off">
+    <div id="collabItems"></div>
+    <p style="margin-top:16px"><button class="primary" id="collabScoreBtn" type="button">計算總分</button></p>
+    <div id="collabResult"></div>
+    <div id="collabHistory"></div>
+  </div>
+</section>
+
+<!-- ═════════ 資料 ═════════ -->
+<section id="view-data" class="hide">
+  <div class="card">
+    <h2>資料備份與還原</h2>
+    <p class="muted">所有紀錄只儲存在<strong>這部裝置的瀏覽器</strong>內（無需登入）。
+    如需換機、與人分享，或怕清除瀏覽器資料時遺失，請匯出成檔案保存；之後可隨時匯入還原。</p>
+    <p>
+      <button class="primary" id="exportBtn" type="button">⬇ 匯出資料（JSON 檔）</button>
+      <button class="ghost" id="importBtn" type="button">⬆ 匯入資料</button>
+      <input type="file" id="importFile" accept="application/json,.json" class="hide">
+    </p>
+    <p class="tiny" id="dataStats"></p>
+    <h3>清除全部資料</h3>
+    <p><button class="ghost" id="wipeBtn" type="button" style="color:var(--crit)">刪除此裝置上的所有紀錄</button></p>
+  </div>
+</section>
+
+<footer class="app">
+  計分方法依據 Amir Levine 醫生著作《Secure》(2026) 及其網站測驗；題目採用可自由使用的研究量表
+  ECR-RS（Fraley, Heffernan, Vicary &amp; Brumbaugh, 2011）之中文改寫版。<br>
+  本工具僅供教育、自我了解及讀書會討論之用，並非臨床診斷。如有困擾，請尋求專業協助。
+</footer>
+</div>
+
+<dialog id="importDlg">
+  <h2 style="margin-top:0;font-size:1.05rem">匯入資料</h2>
+  <p class="muted" id="importSummary"></p>
+  <p>
+    <button class="primary" id="importMerge" type="button">合併到現有紀錄</button>
+    <button class="ghost" id="importReplace" type="button">取代全部</button>
+    <button class="ghost" id="importCancel" type="button">取消</button>
+  </p>
+</dialog>
+
+<script>
+"use strict";
+/* ═══════════ 資料 ═══════════ */
+const LS_KEY = "attachment-topography-v1";
+const REL_TYPES = ["一般依附風格","伴侶","母親","父親","家人","朋友","同事","其他"];
+const SLOT_VARS = ["--s1","--s2","--s3","--s4","--s5","--s6","--s7","--s8"];
+
+/* ECR-RS 中文改寫版（1–4 題反向計分）
+   迴避 = 第 1–6 題平均；焦慮 = 第 7–9 題平均 */
+const QUESTIONS = [
+  {t:"當我需要幫助時，向這個人傾訴對我是有幫助的。", rev:true},
+  {t:"我通常會跟這個人談我的困擾和憂慮。", rev:true},
+  {t:"遇到事情，我會找這個人商量。", rev:true},
+  {t:"我覺得依靠這個人並不困難。", rev:true},
+  {t:"我不太願意向這個人敞開心扉。", rev:false},
+  {t:"我寧願不讓這個人知道我內心深處的感受。", rev:false},
+  {t:"我常常擔心這個人並不真正關心我。", rev:false},
+  {t:"我害怕這個人終有一天會離我而去。", rev:false},
+  {t:"我擔心這個人對我的重視，不如我對他／她的重視。", rev:false},
+];
+
+/* 《Secure》p.194 檢核表（1–5 分） */
+const COLLAB_ITEMS = [
+  "這個人把我的福祉放在心上。",
+  "這個人願意付出，也願意接受。",
+  "我在這段關係投入的心力是可持續的（不會過度消耗自己）。",
+  "這段關係讓我感到公平、平衡。",
+  "在這段關係中，我感到被聆聽、被看見、被重視。",
+  "我也讓對方感到被聆聽、被看見、被重視。",
+  "這個人在互動中不會刻意冷落我、排擠我，或對我木無表情。",
+  "這個人願意聆聽不同觀點，並尋求共識。",
+  "這個人會支持我、撐我。",
+  "我與這個人的日常微小互動（SIMIs）大多是正面的。",
+  "在這段關係中，我的情緒是穩定的。",
+  "這個人不會刻意做些事來懲罰我或「給我一個教訓」。",
+  "這個人對我是 CARRP 的（一致、可得、有回應、可靠、可預測）。",
+  "我對這個人也是 CARRP 的。",
+  "整體而言，這個人值得我繼續投入。",
+];
+
+const STYLES = {
+  secure:  {name:"安全型",   color:"var(--s2)",
+    desc:"低焦慮、低迴避。你在這段關係中能自在地親近對方、表達需要，也不太擔心被拋棄。這是最有利雙方成長的依附狀態。",
+    tip:"繼續保持 CARRP——一致、可得、有回應、可靠、可預測。安全感是會傳染的：你的穩定也會令身邊的人更安全。"},
+  anxious: {name:"焦慮型",   color:"var(--s4)",
+    desc:"高焦慮、低迴避。你渴望親近這個人，但常擔心對方不夠在乎你、可能離開你，情緒容易隨對方的一舉一動起伏。",
+    tip:"焦慮型的敏銳其實是「知覺超能力」。留意「抗議行為—後悔」循環；直接、平靜地說出需要，並觀察對方是否 CARRP——值得的人會用行動讓你安心。"},
+  avoidant:{name:"迴避型",   color:"var(--s1)",
+    desc:"低焦慮、高迴避。你重視獨立和空間，不習慣向這個人打開心扉，親密貼近反而令你不自在。",
+    tip:"需要距離並非罪過，但長期迴避會令對方被觸發、關係惡性循環。嘗試小步分享感受，主動給予微小而穩定的回應（正面的 SIMIs）。"},
+  fearful: {name:"恐懼迴避型",color:"var(--s6)",
+    desc:"高焦慮、高迴避。你既渴望親密又害怕受傷，於是時而靠近、時而抽離，關係中經常感到拉扯。",
+    tip:"這往往與過往受傷的經驗有關。從最安全、最 CARRP 的關係開始練習信任；若困擾持續，尋求心理專業協助是很值得的投資。"},
+};
+
+let db = load();
+function load(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){ const d = JSON.parse(raw); if(d && Array.isArray(d.people)) { d.collab = d.collab||[]; return d; } }
+  }catch(e){}
+  return {version:1, people:[], collab:[]};
+}
+function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(db)); }catch(e){} }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function fmtDate(iso){ const d=new Date(iso); return d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate(); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+
+/* ═══════════ 計分（《Secure》pp.79–81） ═══════════ */
+function scoreAnswers(a){
+  // a: 9 個 1–7 的作答；第 1–4 題反向（8−x）
+  const adj = a.map((v,i)=> QUESTIONS[i].rev ? 8-v : v);
+  const avoidance = adj.slice(0,6).reduce((x,y)=>x+y,0)/6; // 第 1–6 題 ÷ 6
+  const anxiety   = adj.slice(6,9).reduce((x,y)=>x+y,0)/3; // 第 7–9 題 ÷ 3
+  return {anxiety:+anxiety.toFixed(2), avoidance:+avoidance.toFixed(2)};
+}
+function styleOf(anx, avd){
+  if(anx<4 && avd<4)  return "secure";
+  if(anx>=4 && avd<4) return "anxious";
+  if(anx<4 && avd>=4) return "avoidant";
+  return "fearful";
+}
+
+/* ═══════════ 檢視切換 ═══════════ */
+const VIEWS = ["home","quiz","result","map","records","collab","data"];
+function show(view){
+  VIEWS.forEach(v=>document.getElementById("view-"+v).classList.toggle("hide", v!==view));
+  document.querySelectorAll("nav.tabs button").forEach(b=>{
+    const owns = b.dataset.view===view || (b.dataset.view==="home" && (view==="quiz"||view==="result"));
+    b.setAttribute("aria-selected", owns?"true":"false");
+  });
+  if(view==="map") renderMap();
+  if(view==="records") renderRecords();
+  if(view==="data") renderDataStats();
+  if(view==="home") renderHome();
+  if(view==="collab") renderCollabHistory();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+
+/* 主題切換 */
+document.getElementById("themeBtn").addEventListener("click",()=>{
+  const r=document.documentElement;
+  const dark = r.dataset.theme==="dark" || (!r.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+  r.dataset.theme = dark ? "light" : "dark";
+  renderMap(); // 重繪以套用顏色
+  if(lastResult) renderResult(lastResult);
+});
+
+/* ═══════════ 首頁 ═══════════ */
+let selType = REL_TYPES[0], selExisting = null;
+function renderHome(){
+  const tr = document.getElementById("relTypes");
+  tr.innerHTML = "";
+  REL_TYPES.forEach(t=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="chip"; b.textContent=t;
+    b.setAttribute("aria-pressed", t===selType && !selExisting ? "true":"false");
+    b.addEventListener("click",()=>{ selType=t; selExisting=null;
+      const inp=document.getElementById("personName");
+      if(t==="一般依附風格") inp.value="一般";
+      renderHome(); });
+    tr.appendChild(b);
+  });
+  const ex = document.getElementById("existingPeople");
+  const row = document.getElementById("existingRow");
+  ex.innerHTML="";
+  if(db.people.length){
+    row.classList.remove("hide");
+    db.people.forEach(p=>{
+      const b=document.createElement("button");
+      b.type="button"; b.className="chip";
+      b.textContent=p.name+"（"+p.results.length+" 次）";
+      b.setAttribute("aria-pressed", selExisting===p.id?"true":"false");
+      b.addEventListener("click",()=>{ selExisting = selExisting===p.id?null:p.id; renderHome(); });
+      ex.appendChild(b);
+    });
+  } else row.classList.add("hide");
+}
+
+/* ═══════════ 作答流程 ═══════════ */
+let quiz = null, lastResult = null;
+document.getElementById("startBtn").addEventListener("click",()=>{
+  let person;
+  if(selExisting){
+    person = db.people.find(p=>p.id===selExisting);
+  }else{
+    const name = document.getElementById("personName").value.trim() ||
+                 (selType==="一般依附風格" ? "一般" : selType);
+    person = db.people.find(p=>p.name===name);
+    if(!person){
+      person = {id:uid(), name, type:selType, slot: db.people.length % SLOT_VARS.length, results:[]};
+    }
+  }
+  quiz = {person, i:0, answers:Array(9).fill(0), isNew: !db.people.some(p=>p.id===person.id)};
+  renderQuestion();
+  show("quiz");
+});
+document.getElementById("quitBtn").addEventListener("click",()=>{ quiz=null; show("home"); });
+document.getElementById("prevBtn").addEventListener("click",()=>{ if(quiz && quiz.i>0){ quiz.i--; renderQuestion(); } });
+
+function renderQuestion(){
+  const q = QUESTIONS[quiz.i];
+  document.getElementById("quizWho").textContent = "評估對象："+quiz.person.name+"（"+quiz.person.type+"）";
+  document.getElementById("qnum").textContent = "第 "+(quiz.i+1)+" 題／共 9 題";
+  document.getElementById("qtext").textContent = q.t;
+  document.getElementById("pbar").style.width = (quiz.i/9*100)+"%";
+  document.getElementById("prevBtn").disabled = quiz.i===0;
+  const sc = document.getElementById("scale7");
+  sc.innerHTML="";
+  for(let v=1; v<=7; v++){
+    const b=document.createElement("button");
+    b.type="button"; b.textContent=v;
+    b.setAttribute("aria-pressed", quiz.answers[quiz.i]===v?"true":"false");
+    b.addEventListener("click",()=>{
+      quiz.answers[quiz.i]=v;
+      if(quiz.i<8){ quiz.i++; renderQuestion(); }
+      else finishQuiz();
+    });
+    sc.appendChild(b);
+  }
+}
+
+function finishQuiz(){
+  const s = scoreAnswers(quiz.answers);
+  const st = styleOf(s.anxiety, s.avoidance);
+  const rec = {date:new Date().toISOString(), answers:quiz.answers.slice(), anxiety:s.anxiety, avoidance:s.avoidance, style:st};
+  if(quiz.isNew) db.people.push(quiz.person);
+  quiz.person.results.push(rec);
+  save();
+  lastResult = {person:quiz.person, rec};
+  quiz=null;
+  renderResult(lastResult);
+  show("result");
+}
+
+function renderResult({person, rec}){
+  const st = STYLES[rec.style];
+  document.getElementById("resultCard").innerHTML =
+    '<p class="tiny">'+esc(person.name)+"（"+esc(person.type)+"）· "+fmtDate(rec.date)+"</p>"+
+    '<h2>這段關係目前屬於：<span class="badge" style="background:'+st.color+'">'+st.name+"</span></h2>"+
+    '<div class="tiles">'+
+      '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">焦慮分數（第 7–9 題平均，1–7）</div></div>'+
+      '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">迴避分數（第 1–6 題平均，1–7）</div></div>'+
+    "</div>"+
+    "<p>"+st.desc+"</p><h3>給你的提示</h3><p class='muted'>"+st.tip+"</p>"+
+    (person.results.length>1 ? '<p class="tiny">這是你對「'+esc(person.name)+'」的第 '+person.results.length+' 次紀錄——到地形圖看看變化軌跡。</p>' : "");
+  document.getElementById("resultChart").innerHTML="";
+  document.getElementById("resultChart").appendChild(buildChart({highlight:person.id, compact:true}));
+}
+document.getElementById("toMapBtn").addEventListener("click",()=>show("map"));
+document.getElementById("againBtn").addEventListener("click",()=>{ selExisting=null; show("home"); });
+
+/* ═══════════ 地形圖（SVG） ═══════════ */
+let hiddenPeople = new Set();
+function slotColor(slot){
+  return getComputedStyle(document.documentElement).getPropertyValue(SLOT_VARS[slot % SLOT_VARS.length]).trim() || "#2a78d6";
+}
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+function buildChart(opt){
+  opt = opt||{};
+  const W=560, H=520, m={t:26, r:20, b:64, l:46};
+  const iw=W-m.l-m.r, ih=H-m.t-m.b;
+  const x=v=>m.l+(v-1)/6*iw, y=v=>m.t+ih-(v-1)/6*ih;
+  const ink3=cssVar("--ink-3"), grid=cssVar("--grid"), axis=cssVar("--axis"),
+        ink2=cssVar("--ink-2"), surface=cssVar("--surface-1");
+  const NS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(NS,"svg");
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  svg.setAttribute("role","img");
+  svg.setAttribute("aria-label","依附地形圖：橫軸為焦慮分數，縱軸為迴避分數，各 1 至 7 分，4 分為象限分界。");
+  function el(tag, attrs, text){
+    const e=document.createElementNS(NS,tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    if(text!=null) e.textContent=text;
+    svg.appendChild(e); return e;
+  }
+  // 格線
+  for(let v=1; v<=7; v++){
+    el("line",{x1:x(v),y1:m.t,x2:x(v),y2:m.t+ih,stroke:grid,"stroke-width":1});
+    el("line",{x1:m.l,y1:y(v),x2:m.l+iw,y2:y(v),stroke:grid,"stroke-width":1});
+    el("text",{x:x(v),y:m.t+ih+18,"text-anchor":"middle","font-size":11,fill:ink3}, v);
+    el("text",{x:m.l-10,y:y(v)+4,"text-anchor":"end","font-size":11,fill:ink3}, v);
+  }
+  // 象限分界（虛線 4 分）
+  el("line",{x1:x(4),y1:m.t,x2:x(4),y2:m.t+ih,stroke:ink2,"stroke-width":1.5,"stroke-dasharray":"4 4"});
+  el("line",{x1:m.l,y1:y(4),x2:m.l+iw,y2:y(4),stroke:ink2,"stroke-width":1.5,"stroke-dasharray":"4 4"});
+  // 座標軸
+  el("line",{x1:m.l,y1:m.t+ih,x2:m.l+iw,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
+  el("line",{x1:m.l,y1:m.t,x2:m.l,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
+  // 象限浮水印
+  const wm={"font-size":15,fill:ink3,opacity:.55,"text-anchor":"middle","font-weight":600};
+  el("text",Object.assign({x:x(2.5),y:y(2.4)},wm),"安全型");
+  el("text",Object.assign({x:x(5.5),y:y(2.4)},wm),"焦慮型");
+  el("text",Object.assign({x:x(2.5),y:y(5.8)},wm),"迴避型");
+  el("text",Object.assign({x:x(5.5),y:y(5.8)},wm),"恐懼迴避型");
+  // 軸標題
+  el("text",{x:m.l+iw/2,y:H-26,"text-anchor":"middle","font-size":12,fill:ink2},"焦慮程度 →");
+  const yl=el("text",{x:14,y:m.t+ih/2,"text-anchor":"middle","font-size":12,fill:ink2},"迴避程度 →");
+  yl.setAttribute("transform","rotate(-90 14 "+(m.t+ih/2)+")");
+  el("text",{x:m.l+4,y:H-26,"font-size":11,fill:ink3},"◣ 最安全");
+
+  // 資料點
+  db.people.forEach(p=>{
+    if(hiddenPeople.has(p.id)) return;
+    if(!p.results.length) return;
+    const c=slotColor(p.slot);
+    const pts=p.results.map(r=>({cx:x(r.anxiety), cy:y(r.avoidance), r}));
+    // 軌跡線
+    if(pts.length>1){
+      let dstr="M"+pts.map(q=>q.cx.toFixed(1)+" "+q.cy.toFixed(1)).join(" L");
+      el("path",{d:dstr,fill:"none",stroke:c,"stroke-width":2,opacity:.45});
+    }
+    pts.forEach((q,i)=>{
+      const latest=i===pts.length-1;
+      const dot=el("circle",{cx:q.cx,cy:q.cy,r:latest?7:4.5,fill:c,opacity:latest?1:.45,
+        stroke:surface,"stroke-width":2,cursor:"pointer"});
+      dot.addEventListener("click",()=>showPointInfo(p,q.r));
+      const t=document.createElementNS(NS,"title");
+      t.textContent=p.name+" · "+fmtDate(q.r.date)+" · 焦慮 "+q.r.anxiety.toFixed(2)+"／迴避 "+q.r.avoidance.toFixed(2);
+      dot.appendChild(t);
+      if(latest){
+        const lx=Math.min(q.cx+10, m.l+iw-4);
+        el("text",{x:lx,y:q.cy-10,"font-size":12,fill:cssVar("--ink-1"),"font-weight":600,
+          "text-anchor": q.cx>m.l+iw-70?"end":"start",
+          stroke:surface,"stroke-width":3,"paint-order":"stroke"}, p.name);
+      }
+    });
+    // 高亮這次結果
+    if(opt.highlight===p.id && pts.length){
+      const q=pts[pts.length-1];
+      el("circle",{cx:q.cx,cy:q.cy,r:12,fill:"none",stroke:c,"stroke-width":1.5,"stroke-dasharray":"2 3"});
+    }
+  });
+  const fig=document.createElement("figure");
+  fig.className="viz";
+  fig.appendChild(svg);
+  return fig;
+}
+
+function showPointInfo(p, r){
+  const el=document.getElementById("pointInfo");
+  const st=STYLES[r.style];
+  el.classList.remove("hide");
+  el.innerHTML="<strong>"+esc(p.name)+"</strong>（"+esc(p.type)+"）· "+fmtDate(r.date)+
+    " — <span style='color:"+st.color+";font-weight:700'>"+st.name+"</span>"+
+    "：焦慮 "+r.anxiety.toFixed(2)+"、迴避 "+r.avoidance.toFixed(2);
+}
+
+function renderMap(){
+  const lg=document.getElementById("legend");
+  lg.innerHTML="";
+  db.people.filter(p=>p.results.length).forEach(p=>{
+    const b=document.createElement("button");
+    b.type="button";
+    b.setAttribute("aria-pressed", hiddenPeople.has(p.id)?"false":"true");
+    const d=document.createElement("span");
+    d.className="dot"; d.style.background=slotColor(p.slot);
+    b.appendChild(d);
+    b.appendChild(document.createTextNode(p.name));
+    b.addEventListener("click",()=>{
+      hiddenPeople.has(p.id)?hiddenPeople.delete(p.id):hiddenPeople.add(p.id);
+      renderMap();
+    });
+    lg.appendChild(b);
+  });
+  const box=document.getElementById("mapChart");
+  box.innerHTML="";
+  if(db.people.some(p=>p.results.length)){
+    box.appendChild(buildChart({}));
+  }else{
+    box.innerHTML='<p class="muted">還沒有任何紀錄——先到「測驗」為一段關係作答吧。</p>';
+  }
+  document.getElementById("pointInfo").classList.add("hide");
+}
+
+/* ═══════════ 紀錄 ═══════════ */
+function renderRecords(){
+  const box=document.getElementById("recordsBody");
+  if(!db.people.length){ box.innerHTML='<p class="muted">還沒有任何紀錄。</p>'; return; }
+  let h="";
+  db.people.forEach(p=>{
+    h+='<h3><span class="dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+slotColor(p.slot)+'"></span> '+
+       esc(p.name)+' <span class="tiny">（'+esc(p.type)+'）</span> '+
+       '<button class="del" data-delp="'+p.id+'">刪除對象</button></h3>';
+    if(p.results.length){
+      h+="<table><thead><tr><th>日期</th><th>焦慮</th><th>迴避</th><th>風格</th><th></th></tr></thead><tbody>";
+      p.results.forEach((r,i)=>{
+        h+="<tr><td>"+fmtDate(r.date)+"</td><td>"+r.anxiety.toFixed(2)+"</td><td>"+r.avoidance.toFixed(2)+
+           "</td><td>"+STYLES[r.style].name+'</td><td><button class="del" data-delp="'+p.id+'" data-delr="'+i+'">刪除</button></td></tr>';
+      });
+      h+="</tbody></table>";
+    } else h+='<p class="tiny">尚無紀錄</p>';
+  });
+  box.innerHTML=h;
+  box.querySelectorAll("button.del").forEach(b=>b.addEventListener("click",()=>{
+    const pid=b.dataset.delp, ri=b.dataset.delr;
+    const p=db.people.find(q=>q.id===pid);
+    if(!p) return;
+    if(ri!=null){
+      if(confirm("刪除「"+p.name+"」在 "+fmtDate(p.results[ri].date)+" 的這筆紀錄？")){
+        p.results.splice(+ri,1); save(); renderRecords();
+      }
+    }else{
+      if(confirm("刪除對象「"+p.name+"」及其全部 "+p.results.length+" 筆紀錄？此動作無法還原。")){
+        db.people=db.people.filter(q=>q.id!==pid); save(); renderRecords();
+      }
+    }
+  }));
+}
+
+/* ═══════════ 關係檢核表 ═══════════ */
+let collabAns = Array(15).fill(0);
+function renderCollabItems(){
+  const box=document.getElementById("collabItems");
+  box.innerHTML="";
+  COLLAB_ITEMS.forEach((t,i)=>{
+    const d=document.createElement("div");
+    d.className="clitem";
+    d.innerHTML="<p>"+(i+1)+". "+t+"</p>";
+    const row=document.createElement("div");
+    row.className="likert5";
+    for(let v=1; v<=5; v++){
+      const b=document.createElement("button");
+      b.type="button"; b.textContent=v;
+      b.setAttribute("aria-pressed", collabAns[i]===v?"true":"false");
+      b.addEventListener("click",()=>{ collabAns[i]=v; renderCollabItems(); });
+      row.appendChild(b);
+    }
+    d.appendChild(row);
+    const a=document.createElement("div");
+    a.className="anchors";
+    a.innerHTML="<span>非常不同意</span><span>非常同意</span>";
+    d.appendChild(a);
+    box.appendChild(d);
+  });
+}
+document.getElementById("collabScoreBtn").addEventListener("click",()=>{
+  if(collabAns.some(v=>!v)){ alert("還有題目未作答。"); return; }
+  const total=collabAns.reduce((a,b)=>a+b,0);
+  const name=document.getElementById("collabName").value.trim()||"未命名";
+  let band, bandColor;
+  if(total>=60){ band="這段關係展現出高度的安全特質，值得繼續投入。"; bandColor="var(--good)"; }
+  else if(total>=45){ band="這段關係有不錯的基礎，但部分範疇值得留意——看看哪幾題分數偏低。"; bandColor="var(--warn)"; }
+  else { band="這段關係在多個安全指標上偏低。書中建議：先嘗試 CARRP 式介入，若持續沒有改善，可考慮「調低音量、降低優先次序」。"; bandColor="var(--serious)"; }
+  db.collab.push({id:uid(), name, date:new Date().toISOString(), answers:collabAns.slice(), total});
+  save();
+  document.getElementById("collabResult").innerHTML=
+    '<div class="tile" style="margin-top:14px"><div class="v">'+total+' <span class="tiny">/ 75</span></div>'+
+    '<div class="l">「'+esc(name)+'」的安全關係總分</div></div>'+
+    '<p style="border-left:4px solid '+bandColor+';padding-left:10px" class="muted">'+band+'</p>'+
+    '<p class="tiny">分界僅供參考，重點是逐題檢視：哪些範疇強？哪些弱？（書中原表只計總分。）</p>';
+  collabAns=Array(15).fill(0);
+  renderCollabItems();
+  renderCollabHistory();
+});
+function renderCollabHistory(){
+  const box=document.getElementById("collabHistory");
+  if(!db.collab.length){ box.innerHTML=""; return; }
+  let h="<h3>過往檢核紀錄</h3><table><thead><tr><th>日期</th><th>對象</th><th>總分</th><th></th></tr></thead><tbody>";
+  db.collab.forEach((c,i)=>{
+    h+="<tr><td>"+fmtDate(c.date)+"</td><td>"+esc(c.name)+"</td><td>"+c.total+' / 75</td>'+
+       '<td><button class="del" data-i="'+i+'">刪除</button></td></tr>';
+  });
+  h+="</tbody></table>";
+  box.innerHTML=h;
+  box.querySelectorAll("button.del").forEach(b=>b.addEventListener("click",()=>{
+    if(confirm("刪除這筆檢核紀錄？")){ db.collab.splice(+b.dataset.i,1); save(); renderCollabHistory(); }
+  }));
+}
+
+/* ═══════════ 匯出／匯入 ═══════════ */
+document.getElementById("exportBtn").addEventListener("click",()=>{
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  const d=new Date();
+  a.href=URL.createObjectURL(blob);
+  a.download="依附地形圖-"+d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+".json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+let pendingImport=null;
+document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change",e=>{
+  const f=e.target.files[0];
+  if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const d=JSON.parse(rd.result);
+      if(!d || !Array.isArray(d.people)) throw new Error("bad");
+      d.collab=Array.isArray(d.collab)?d.collab:[];
+      pendingImport=d;
+      const nRes=d.people.reduce((a,p)=>a+(p.results?p.results.length:0),0);
+      document.getElementById("importSummary").textContent=
+        "檔案包含 "+d.people.length+" 位對象、"+nRes+" 筆測驗紀錄、"+d.collab.length+" 筆檢核紀錄。要如何處理？";
+      document.getElementById("importDlg").showModal();
+    }catch(err){ alert("無法讀取：這不是有效的依附地形圖備份檔。"); }
+    e.target.value="";
+  };
+  rd.readAsText(f);
+});
+document.getElementById("importCancel").addEventListener("click",()=>{ pendingImport=null; document.getElementById("importDlg").close(); });
+document.getElementById("importReplace").addEventListener("click",()=>{
+  if(pendingImport){ db=pendingImport; normalizeDb(); save(); }
+  finishImport();
+});
+document.getElementById("importMerge").addEventListener("click",()=>{
+  if(pendingImport){
+    pendingImport.people.forEach(np=>{
+      const mine=db.people.find(p=>p.id===np.id || p.name===np.name);
+      if(!mine){ np.slot = db.people.length % SLOT_VARS.length; db.people.push(np); }
+      else{
+        (np.results||[]).forEach(r=>{
+          if(!mine.results.some(m=>m.date===r.date)) mine.results.push(r);
+        });
+        mine.results.sort((a,b)=>a.date.localeCompare(b.date));
+      }
+    });
+    pendingImport.collab.forEach(c=>{
+      if(!db.collab.some(m=>m.id===c.id)) db.collab.push(c);
+    });
+    normalizeDb(); save();
+  }
+  finishImport();
+});
+function normalizeDb(){
+  db.version=1;
+  db.people=(db.people||[]).map((p,i)=>({
+    id:p.id||uid(), name:String(p.name||"未命名").slice(0,20), type:p.type||"其他",
+    slot: Number.isInteger(p.slot)?p.slot:i%SLOT_VARS.length,
+    results:(p.results||[]).filter(r=>typeof r.anxiety==="number"&&typeof r.avoidance==="number")
+      .map(r=>({date:r.date||new Date().toISOString(), answers:r.answers||[],
+        anxiety:r.anxiety, avoidance:r.avoidance, style:r.style||styleOf(r.anxiety,r.avoidance)})),
+  }));
+  db.collab=(db.collab||[]).filter(c=>typeof c.total==="number");
+}
+function finishImport(){
+  pendingImport=null;
+  document.getElementById("importDlg").close();
+  hiddenPeople.clear();
+  renderDataStats(); renderHome();
+  alert("匯入完成！");
+}
+function renderDataStats(){
+  const nRes=db.people.reduce((a,p)=>a+p.results.length,0);
+  document.getElementById("dataStats").textContent=
+    "目前裝置上："+db.people.length+" 位對象、"+nRes+" 筆測驗紀錄、"+db.collab.length+" 筆檢核紀錄。";
+}
+document.getElementById("wipeBtn").addEventListener("click",()=>{
+  if(confirm("確定要刪除此裝置上的全部紀錄嗎？此動作無法還原。建議先匯出備份。") &&
+     confirm("最後確認：真的要全部刪除？")){
+    db={version:1,people:[],collab:[]}; save(); hiddenPeople.clear();
+    renderDataStats(); renderHome(); alert("已清除。");
+  }
+});
+
+/* ═══════════ 啟動 ═══════════ */
+renderHome();
+renderCollabItems();
+renderDataStats();
+</script>
+</body>
+</html>
