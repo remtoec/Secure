@@ -56,6 +56,9 @@ nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(
 .card{background:var(--surface-1);border:1px solid var(--ring);border-radius:16px;padding:18px 18px;margin:12px 0}
 .card h2{font-size:1.1rem;margin:0 0 6px}
 .card h3{font-size:1rem;margin:14px 0 6px}
+.card.hero{padding:26px 22px}
+.eyebrow{margin:0 0 8px;font-size:.75rem;letter-spacing:.14em;color:var(--accent);font-weight:700;text-transform:uppercase}
+.herotitle{font-size:1.55rem;line-height:1.35;margin:0 0 10px;text-wrap:balance}
 .muted{color:var(--ink-2);font-size:.9rem}
 .tiny{color:var(--ink-3);font-size:.8rem}
 button.primary{
@@ -67,6 +70,10 @@ button.ghost{
   border-radius:12px;padding:10px 16px;font-size:.9rem;cursor:pointer;
 }
 button:disabled{opacity:.4;cursor:not-allowed}
+button{transition:transform .12s ease, background-color .12s ease}
+button.primary:active,.scale button:active,.likert5 button:active{transform:scale(.96)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none !important}}
 .chiprow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .chip{border:1px solid var(--ring);background:var(--page);color:var(--ink-2);
   border-radius:99px;padding:8px 14px;font-size:.9rem;cursor:pointer}
@@ -126,32 +133,61 @@ a{color:var(--accent)}
 <div class="wrap">
 
 <header class="app">
-  <h1>依附地形圖</h1>
-  <span class="sub">Attachment Topography · 讀書會版</span>
+  <h1><a href="#" id="homeLink" style="color:inherit;text-decoration:none">依附地形圖</a></h1>
+  <span class="sub">書識圈 Bookfort ·《Secure》讀書會</span>
   <button id="themeBtn" type="button">🌗 深／淺色</button>
 </header>
 
 <nav class="tabs" role="tablist">
-  <button role="tab" data-view="home" aria-selected="true">測驗</button>
+  <button role="tab" data-view="home" aria-selected="false">測驗</button>
   <button role="tab" data-view="map" aria-selected="false">地形圖</button>
   <button role="tab" data-view="records" aria-selected="false">紀錄</button>
   <button role="tab" data-view="collab" aria-selected="false">關係檢核</button>
-  <button role="tab" data-view="data" aria-selected="false">資料</button>
 </nav>
 
-<!-- ═════════ 測驗首頁 ═════════ -->
-<section id="view-home">
+<!-- ═════════ 歡迎頁 ═════════ -->
+<section id="view-landing">
+  <div class="card hero">
+    <p class="eyebrow">書識圈 ×《Secure》讀書會工具</p>
+    <h2 class="herotitle">每段關係，都有自己的座標</h2>
+    <p class="muted">Amir Levine 在《Secure》中提出：依附風格並非一個固定的「人格標籤」——
+    你面對媽媽時可以是安全型，面對伴侶時卻可能偏向焦慮型。
+    這個小工具依照書中的計分方法，透過 9 條簡單題目，為你和每一位重要的人計算
+    <strong>焦慮</strong>與<strong>迴避</strong>兩個分數，繪成一張屬於你的「依附地形圖」；
+    隔一段時間重測，更可以看到每段關係隨時間移動的軌跡。</p>
+    <p style="margin-top:18px">
+      <button class="primary" id="landingStart" type="button">開始測驗 →</button>
+      <button class="ghost hide" id="landingMap" type="button">查看我的地形圖</button>
+    </p>
+  </div>
   <div class="card">
-    <h2>認識你在每段關係中的依附風格</h2>
-    <p class="muted">依據 Amir Levine《Secure》一書的計分方法：就<strong>某一段特定關係</strong>回答 9 條題目（1–7 分），
-    計算出<strong>焦慮分數</strong>與<strong>迴避分數</strong>，再把這段關係繪畫在「依附地形圖」上。
-    你可以為不同的人分別作答，也可以隔一段時間重測，觀察變化。</p>
+    <h2>🔒 你的私隱</h2>
+    <p class="muted">無需登入、無需帳號——所有紀錄<strong>只儲存在此裝置的瀏覽器內</strong>，
+    不會上傳到任何伺服器，連名字也不會離開你部機。
+    想備份、轉用新裝置，或與書友互相比較，隨時可以在「紀錄」頁<strong>匯出／匯入</strong>資料檔。</p>
+  </div>
+  <div class="card">
+    <h2>可以點樣用？</h2>
+    <p class="muted">
+    <strong>逐段關係測</strong>：伴侶、媽媽、爸爸、好友、同事⋯⋯每位對象一種顏色，全部畫在同一張圖上。<br>
+    <strong>隔期重測</strong>：關係會變，座標也會移動——地形圖會為你連起每次紀錄的軌跡。<br>
+    <strong>關係檢核</strong>：書末的 15 條「這段關係值得投入嗎？」檢核表，讀書會討論一流。</p>
+    <p class="tiny">本工具僅供教育、自我了解及讀書會討論之用，並非臨床診斷。</p>
+  </div>
+</section>
+
+<!-- ═════════ 測驗首頁 ═════════ -->
+<section id="view-home" class="hide">
+  <div class="card">
+    <h2>開始新測驗</h2>
+    <p class="muted">就<strong>某一段特定關係</strong>回答 9 條題目（1–7 分）。
+    你可以為不同的人分別作答，也可以為已有的對象重測，觀察變化。</p>
     <h3>1 · 這次評估的是哪一段關係？</h3>
     <div class="chiprow" id="relTypes"></div>
     <div id="nameRow">
-      <h3>2 · 為這位對象起個名字或代號</h3>
+      <h3>2 · 為這位對象改個名稱或代號</h3>
       <input type="text" id="personName" maxlength="20" placeholder="例如：媽媽、阿明、太太⋯⋯" autocomplete="off">
-      <p class="tiny">名字只儲存在你自己的裝置上，不會上傳到任何地方。</p>
+      <p class="tiny">名稱只儲存在你自己的裝置上，不會上傳到任何地方。</p>
     </div>
     <div id="existingRow" class="hide">
       <h3>或：為已有的對象重測</h3>
@@ -182,7 +218,7 @@ a{color:var(--accent)}
     <div class="anchors"><span>1 非常不同意</span><span>7 非常同意</span></div>
     <div class="quiznav">
       <button class="ghost" id="prevBtn" type="button">← 上一題</button>
-      <button class="ghost" id="quitBtn" type="button">放棄</button>
+      <button class="ghost" id="quitBtn" type="button">離開測驗</button>
     </div>
   </div>
 </section>
@@ -207,6 +243,7 @@ a{color:var(--accent)}
     <div class="legend" id="legend"></div>
     <div class="chartbox" id="mapChart"></div>
     <div class="pointinfo hide" id="pointInfo"></div>
+    <p id="mapActions"><button class="ghost" id="mapImgBtn" type="button">🖼 將地形圖儲存為圖片</button></p>
     <p class="tiny">書中提示：你可以隨時回到這張圖，加入新的對象，或檢視你與某人的依附風格是否已隨時間改變。</p>
   </div>
 </section>
@@ -216,6 +253,19 @@ a{color:var(--accent)}
   <div class="card">
     <h2>測驗紀錄</h2>
     <div id="recordsBody"></div>
+  </div>
+  <div class="card">
+    <h2>備份與還原</h2>
+    <p class="muted">所有紀錄只儲存在<strong>此裝置的瀏覽器</strong>內（無需登入）。
+    如需轉用新裝置、與書友分享，或怕清除瀏覽器資料時遺失，請匯出成檔案保存；之後可隨時匯入還原。</p>
+    <p>
+      <button class="primary" id="exportBtn" type="button">⬇ 匯出資料（JSON 檔）</button>
+      <button class="ghost" id="importBtn" type="button">⬆ 匯入資料</button>
+      <input type="file" id="importFile" accept="application/json,.json" class="hide">
+    </p>
+    <p class="tiny" id="dataStats"></p>
+    <h3>清除全部資料</h3>
+    <p><button class="ghost" id="wipeBtn" type="button" style="color:var(--crit)">刪除此裝置上的所有紀錄</button></p>
   </div>
 </section>
 
@@ -232,23 +282,6 @@ a{color:var(--accent)}
     <p style="margin-top:16px"><button class="primary" id="collabScoreBtn" type="button">計算總分</button></p>
     <div id="collabResult"></div>
     <div id="collabHistory"></div>
-  </div>
-</section>
-
-<!-- ═════════ 資料 ═════════ -->
-<section id="view-data" class="hide">
-  <div class="card">
-    <h2>資料備份與還原</h2>
-    <p class="muted">所有紀錄只儲存在<strong>這部裝置的瀏覽器</strong>內（無需登入）。
-    如需換機、與人分享，或怕清除瀏覽器資料時遺失，請匯出成檔案保存；之後可隨時匯入還原。</p>
-    <p>
-      <button class="primary" id="exportBtn" type="button">⬇ 匯出資料（JSON 檔）</button>
-      <button class="ghost" id="importBtn" type="button">⬆ 匯入資料</button>
-      <input type="file" id="importFile" accept="application/json,.json" class="hide">
-    </p>
-    <p class="tiny" id="dataStats"></p>
-    <h3>清除全部資料</h3>
-    <p><button class="ghost" id="wipeBtn" type="button" style="color:var(--crit)">刪除此裝置上的所有紀錄</button></p>
   </div>
 </section>
 
@@ -283,7 +316,7 @@ const QUESTIONS = [
   {t:"我通常會跟這個人談我的困擾和憂慮。", rev:true},
   {t:"遇到事情，我會找這個人商量。", rev:true},
   {t:"我覺得依靠這個人並不困難。", rev:true},
-  {t:"我不太願意向這個人敞開心扉。", rev:false},
+  {t:"我不太願意向這個人打開心扉。", rev:false},
   {t:"我寧願不讓這個人知道我內心深處的感受。", rev:false},
   {t:"我常常擔心這個人並不真正關心我。", rev:false},
   {t:"我害怕這個人終有一天會離我而去。", rev:false},
@@ -336,6 +369,16 @@ function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(db)); }catch(e
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function fmtDate(iso){ const d=new Date(iso); return d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate(); }
 function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function stamp(){ const d=new Date(); return d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"); }
+function downloadBlob(blob, filename){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+}
 
 /* ═══════════ 計分（《Secure》pp.79–81） ═══════════ */
 function scoreAnswers(a){
@@ -353,21 +396,28 @@ function styleOf(anx, avd){
 }
 
 /* ═══════════ 檢視切換 ═══════════ */
-const VIEWS = ["home","quiz","result","map","records","collab","data"];
+const VIEWS = ["landing","home","quiz","result","map","records","collab"];
 function show(view){
   VIEWS.forEach(v=>document.getElementById("view-"+v).classList.toggle("hide", v!==view));
   document.querySelectorAll("nav.tabs button").forEach(b=>{
     const owns = b.dataset.view===view || (b.dataset.view==="home" && (view==="quiz"||view==="result"));
     b.setAttribute("aria-selected", owns?"true":"false");
   });
+  if(view==="landing") renderLanding();
   if(view==="map") renderMap();
-  if(view==="records") renderRecords();
-  if(view==="data") renderDataStats();
+  if(view==="records"){ renderRecords(); renderDataStats(); }
   if(view==="home") renderHome();
   if(view==="collab") renderCollabHistory();
   window.scrollTo({top:0});
 }
 document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+document.getElementById("homeLink").addEventListener("click",e=>{ e.preventDefault(); show("landing"); });
+document.getElementById("landingStart").addEventListener("click",()=>show("home"));
+document.getElementById("landingMap").addEventListener("click",()=>show("map"));
+function renderLanding(){
+  const has = db.people.some(p=>p.results.length);
+  document.getElementById("landingMap").classList.toggle("hide", !has);
+}
 
 /* 主題切換 */
 document.getElementById("themeBtn").addEventListener("click",()=>{
@@ -376,6 +426,35 @@ document.getElementById("themeBtn").addEventListener("click",()=>{
   r.dataset.theme = dark ? "light" : "dark";
   renderMap(); // 重繪以套用顏色
   if(lastResult) renderResult(lastResult);
+});
+
+/* 將地形圖儲存為 PNG 圖片 */
+document.getElementById("mapImgBtn").addEventListener("click",()=>{
+  const svg = document.querySelector("#mapChart svg");
+  if(!svg){ alert("地形圖還沒有任何資料。"); return; }
+  const xml = new XMLSerializer().serializeToString(svg);
+  const url = URL.createObjectURL(new Blob([xml], {type:"image/svg+xml;charset=utf-8"}));
+  const img = new Image();
+  img.onload = ()=>{
+    const scale=2, headH=44, W=560, H=520;
+    const c=document.createElement("canvas");
+    c.width=W*scale; c.height=(H+headH)*scale;
+    const ctx=c.getContext("2d");
+    ctx.scale(scale,scale);
+    ctx.fillStyle=cssVar("--surface-1")||"#fcfcfb";
+    ctx.fillRect(0,0,W,H+headH);
+    ctx.fillStyle=cssVar("--ink-1")||"#0b0b0b";
+    ctx.font="600 16px system-ui, -apple-system, 'PingFang HK', sans-serif";
+    ctx.fillText("依附地形圖", 20, 27);
+    ctx.fillStyle=cssVar("--ink-3")||"#898781";
+    ctx.font="11px system-ui, -apple-system, 'PingFang HK', sans-serif";
+    ctx.fillText(fmtDate(new Date().toISOString())+" · 書識圈《Secure》讀書會", 120, 27);
+    ctx.drawImage(img, 0, headH, W, H);
+    URL.revokeObjectURL(url);
+    c.toBlob(b=>downloadBlob(b, "attachment-map-"+stamp()+".png"), "image/png");
+  };
+  img.onerror = ()=>{ URL.revokeObjectURL(url); alert("圖片產生失敗，請重試。"); };
+  img.src = url;
 });
 
 /* ═══════════ 首頁 ═══════════ */
@@ -474,7 +553,7 @@ function renderResult({person, rec}){
       '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">焦慮分數（第 7–9 題平均，1–7）</div></div>'+
       '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">迴避分數（第 1–6 題平均，1–7）</div></div>'+
     "</div>"+
-    "<p>"+st.desc+"</p><h3>給你的提示</h3><p class='muted'>"+st.tip+"</p>"+
+    "<p>"+st.desc+"</p><h3>給你的貼士</h3><p class='muted'>"+st.tip+"</p>"+
     (person.results.length>1 ? '<p class="tiny">這是你對「'+esc(person.name)+'」的第 '+person.results.length+' 次紀錄——到地形圖看看變化軌跡。</p>' : "");
   document.getElementById("resultChart").innerHTML="";
   document.getElementById("resultChart").appendChild(buildChart({highlight:person.id, compact:true}));
@@ -499,6 +578,8 @@ function buildChart(opt){
   const NS="http://www.w3.org/2000/svg";
   const svg=document.createElementNS(NS,"svg");
   svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  svg.setAttribute("width",W); svg.setAttribute("height",H);
+  svg.setAttribute("font-family","system-ui, -apple-system, 'PingFang HK', 'Microsoft JhengHei', sans-serif");
   svg.setAttribute("role","img");
   svg.setAttribute("aria-label","依附地形圖：橫軸為焦慮分數，縱軸為迴避分數，各 1 至 7 分，4 分為象限分界。");
   function el(tag, attrs, text){
@@ -656,7 +737,10 @@ function renderCollabItems(){
       const b=document.createElement("button");
       b.type="button"; b.textContent=v;
       b.setAttribute("aria-pressed", collabAns[i]===v?"true":"false");
-      b.addEventListener("click",()=>{ collabAns[i]=v; renderCollabItems(); });
+      b.addEventListener("click",()=>{
+        collabAns[i]=v;
+        row.querySelectorAll("button").forEach((bb,idx)=>bb.setAttribute("aria-pressed", idx+1===v?"true":"false"));
+      });
       row.appendChild(b);
     }
     d.appendChild(row);
@@ -703,13 +787,8 @@ function renderCollabHistory(){
 
 /* ═══════════ 匯出／匯入 ═══════════ */
 document.getElementById("exportBtn").addEventListener("click",()=>{
-  const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});
-  const a=document.createElement("a");
-  const d=new Date();
-  a.href=URL.createObjectURL(blob);
-  a.download="依附地形圖-"+d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+".json";
-  a.click();
-  URL.revokeObjectURL(a.href);
+  downloadBlob(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),
+    "attachment-data-"+stamp()+".json");
 });
 let pendingImport=null;
 document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
@@ -788,6 +867,7 @@ document.getElementById("wipeBtn").addEventListener("click",()=>{
 });
 
 /* ═══════════ 啟動 ═══════════ */
+renderLanding();
 renderHome();
 renderCollabItems();
 renderDataStats();
