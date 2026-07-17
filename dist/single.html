@@ -1,0 +1,1240 @@
+<!doctype html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>依附地形圖 · Attachment Topography</title>
+<style>
+:root{
+  color-scheme: light;
+  --surface-1:#fcfcfb; --page:#f9f9f7;
+  --ink-1:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10);
+  --accent:#2a78d6; --accent-ink:#ffffff;
+  --s1:#2a78d6; --s2:#008300; --s3:#e87ba4; --s4:#eda100;
+  --s5:#1baf7a; --s6:#eb6834; --s7:#4a3aa7; --s8:#e34948;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --surface-1:#1a1a19; --page:#0d0d0d;
+    --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+    --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
+    --accent:#3987e5;
+    --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
+    --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --surface-1:#1a1a19; --page:#0d0d0d;
+  --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+  --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
+  --accent:#3987e5;
+  --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
+  --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--page); color:var(--ink-1);
+  font-family:system-ui,-apple-system,"Segoe UI","PingFang HK","PingFang TC","Microsoft JhengHei",sans-serif;
+  line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto;padding:16px 16px 96px}
+header.app{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:14px 4px 6px}
+header.app h1{font-size:1.45rem;margin:0;letter-spacing:.02em}
+header.app .sub{color:var(--ink-2);font-size:.85rem}
+#langBtn,#themeBtn{border:1px solid var(--ring);background:var(--surface-1);color:var(--ink-2);
+  border-radius:99px;padding:4px 12px;font-size:.8rem;cursor:pointer}
+#langBtn{margin-left:auto;font-weight:700;min-width:44px}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 2px;position:sticky;top:0;background:var(--page);z-index:5}
+nav.tabs button{
+  flex:0 0 auto;border:1px solid var(--ring);background:var(--surface-1);color:var(--ink-2);
+  padding:8px 14px;border-radius:99px;font-size:.9rem;cursor:pointer;white-space:nowrap;
+}
+nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.card{background:var(--surface-1);border:1px solid var(--ring);border-radius:16px;padding:18px 18px;margin:12px 0}
+.card h2{font-size:1.1rem;margin:0 0 6px}
+.card h3{font-size:1rem;margin:14px 0 6px}
+.card.hero{padding:26px 22px}
+.eyebrow{margin:0 0 8px;font-size:.75rem;letter-spacing:.14em;color:var(--accent);font-weight:700;text-transform:uppercase}
+.herotitle{font-size:1.55rem;line-height:1.35;margin:0 0 10px;text-wrap:balance}
+.muted{color:var(--ink-2);font-size:.9rem}
+.tiny{color:var(--ink-3);font-size:.8rem}
+button.primary{
+  background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;
+  padding:12px 20px;font-size:1rem;font-weight:600;cursor:pointer;
+}
+button.ghost{
+  background:transparent;color:var(--ink-2);border:1px solid var(--ring);
+  border-radius:12px;padding:10px 16px;font-size:.9rem;cursor:pointer;
+}
+button:disabled{opacity:.4;cursor:not-allowed}
+button{transition:transform .12s ease, background-color .12s ease}
+button.primary:active,.scale button:active,.likert5 button:active{transform:scale(.96)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none !important}}
+.chiprow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{border:1px solid var(--ring);background:var(--page);color:var(--ink-2);
+  border-radius:99px;padding:8px 14px;font-size:.9rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+input[type=text]{
+  width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ring);
+  background:var(--page);color:var(--ink-1);font-size:1rem;
+}
+/* quiz */
+.progress{height:6px;background:var(--grid);border-radius:99px;overflow:hidden;margin:10px 0 18px}
+.progress>div{height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
+.qtext{font-size:1.2rem;font-weight:600;min-height:3.2em;margin:6px 0 4px}
+.scale{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:14px 0 6px}
+.scale button{
+  min-height:52px;border-radius:12px;border:1px solid var(--ring);background:var(--page);
+  color:var(--ink-1);font-size:1.05rem;font-weight:600;cursor:pointer;
+}
+.scale button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.anchors{display:flex;justify-content:space-between;font-size:.78rem;color:var(--ink-3)}
+.quiznav{display:flex;justify-content:space-between;margin-top:18px;gap:10px}
+/* result */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.tile{background:var(--page);border:1px solid var(--ring);border-radius:14px;padding:12px 14px}
+.tile .v{font-size:1.9rem;font-weight:700;line-height:1.2}
+.tile .l{font-size:.82rem;color:var(--ink-2)}
+.badge{display:inline-block;padding:6px 14px;border-radius:99px;font-weight:700;font-size:1rem;color:#fff}
+/* chart */
+.chartbox{overflow-x:auto}
+figure.viz{margin:8px 0}
+figure.viz svg{display:block;max-width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.legend button{display:flex;align-items:center;gap:6px;border:1px solid var(--ring);border-radius:99px;
+  background:var(--page);color:var(--ink-2);padding:5px 12px;font-size:.85rem;cursor:pointer}
+.legend button[aria-pressed="false"]{opacity:.35}
+.legend .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.pointinfo{border:1px dashed var(--axis);border-radius:12px;padding:10px 14px;margin-top:10px;font-size:.9rem;color:var(--ink-2)}
+/* records */
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
+th{color:var(--ink-3);font-weight:600;font-size:.8rem}
+td .del{color:var(--crit);background:none;border:none;cursor:pointer;font-size:.85rem}
+/* checklist */
+.likert5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0 2px}
+.likert5 button{min-height:44px;border-radius:10px;border:1px solid var(--ring);background:var(--page);
+  color:var(--ink-1);font-weight:600;cursor:pointer}
+.likert5 button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.clitem{padding:12px 0;border-bottom:1px solid var(--grid)}
+.clitem p{margin:0 0 4px;font-size:.95rem}
+dialog{border:1px solid var(--ring);border-radius:16px;background:var(--surface-1);color:var(--ink-1);max-width:420px;padding:20px}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.hide{display:none !important}
+footer.app{margin-top:28px;color:var(--ink-3);font-size:.78rem;line-height:1.7}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="app">
+  <h1><a href="#" id="homeLink" style="color:inherit;text-decoration:none" data-i18n="app.title">依附地形圖</a></h1>
+  <span class="sub" data-i18n="app.club">書識圈 Bookfort ·《Secure》讀書會</span>
+  <button id="langBtn" type="button" data-i18n="btn.lang">EN</button>
+  <button id="themeBtn" type="button" data-i18n="btn.theme">🌗 深／淺色</button>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" data-view="home" aria-selected="false" data-i18n="nav.quiz">測驗</button>
+  <button role="tab" data-view="map" aria-selected="false" data-i18n="nav.map">地形圖</button>
+  <button role="tab" data-view="records" aria-selected="false" data-i18n="nav.records">紀錄</button>
+  <button role="tab" data-view="collab" aria-selected="false" data-i18n="nav.collab">關係檢核</button>
+</nav>
+
+<!-- ═════════ 歡迎頁 · Landing ═════════ -->
+<section id="view-landing">
+  <div class="card hero">
+    <p class="eyebrow" data-i18n="landing.eyebrow"></p>
+    <h2 class="herotitle" data-i18n="landing.title"></h2>
+    <p class="muted" data-i18n-html="landing.body"></p>
+    <p style="margin-top:18px">
+      <button class="primary" id="landingStart" type="button" data-i18n="landing.start"></button>
+      <button class="ghost hide" id="landingMap" type="button" data-i18n="landing.viewMap"></button>
+    </p>
+  </div>
+  <div class="card">
+    <h2 data-i18n="landing.privacyTitle"></h2>
+    <p class="muted" data-i18n-html="landing.privacyBody"></p>
+  </div>
+  <div class="card">
+    <h2 data-i18n="landing.howTitle"></h2>
+    <p class="muted" data-i18n-html="landing.howBody"></p>
+    <p class="tiny" data-i18n="landing.disclaimer"></p>
+  </div>
+</section>
+
+<!-- ═════════ 測驗首頁 · Quiz home ═════════ -->
+<section id="view-home" class="hide">
+  <div class="card">
+    <h2 data-i18n="home.title"></h2>
+    <p class="muted" data-i18n-html="home.body"></p>
+    <h3 data-i18n="home.q1"></h3>
+    <div class="chiprow" id="relTypes"></div>
+    <div id="nameRow">
+      <h3 data-i18n="home.q2"></h3>
+      <input type="text" id="personName" maxlength="20" data-i18n-ph="home.namePh" autocomplete="off">
+      <p class="tiny" data-i18n="home.nameHint"></p>
+    </div>
+    <div id="existingRow" class="hide">
+      <h3 data-i18n="home.retestTitle"></h3>
+      <div class="chiprow" id="existingPeople"></div>
+    </div>
+    <p><button class="primary" id="startBtn" type="button" data-i18n="home.start"></button></p>
+  </div>
+  <div class="card">
+    <h2 data-i18n="home.stylesTitle"></h2>
+    <p class="muted" data-i18n-html="home.stylesBody"></p>
+    <p class="tiny" data-i18n="home.stylesNote"></p>
+  </div>
+</section>
+
+<!-- ═════════ 作答 · Quiz ═════════ -->
+<section id="view-quiz" class="hide">
+  <div class="card">
+    <p class="tiny" id="quizWho"></p>
+    <div class="progress"><div id="pbar" style="width:0%"></div></div>
+    <p class="tiny" id="qnum"></p>
+    <p class="qtext" id="qtext"></p>
+    <div class="scale" id="scale7"></div>
+    <div class="anchors"><span data-i18n="quiz.anchorLow"></span><span data-i18n="quiz.anchorHigh"></span></div>
+    <div class="quiznav">
+      <button class="ghost" id="prevBtn" type="button" data-i18n="quiz.prev"></button>
+      <button class="ghost" id="quitBtn" type="button" data-i18n="quiz.quit"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 結果 · Result ═════════ -->
+<section id="view-result" class="hide">
+  <div class="card" id="resultCard"></div>
+  <div class="card">
+    <h2 data-i18n="result.chartTitle"></h2>
+    <div class="chartbox" id="resultChart"></div>
+    <p class="tiny" data-i18n="result.chartNote"></p>
+    <p><button class="primary" id="toMapBtn" type="button" data-i18n="result.viewMap"></button>
+       <button class="ghost" id="againBtn" type="button" data-i18n="result.again"></button></p>
+  </div>
+</section>
+
+<!-- ═════════ 地形圖 · Map ═════════ -->
+<section id="view-map" class="hide">
+  <div class="card">
+    <h2 data-i18n="map.title"></h2>
+    <p class="muted" data-i18n="map.body"></p>
+    <div class="legend" id="legend"></div>
+    <div class="chartbox" id="mapChart"></div>
+    <div class="pointinfo hide" id="pointInfo"></div>
+    <p id="mapActions"><button class="ghost" id="mapImgBtn" type="button" data-i18n="map.saveImg"></button></p>
+    <p class="tiny" data-i18n="map.bookTip"></p>
+  </div>
+</section>
+
+<!-- ═════════ 紀錄 · Records ═════════ -->
+<section id="view-records" class="hide">
+  <div class="card">
+    <h2 data-i18n="records.title"></h2>
+    <div id="recordsBody"></div>
+  </div>
+  <div class="card">
+    <h2 data-i18n="records.backupTitle"></h2>
+    <p class="muted" data-i18n-html="records.backupBody"></p>
+    <p>
+      <button class="primary" id="exportBtn" type="button" data-i18n="records.export"></button>
+      <button class="ghost" id="importBtn" type="button" data-i18n="records.import"></button>
+      <input type="file" id="importFile" accept="application/json,.json" class="hide">
+    </p>
+    <p class="tiny" id="dataStats"></p>
+    <h3 data-i18n="records.wipeTitle"></h3>
+    <p><button class="ghost" id="wipeBtn" type="button" style="color:var(--crit)" data-i18n="records.wipe"></button></p>
+  </div>
+</section>
+
+<!-- ═════════ 關係檢核 · Checklist ═════════ -->
+<section id="view-collab" class="hide">
+  <div class="card">
+    <h2 data-i18n="collab.title"></h2>
+    <p class="muted" data-i18n-html="collab.body"></p>
+    <h3 data-i18n="collab.whoTitle"></h3>
+    <input type="text" id="collabName" maxlength="20" data-i18n-ph="collab.whoPh" autocomplete="off">
+    <div id="collabItems"></div>
+    <p style="margin-top:16px"><button class="primary" id="collabScoreBtn" type="button" data-i18n="collab.calc"></button></p>
+    <div id="collabResult"></div>
+    <div id="collabHistory"></div>
+  </div>
+</section>
+
+<footer class="app" data-i18n-html="footer.html"></footer>
+</div>
+
+<dialog id="importDlg">
+  <h2 style="margin-top:0;font-size:1.05rem" data-i18n="import.title"></h2>
+  <p class="muted" id="importSummary"></p>
+  <p>
+    <button class="primary" id="importMerge" type="button" data-i18n="import.merge"></button>
+    <button class="ghost" id="importReplace" type="button" data-i18n="import.replace"></button>
+    <button class="ghost" id="importCancel" type="button" data-i18n="import.cancel"></button>
+  </p>
+</dialog>
+
+<script>
+"use strict";
+/* ═══════════ 雙語文字 · Bilingual strings ═══════════
+   所有介面文字集中在此檔，方便修改。
+   All UI copy lives here — edit this file to tweak wording. */
+
+const LANG_KEY = "attachment-lang";
+let LANG = "zh";
+try { LANG = localStorage.getItem(LANG_KEY) || "zh"; } catch (e) {}
+
+/* 關係類別（儲存時用 key，顯示時翻譯） */
+const REL_KEYS = ["general","partner","mother","father","family","friend","colleague","other"];
+
+const I18N = {
+zh: {
+  "html.lang": "zh-Hant-HK",
+  "app.title": "依附地形圖",
+  "app.club": "書識圈 Bookfort ·《Secure》讀書會",
+  "btn.theme": "🌗 深／淺色",
+  "btn.lang": "EN",
+
+  "nav.quiz": "測驗", "nav.map": "地形圖", "nav.records": "紀錄", "nav.collab": "關係檢核",
+
+  "rel.general": "一般依附風格", "rel.partner": "伴侶", "rel.mother": "母親", "rel.father": "父親",
+  "rel.family": "家人", "rel.friend": "朋友", "rel.colleague": "同事", "rel.other": "其他",
+  "rel.general.short": "一般",
+
+  "landing.eyebrow": "書識圈 ×《Secure》讀書會工具",
+  "landing.title": "每段關係，都有自己的座標",
+  "landing.body": "依附研究數十年來的一個重要發現：依附風格並非一個固定的「人格標籤」——你面對媽媽時可以是安全型，面對伴侶時卻可能偏向焦慮型。Amir Levine 在《Secure》一書中對此有深入淺出的討論。這個小工具採用研究中廣泛使用的兩個維度，透過 9 條簡單題目，為你和每一位重要的人計算<strong>焦慮</strong>與<strong>迴避</strong>兩個分數，繪成一張屬於你的「依附地形圖」；隔一段時間重測，更可以看到每段關係隨時間移動的軌跡。",
+  "landing.start": "開始測驗 →",
+  "landing.viewMap": "查看我的地形圖",
+  "landing.privacyTitle": "🔒 你的私隱",
+  "landing.privacyBody": "無需登入、無需帳號——所有紀錄<strong>只儲存在此裝置的瀏覽器內</strong>，不會上傳到任何伺服器，連名字也不會離開你部機。想備份、轉用新裝置，或與書友互相比較，隨時可以在「紀錄」頁<strong>匯出／匯入</strong>資料檔。",
+  "landing.howTitle": "可以點樣用？",
+  "landing.howBody": "<strong>逐段關係測</strong>：伴侶、媽媽、爸爸、好友、同事⋯⋯每位對象一種顏色，全部畫在同一張圖上。<br><strong>隔期重測</strong>：關係會變，座標也會移動——地形圖會為你連起每次紀錄的軌跡。<br><strong>關係檢核</strong>：15 條「這段關係值得投入嗎？」檢核表，讀書會討論一流。",
+  "landing.disclaimer": "本工具僅供教育、自我了解及讀書會討論之用，並非臨床診斷。",
+
+  "home.title": "開始新測驗",
+  "home.body": "就<strong>某一段特定關係</strong>回答 9 條題目（1–7 分）。你可以為不同的人分別作答，也可以為已有的對象重測，觀察變化。",
+  "home.q1": "1 · 這次評估的是哪一段關係？",
+  "home.q2": "2 · 為這位對象改個名稱或代號",
+  "home.namePh": "例如：媽媽、阿明、太太⋯⋯",
+  "home.nameHint": "名稱只儲存在你自己的裝置上，不會上傳到任何地方。",
+  "home.retestTitle": "或：為已有的對象重測",
+  "home.start": "開始作答 →",
+  "home.times": "次",
+  "home.stylesTitle": "四種依附風格",
+  "home.stylesBody": "<strong>安全型</strong>：低焦慮、低迴避——親密自在，信任對方也信任自己。<br><strong>焦慮型</strong>：高焦慮、低迴避——渴望親近，卻常擔心對方不夠在乎自己。<br><strong>迴避型</strong>：低焦慮、高迴避——重視獨立，傾向與人保持情感距離。<br><strong>恐懼迴避型</strong>：高焦慮、高迴避——既渴望親密又害怕受傷，時近時遠。",
+  "home.stylesNote": "依附風格並非「與生俱來、一成不變」——它會隨關係、隨時間改變。這正是本工具讓你反覆記錄的原因。",
+
+  "quiz.who": "評估對象：{name}（{type}）",
+  "quiz.qnum": "第 {n} 題／共 9 題",
+  "quiz.prev": "← 上一題",
+  "quiz.quit": "離開測驗",
+  "quiz.anchorLow": "1 非常不同意",
+  "quiz.anchorHigh": "7 非常同意",
+
+  "result.styleIs": "這段關係目前屬於：",
+  "result.anxLabel": "焦慮分數（第 7–9 題平均，1–7）",
+  "result.avdLabel": "迴避分數（第 1–6 題平均，1–7）",
+  "result.tipTitle": "給你的貼士",
+  "result.nth": "這是你對「{name}」的第 {n} 次紀錄——到地形圖看看變化軌跡。",
+  "result.chartTitle": "你的依附地形圖",
+  "result.chartNote": "虛線（4 分）為象限分界。左下角＝最安全。",
+  "result.viewMap": "查看完整地形圖",
+  "result.again": "再測另一段關係",
+
+  "map.title": "依附地形圖",
+  "map.body": "每種顏色代表一位對象；同一對象若有多次紀錄，會以線連接（淡色＝較早，實色＝最新），讓你看到關係隨時間的移動。點按圖上的點可查看詳情。",
+  "map.saveImg": "🖼 將地形圖儲存為圖片",
+  "map.bookTip": "《Secure》提示：你可以隨時回到這張圖，加入新的對象，或檢視你與某人的依附風格是否已隨時間改變。",
+  "map.empty": "還沒有任何紀錄——先到「測驗」為一段關係作答吧。",
+  "map.noData": "地形圖還沒有任何資料。",
+  "map.imgFail": "圖片產生失敗，請重試。",
+
+  "chart.secure": "安全型", "chart.anxious": "焦慮型", "chart.avoidant": "迴避型", "chart.fearful": "恐懼迴避型",
+  "chart.xAxis": "焦慮程度 →", "chart.yAxis": "迴避程度 →", "chart.mostSecure": "◣ 最安全",
+  "chart.aria": "依附地形圖：橫軸為焦慮分數，縱軸為迴避分數，各 1 至 7 分，4 分為象限分界。",
+  "chart.imgTitle": "依附地形圖",
+  "chart.imgCredit": "書識圈《Secure》讀書會",
+  "chart.tipAnx": "焦慮", "chart.tipAvd": "迴避",
+
+  "records.title": "測驗紀錄",
+  "records.empty": "還沒有任何紀錄。",
+  "records.none": "尚無紀錄",
+  "records.deletePerson": "刪除對象",
+  "records.delete": "刪除",
+  "th.date": "日期", "th.anx": "焦慮", "th.avd": "迴避", "th.style": "風格", "th.person": "對象", "th.total": "總分",
+  "records.confirmDelRec": "刪除「{name}」在 {date} 的這筆紀錄？",
+  "records.confirmDelPerson": "刪除對象「{name}」及其全部 {n} 筆紀錄？此動作無法還原。",
+  "records.backupTitle": "備份與還原",
+  "records.backupBody": "所有紀錄只儲存在<strong>此裝置的瀏覽器</strong>內（無需登入）。如需轉用新裝置、與書友分享，或怕清除瀏覽器資料時遺失，請匯出成檔案保存；之後可隨時匯入還原。",
+  "records.export": "⬇ 匯出資料（JSON 檔）",
+  "records.import": "⬆ 匯入資料",
+  "records.stats": "目前裝置上：{p} 位對象、{r} 筆測驗紀錄、{c} 筆檢核紀錄。",
+  "records.wipeTitle": "清除全部資料",
+  "records.wipe": "刪除此裝置上的所有紀錄",
+  "records.wipeConfirm1": "確定要刪除此裝置上的全部紀錄嗎？此動作無法還原。建議先匯出備份。",
+  "records.wipeConfirm2": "最後確認：真的要全部刪除？",
+  "records.wiped": "已清除。",
+
+  "import.title": "匯入資料",
+  "import.summary": "檔案包含 {p} 位對象、{r} 筆測驗紀錄、{c} 筆檢核紀錄。要如何處理？",
+  "import.merge": "合併到現有紀錄",
+  "import.replace": "取代全部",
+  "import.cancel": "取消",
+  "import.bad": "無法讀取：這不是有效的依附地形圖備份檔。",
+  "import.done": "匯入完成！",
+
+  "collab.title": "這段關係值得投入嗎？——安全關係檢核表",
+  "collab.body": "《Secure》書末的 15 條檢核題（1 非常不同意 – 5 非常同意），幫你檢視一段關係是否 <strong>CARRP</strong>——一致（Consistent）、可得（Available）、有回應（Responsive）、可靠（Reliable）、可預測（Predictable）——以及日常微小互動（SIMIs）的品質。",
+  "collab.whoTitle": "評估對象",
+  "collab.whoPh": "這段關係的對象（例如：阿明）",
+  "collab.calc": "計算總分",
+  "collab.unanswered": "還有題目未作答。",
+  "collab.unnamed": "未命名",
+  "collab.resultLabel": "「{name}」的安全關係總分",
+  "collab.bandHigh": "這段關係展現出高度的安全特質，值得繼續投入。",
+  "collab.bandMid": "這段關係有不錯的基礎，但部分範疇值得留意——看看哪幾題分數偏低。",
+  "collab.bandLow": "這段關係在多個安全指標上偏低。書中建議：先嘗試 CARRP 式介入，若持續沒有改善，可考慮「調低音量、降低優先次序」。",
+  "collab.bandNote": "分界僅供參考，重點是逐題檢視：哪些範疇強？哪些弱？（書中原表只計總分。）",
+  "collab.anchorLow": "非常不同意", "collab.anchorHigh": "非常同意",
+  "collab.historyTitle": "過往檢核紀錄",
+  "collab.confirmDel": "刪除這筆檢核紀錄？",
+
+  "footer.html": "本工具採用依附研究廣泛使用的「焦慮 × 迴避」兩維度模型，題目為可自由使用的研究量表 ECR-RS（Fraley, Heffernan, Vicary &amp; Brumbaugh, 2011）之中文改寫版；「依附地形圖」的做法在 Amir Levine 醫生的著作《Secure》(2026) 中有詳細討論。<br>本工具僅供教育、自我了解及讀書會討論之用，並非臨床診斷。如有困擾，請尋求專業協助。",
+
+  "questions": [
+    "當我需要幫助時，向這個人傾訴對我是有幫助的。",
+    "我通常會跟這個人談我的困擾和憂慮。",
+    "遇到事情，我會找這個人商量。",
+    "我覺得依靠這個人並不困難。",
+    "我不太願意向這個人打開心扉。",
+    "我寧願不讓這個人知道我內心深處的感受。",
+    "我常常擔心這個人並不真正關心我。",
+    "我害怕這個人終有一天會離我而去。",
+    "我擔心這個人對我的重視，不如我對他／她的重視。",
+  ],
+
+  "collabItems": [
+    "這個人把我的福祉放在心上。",
+    "這個人願意付出，也願意接受。",
+    "我在這段關係投入的心力是可持續的（不會過度消耗自己）。",
+    "這段關係讓我感到公平、平衡。",
+    "在這段關係中，我感到被聆聽、被看見、被重視。",
+    "我也讓對方感到被聆聽、被看見、被重視。",
+    "這個人在互動中不會刻意冷落我、排擠我，或對我木無表情。",
+    "這個人願意聆聽不同觀點，並尋求共識。",
+    "這個人會支持我、撐我。",
+    "我與這個人的日常微小互動（SIMIs）大多是正面的。",
+    "在這段關係中，我的情緒是穩定的。",
+    "這個人不會刻意做些事來懲罰我或「給我一個教訓」。",
+    "這個人對我是 CARRP 的（一致、可得、有回應、可靠、可預測）。",
+    "我對這個人也是 CARRP 的。",
+    "整體而言，這個人值得我繼續投入。",
+  ],
+
+  "styles": {
+    secure:  {name:"安全型",
+      desc:"低焦慮、低迴避。你在這段關係中能自在地親近對方、表達需要，也不太擔心被拋棄。這是最有利雙方成長的依附狀態。",
+      tip:"繼續保持 CARRP——一致、可得、有回應、可靠、可預測。安全感是會傳染的：你的穩定也會令身邊的人更安全。"},
+    anxious: {name:"焦慮型",
+      desc:"高焦慮、低迴避。你渴望親近這個人，但常擔心對方不夠在乎你、可能離開你，情緒容易隨對方的一舉一動起伏。",
+      tip:"焦慮型的敏銳其實是「知覺超能力」。留意「抗議行為—後悔」循環；直接、平靜地說出需要，並觀察對方是否 CARRP——值得的人會用行動讓你安心。"},
+    avoidant:{name:"迴避型",
+      desc:"低焦慮、高迴避。你重視獨立和空間，不習慣向這個人打開心扉，親密貼近反而令你不自在。",
+      tip:"需要距離並非罪過，但長期迴避會令對方被觸發、關係惡性循環。嘗試小步分享感受，主動給予微小而穩定的回應（正面的 SIMIs）。"},
+    fearful: {name:"恐懼迴避型",
+      desc:"高焦慮、高迴避。你既渴望親密又害怕受傷，於是時而靠近、時而抽離，關係中經常感到拉扯。",
+      tip:"這往往與過往受傷的經驗有關。從最安全、最 CARRP 的關係開始練習信任；若困擾持續，尋求心理專業協助是很值得的投資。"},
+  },
+},
+
+en: {
+  "html.lang": "en",
+  "app.title": "Attachment Topography",
+  "app.club": "Bookfort 書識圈 · Secure Book Club",
+  "btn.theme": "🌗 Theme",
+  "btn.lang": "中",
+
+  "nav.quiz": "Quiz", "nav.map": "Map", "nav.records": "Records", "nav.collab": "Checklist",
+
+  "rel.general": "General attachment style", "rel.partner": "Partner", "rel.mother": "Mother", "rel.father": "Father",
+  "rel.family": "Family", "rel.friend": "Friend", "rel.colleague": "Colleague", "rel.other": "Other",
+  "rel.general.short": "General",
+
+  "landing.eyebrow": "A Bookfort × Secure book-club tool",
+  "landing.title": "Every relationship has its own coordinates",
+  "landing.body": "A key finding from decades of attachment research: attachment style is not a fixed personality label — you can be secure with your mum yet lean anxious with your partner. Dr. Amir Levine discusses this in depth in <em>Secure</em>. This little tool uses the two dimensions widely used in the research — <strong>anxiety</strong> and <strong>avoidance</strong> — to score 9 short questions about one specific relationship and plot it on your personal “attachment topography” map. Retake it over time and watch each relationship move.",
+  "landing.start": "Start the quiz →",
+  "landing.viewMap": "View my map",
+  "landing.privacyTitle": "🔒 Your privacy",
+  "landing.privacyBody": "No login, no account — every record is stored <strong>only in this device's browser</strong>. Nothing is uploaded anywhere; even the names never leave your phone. To back up, move to a new device, or compare with friends, use <strong>export / import</strong> on the Records page anytime.",
+  "landing.howTitle": "How to use it",
+  "landing.howBody": "<strong>One relationship at a time</strong>: partner, mum, dad, best friend, colleague… each person gets a colour on the same map.<br><strong>Retake over time</strong>: relationships change and coordinates move — the map draws the trajectory between your records.<br><strong>Relationship checklist</strong>: a 15-item “is this relationship worth investing in?” check — great for book-club discussion.",
+  "landing.disclaimer": "For education, self-reflection and book-club discussion only — not a clinical diagnosis.",
+
+  "home.title": "Start a new quiz",
+  "home.body": "Answer 9 questions (scored 1–7) about <strong>one specific relationship</strong>. You can assess different people separately, or retest someone to track change.",
+  "home.q1": "1 · Which relationship are you assessing?",
+  "home.q2": "2 · Give this person a name or nickname",
+  "home.namePh": "e.g. Mum, Alex, my wife…",
+  "home.nameHint": "Names are stored only on your own device and never uploaded.",
+  "home.retestTitle": "Or: retest someone you've assessed before",
+  "home.start": "Begin →",
+  "home.times": "",
+  "home.stylesTitle": "The four attachment styles",
+  "home.stylesBody": "<strong>Secure</strong>: low anxiety, low avoidance — comfortable with closeness, trusting of both of you.<br><strong>Anxious</strong>: high anxiety, low avoidance — craves closeness but often worries the other person doesn't care enough.<br><strong>Avoidant</strong>: low anxiety, high avoidance — values independence and keeps emotional distance.<br><strong>Fearful-avoidant</strong>: high on both — longs for intimacy yet fears getting hurt, swinging near and far.",
+  "home.stylesNote": "Attachment style is not fixed at birth — it shifts across relationships and over time. That's exactly why this tool lets you keep recording.",
+
+  "quiz.who": "Assessing: {name} ({type})",
+  "quiz.qnum": "Question {n} of 9",
+  "quiz.prev": "← Back",
+  "quiz.quit": "Exit quiz",
+  "quiz.anchorLow": "1 Strongly disagree",
+  "quiz.anchorHigh": "7 Strongly agree",
+
+  "result.styleIs": "Right now, this relationship reads as: ",
+  "result.anxLabel": "Anxiety score (mean of Q7–9, 1–7)",
+  "result.avdLabel": "Avoidance score (mean of Q1–6, 1–7)",
+  "result.tipTitle": "A tip for you",
+  "result.nth": "This is record #{n} for “{name}” — check the map to see the trajectory.",
+  "result.chartTitle": "Your attachment topography",
+  "result.chartNote": "Dashed lines (score 4) mark the quadrant boundaries. Bottom-left = most secure.",
+  "result.viewMap": "View the full map",
+  "result.again": "Assess another relationship",
+
+  "map.title": "Attachment topography",
+  "map.body": "Each colour is one person; repeated records are joined by a line (faded = earlier, solid = latest) so you can watch a relationship move over time. Tap a dot for details.",
+  "map.saveImg": "🖼 Save map as an image",
+  "map.bookTip": "Tip from Secure: come back to this chart anytime to add new people, or to check whether your attachment style with someone has changed over time.",
+  "map.empty": "No records yet — head to the Quiz tab and assess a relationship first.",
+  "map.noData": "The map has no data yet.",
+  "map.imgFail": "Couldn't generate the image — please try again.",
+
+  "chart.secure": "SECURE", "chart.anxious": "ANXIOUS", "chart.avoidant": "AVOIDANT", "chart.fearful": "FEARFUL-AVOIDANT",
+  "chart.xAxis": "More anxious →", "chart.yAxis": "More avoidant →", "chart.mostSecure": "◣ Most secure",
+  "chart.aria": "Attachment topography chart: x-axis is the anxiety score, y-axis the avoidance score, each 1 to 7, quadrants split at 4.",
+  "chart.imgTitle": "Attachment Topography",
+  "chart.imgCredit": "Bookfort Secure Book Club",
+  "chart.tipAnx": "anxiety", "chart.tipAvd": "avoidance",
+
+  "records.title": "Quiz records",
+  "records.empty": "No records yet.",
+  "records.none": "No records",
+  "records.deletePerson": "Delete person",
+  "records.delete": "Delete",
+  "th.date": "Date", "th.anx": "Anxiety", "th.avd": "Avoidance", "th.style": "Style", "th.person": "Person", "th.total": "Total",
+  "records.confirmDelRec": "Delete the record for “{name}” from {date}?",
+  "records.confirmDelPerson": "Delete “{name}” and all {n} of their records? This cannot be undone.",
+  "records.backupTitle": "Backup & restore",
+  "records.backupBody": "Everything is stored in <strong>this device's browser</strong> only (no login). To move to a new device, share with friends, or guard against clearing browser data, export a file — you can import it back anytime.",
+  "records.export": "⬇ Export data (JSON file)",
+  "records.import": "⬆ Import data",
+  "records.stats": "On this device: {p} people, {r} quiz records, {c} checklist records.",
+  "records.wipeTitle": "Clear all data",
+  "records.wipe": "Delete all records on this device",
+  "records.wipeConfirm1": "Delete ALL records on this device? This cannot be undone. Consider exporting a backup first.",
+  "records.wipeConfirm2": "Final confirmation: really delete everything?",
+  "records.wiped": "Cleared.",
+
+  "import.title": "Import data",
+  "import.summary": "The file contains {p} people, {r} quiz records and {c} checklist records. How should it be handled?",
+  "import.merge": "Merge into existing records",
+  "import.replace": "Replace everything",
+  "import.cancel": "Cancel",
+  "import.bad": "Couldn't read this file — it isn't a valid backup from this app.",
+  "import.done": "Import complete!",
+
+  "collab.title": "Is this relationship worth investing in? — Security checklist",
+  "collab.body": "15 check items (1 strongly disagree – 5 strongly agree) to review whether a relationship is <strong>CARRP</strong> — Consistent, Available, Responsive, Reliable, Predictable — and how the small everyday interactions (SIMIs) feel. Discussed in detail in <em>Secure</em>.",
+  "collab.whoTitle": "Who are you assessing?",
+  "collab.whoPh": "The person in this relationship (e.g. Alex)",
+  "collab.calc": "Calculate total",
+  "collab.unanswered": "Some items are still unanswered.",
+  "collab.unnamed": "Unnamed",
+  "collab.resultLabel": "Security total for “{name}”",
+  "collab.bandHigh": "This relationship shows strongly secure qualities — worth continuing to invest in.",
+  "collab.bandMid": "A decent foundation, but some areas deserve attention — look at which items scored low.",
+  "collab.bandLow": "Several security indicators are low. The book's suggestion: try CARRP-style repairs first; if nothing improves, consider turning down the volume and lowering this relationship's priority.",
+  "collab.bandNote": "The cut-offs are only a rough guide — the real value is reviewing item by item: where is this relationship strong, and where is it weak? (The book's original table only records a total.)",
+  "collab.anchorLow": "Strongly disagree", "collab.anchorHigh": "Strongly agree",
+  "collab.historyTitle": "Past checklists",
+  "collab.confirmDel": "Delete this checklist record?",
+
+  "footer.html": "Built on the “anxiety × avoidance” two-dimension model widely used in attachment research; questions are the freely available ECR-RS scale (Fraley, Heffernan, Vicary &amp; Brumbaugh, 2011). The attachment-topography exercise is discussed in detail in Dr. Amir Levine's book <em>Secure</em> (2026).<br>For education, self-reflection and book-club discussion only — not a clinical diagnosis. If something here troubles you, please seek professional support.",
+
+  /* ECR-RS (Fraley et al., 2011) — freely available for research/education use */
+  "questions": [
+    "It helps to turn to this person in times of need.",
+    "I usually discuss my problems and concerns with this person.",
+    "I talk things over with this person.",
+    "I find it easy to depend on this person.",
+    "I don't feel comfortable opening up to this person.",
+    "I prefer not to show this person how I feel deep down.",
+    "I often worry that this person doesn't really care for me.",
+    "I'm afraid this person may abandon me.",
+    "I worry that this person won't care about me as much as I care about him or her.",
+  ],
+
+  "collabItems": [
+    "This person keeps my well-being in mind.",
+    "This person is willing both to give and to receive.",
+    "The effort I put into this relationship is sustainable — it doesn't drain me.",
+    "The relationship feels fair and balanced.",
+    "In this relationship I feel heard, seen and valued.",
+    "I make the other person feel heard, seen and valued too.",
+    "This person doesn't freeze me out or blank me in our interactions.",
+    "This person is open to other points of view and looks for common ground.",
+    "This person has my back.",
+    "The small everyday interactions (SIMIs) with this person are mostly positive.",
+    "I feel emotionally steady in this relationship.",
+    "This person doesn't deliberately do things to punish me or “teach me a lesson”.",
+    "This person is CARRP with me (consistent, available, responsive, reliable, predictable).",
+    "I am CARRP with this person.",
+    "Overall, this person is worth continuing to invest in.",
+  ],
+
+  "styles": {
+    secure:  {name:"Secure",
+      desc:"Low anxiety, low avoidance. In this relationship you're comfortable getting close, expressing needs, and you don't worry much about being left. This is the state that lets both people grow.",
+      tip:"Keep being CARRP — consistent, available, responsive, reliable, predictable. Security is contagious: your steadiness makes the people around you more secure too."},
+    anxious: {name:"Anxious",
+      desc:"High anxiety, low avoidance. You crave closeness with this person but often worry they don't care enough or might leave, and your mood tracks their every move.",
+      tip:"Anxious sensitivity is really a perceptual superpower. Watch the protest-behaviour → regret cycle; state your needs directly and calmly, and check whether this person is CARRP — the right people reassure you through action."},
+    avoidant:{name:"Avoidant",
+      desc:"Low anxiety, high avoidance. You value independence and space, rarely open up to this person, and too much closeness feels uncomfortable.",
+      tip:"Needing distance is no crime, but chronic avoidance triggers the other person and feeds a vicious cycle. Try sharing feelings in small steps and offering small, steady positive responses (positive SIMIs)."},
+    fearful: {name:"Fearful-avoidant",
+      desc:"High anxiety and high avoidance. You long for intimacy yet fear getting hurt, so you swing between approaching and withdrawing, and the relationship often feels like a tug-of-war.",
+      tip:"This pattern often traces back to past hurt. Practise trust starting from your safest, most CARRP relationship — and if the distress persists, professional support is a worthwhile investment."},
+  },
+},
+};
+
+/* 取字串 · translate */
+function t(key){
+  const d = I18N[LANG] || I18N.zh;
+  return (key in d) ? d[key] : (I18N.zh[key] !== undefined ? I18N.zh[key] : key);
+}
+/* 帶參數 · with {placeholders} */
+function tp(key, vars){
+  let s = t(key);
+  for(const k in vars) s = s.split("{"+k+"}").join(vars[k]);
+  return s;
+}
+function setLang(lang){
+  LANG = lang;
+  try{ localStorage.setItem(LANG_KEY, lang); }catch(e){}
+  document.documentElement.lang = t("html.lang");
+}
+/* 套用到帶 data-i18n 屬性的靜態元素 */
+function applyI18n(){
+  document.documentElement.lang = t("html.lang");
+  document.title = t("app.title");
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-html]").forEach(el=>{ el.innerHTML = t(el.dataset.i18nHtml); });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ el.placeholder = t(el.dataset.i18nPh); });
+}
+</script>
+<script>
+"use strict";
+/* ═══════════ 計分 · Scoring ═══════════
+   兩維度模型（焦慮 × 迴避），計分公式見《Secure》pp.79–81：
+   迴避 = 第 1–6 題平均（第 1–4 題反向計分）；焦慮 = 第 7–9 題平均。
+   Two-dimension model (anxiety × avoidance), per the ECR-RS structure:
+   avoidance = mean of Q1–6 (Q1–4 reverse-scored); anxiety = mean of Q7–9. */
+
+/* 反向計分題（第 1–4 題）· reverse-scored items */
+const REVERSED = [true, true, true, true, false, false, false, false, false];
+
+function scoreAnswers(a){
+  // a: 9 個 1–7 的作答 · nine 1–7 responses
+  const adj = a.map((v,i)=> REVERSED[i] ? 8-v : v);
+  const avoidance = adj.slice(0,6).reduce((x,y)=>x+y,0)/6;
+  const anxiety   = adj.slice(6,9).reduce((x,y)=>x+y,0)/3;
+  return {anxiety:+anxiety.toFixed(2), avoidance:+avoidance.toFixed(2)};
+}
+
+/* 象限判定（4 分為界）· quadrant, split at 4 */
+function styleOf(anx, avd){
+  if(anx<4 && avd<4)  return "secure";
+  if(anx>=4 && avd<4) return "anxious";
+  if(anx<4 && avd>=4) return "avoidant";
+  return "fearful";
+}
+</script>
+<script>
+"use strict";
+/* ═══════════ 資料儲存 · Storage ═══════════
+   localStorage 讀寫、資料正規化、匯入合併。
+   localStorage persistence, normalisation, import merging. */
+
+const LS_KEY = "attachment-topography-v1";
+const SLOT_VARS = ["--s1","--s2","--s3","--s4","--s5","--s6","--s7","--s8"];
+
+/* 舊版資料以中文儲存關係類別，轉換成 key · migrate legacy Chinese type labels */
+const LEGACY_TYPES = {
+  "一般依附風格":"general","伴侶":"partner","母親":"mother","父親":"father",
+  "家人":"family","朋友":"friend","同事":"colleague","其他":"other",
+};
+
+let db = loadDb();
+
+function loadDb(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){
+      const d = JSON.parse(raw);
+      if(d && Array.isArray(d.people)) return normalizeDb(d);
+    }
+  }catch(e){}
+  return {version:1, people:[], collab:[]};
+}
+function saveDb(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(db)); }catch(e){} }
+
+function normalizeDb(d){
+  d.version = 1;
+  d.people = (d.people||[]).map((p,i)=>({
+    id: p.id || uid(),
+    name: String(p.name||"?").slice(0,20),
+    type: REL_KEYS.includes(p.type) ? p.type : (LEGACY_TYPES[p.type] || "other"),
+    slot: Number.isInteger(p.slot) ? p.slot : i % SLOT_VARS.length,
+    results: (p.results||[]).filter(r=>typeof r.anxiety==="number" && typeof r.avoidance==="number")
+      .map(r=>({date:r.date||new Date().toISOString(), answers:r.answers||[],
+        anxiety:r.anxiety, avoidance:r.avoidance, style:r.style||styleOf(r.anxiety,r.avoidance)})),
+  }));
+  d.collab = (d.collab||[]).filter(c=>typeof c.total==="number");
+  return d;
+}
+
+/* 匯入：合併（以 id 或名稱對應，補回未見過的紀錄）· import-merge */
+function mergeDb(incoming){
+  incoming.people.forEach(np=>{
+    const mine = db.people.find(p=>p.id===np.id || p.name===np.name);
+    if(!mine){
+      np.slot = db.people.length % SLOT_VARS.length;
+      db.people.push(np);
+    }else{
+      (np.results||[]).forEach(r=>{
+        if(!mine.results.some(m=>m.date===r.date)) mine.results.push(r);
+      });
+      mine.results.sort((a,b)=>a.date.localeCompare(b.date));
+    }
+  });
+  (incoming.collab||[]).forEach(c=>{
+    if(!db.collab.some(m=>m.id===c.id)) db.collab.push(c);
+  });
+  db = normalizeDb(db);
+  saveDb();
+}
+function replaceDb(incoming){ db = normalizeDb(incoming); saveDb(); }
+function wipeDb(){ db = {version:1, people:[], collab:[]}; saveDb(); }
+function dbStats(d){
+  d = d || db;
+  return {p:d.people.length, r:d.people.reduce((a,p)=>a+(p.results?p.results.length:0),0), c:(d.collab||[]).length};
+}
+
+/* ── 通用小工具 · small helpers ── */
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function fmtDate(iso){ const d=new Date(iso); return d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate(); }
+function stamp(){ const d=new Date(); return d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function downloadBlob(blob, filename){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+}
+</script>
+<script>
+"use strict";
+/* ═══════════ 地形圖 · Topography chart (SVG) ═══════════
+   四象限散點圖：橫軸焦慮、縱軸迴避，各 1–7 分，4 分為界。
+   Quadrant scatter: x = anxiety, y = avoidance, 1–7, split at 4. */
+
+const CHART_W = 560, CHART_H = 520;
+
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function slotColor(slot){ return cssVar(SLOT_VARS[slot % SLOT_VARS.length]) || "#2a78d6"; }
+
+function buildChart(opt){
+  opt = opt||{};
+  const W=CHART_W, H=CHART_H, m={t:26, r:20, b:64, l:46};
+  const iw=W-m.l-m.r, ih=H-m.t-m.b;
+  const x=v=>m.l+(v-1)/6*iw, y=v=>m.t+ih-(v-1)/6*ih;
+  const ink3=cssVar("--ink-3"), grid=cssVar("--grid"), axis=cssVar("--axis"),
+        ink2=cssVar("--ink-2"), surface=cssVar("--surface-1");
+  const NS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(NS,"svg");
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  svg.setAttribute("width",W); svg.setAttribute("height",H);
+  svg.setAttribute("font-family","system-ui, -apple-system, 'PingFang HK', 'Microsoft JhengHei', sans-serif");
+  svg.setAttribute("role","img");
+  svg.setAttribute("aria-label", t("chart.aria"));
+  function el(tag, attrs, text){
+    const e=document.createElementNS(NS,tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    if(text!=null) e.textContent=text;
+    svg.appendChild(e); return e;
+  }
+  // 格線 · gridlines
+  for(let v=1; v<=7; v++){
+    el("line",{x1:x(v),y1:m.t,x2:x(v),y2:m.t+ih,stroke:grid,"stroke-width":1});
+    el("line",{x1:m.l,y1:y(v),x2:m.l+iw,y2:y(v),stroke:grid,"stroke-width":1});
+    el("text",{x:x(v),y:m.t+ih+18,"text-anchor":"middle","font-size":11,fill:ink3}, v);
+    el("text",{x:m.l-10,y:y(v)+4,"text-anchor":"end","font-size":11,fill:ink3}, v);
+  }
+  // 象限分界（4 分虛線）· quadrant split
+  el("line",{x1:x(4),y1:m.t,x2:x(4),y2:m.t+ih,stroke:ink2,"stroke-width":1.5,"stroke-dasharray":"4 4"});
+  el("line",{x1:m.l,y1:y(4),x2:m.l+iw,y2:y(4),stroke:ink2,"stroke-width":1.5,"stroke-dasharray":"4 4"});
+  // 座標軸 · axes
+  el("line",{x1:m.l,y1:m.t+ih,x2:m.l+iw,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
+  el("line",{x1:m.l,y1:m.t,x2:m.l,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
+  // 象限浮水印 · quadrant watermarks
+  const wm={"font-size":15,fill:ink3,opacity:.55,"text-anchor":"middle","font-weight":600};
+  el("text",Object.assign({x:x(2.5),y:y(2.4)},wm), t("chart.secure"));
+  el("text",Object.assign({x:x(5.5),y:y(2.4)},wm), t("chart.anxious"));
+  el("text",Object.assign({x:x(2.5),y:y(5.8)},wm), t("chart.avoidant"));
+  el("text",Object.assign({x:x(5.5),y:y(5.8)},wm), t("chart.fearful"));
+  // 軸標題 · axis titles
+  el("text",{x:m.l+iw/2,y:H-26,"text-anchor":"middle","font-size":12,fill:ink2}, t("chart.xAxis"));
+  const yl=el("text",{x:14,y:m.t+ih/2,"text-anchor":"middle","font-size":12,fill:ink2}, t("chart.yAxis"));
+  yl.setAttribute("transform","rotate(-90 14 "+(m.t+ih/2)+")");
+  el("text",{x:m.l+4,y:H-26,"font-size":11,fill:ink3}, t("chart.mostSecure"));
+
+  // 資料點 · data points
+  db.people.forEach(p=>{
+    if(opt.hidden && opt.hidden.has(p.id)) return;
+    if(!p.results.length) return;
+    const c=slotColor(p.slot);
+    const pts=p.results.map(r=>({cx:x(r.anxiety), cy:y(r.avoidance), r}));
+    // 軌跡 · trajectory
+    if(pts.length>1){
+      const dstr="M"+pts.map(q=>q.cx.toFixed(1)+" "+q.cy.toFixed(1)).join(" L");
+      el("path",{d:dstr,fill:"none",stroke:c,"stroke-width":2,opacity:.45});
+    }
+    pts.forEach((q,i)=>{
+      const latest=i===pts.length-1;
+      const dot=el("circle",{cx:q.cx,cy:q.cy,r:latest?7:4.5,fill:c,opacity:latest?1:.45,
+        stroke:surface,"stroke-width":2,cursor:"pointer"});
+      if(opt.onPoint) dot.addEventListener("click",()=>opt.onPoint(p,q.r));
+      const tt=document.createElementNS(NS,"title");
+      tt.textContent=p.name+" · "+fmtDate(q.r.date)+" · "+t("chart.tipAnx")+" "+q.r.anxiety.toFixed(2)+" / "+t("chart.tipAvd")+" "+q.r.avoidance.toFixed(2);
+      dot.appendChild(tt);
+      if(latest){
+        const lx=Math.min(q.cx+10, m.l+iw-4);
+        el("text",{x:lx,y:q.cy-10,"font-size":12,fill:cssVar("--ink-1"),"font-weight":600,
+          "text-anchor": q.cx>m.l+iw-70?"end":"start",
+          stroke:surface,"stroke-width":3,"paint-order":"stroke"}, p.name);
+      }
+    });
+    // 高亮最新一筆 · highlight ring
+    if(opt.highlight===p.id && pts.length){
+      const q=pts[pts.length-1];
+      el("circle",{cx:q.cx,cy:q.cy,r:12,fill:"none",stroke:c,"stroke-width":1.5,"stroke-dasharray":"2 3"});
+    }
+  });
+  const fig=document.createElement("figure");
+  fig.className="viz";
+  fig.appendChild(svg);
+  return fig;
+}
+
+/* 將 SVG 轉成 PNG 下載 · rasterise the map to a PNG download */
+function exportChartPng(svg, onFail){
+  const xml = new XMLSerializer().serializeToString(svg);
+  const url = URL.createObjectURL(new Blob([xml], {type:"image/svg+xml;charset=utf-8"}));
+  const img = new Image();
+  img.onload = ()=>{
+    const scale=2, headH=44, W=CHART_W, H=CHART_H;
+    const c=document.createElement("canvas");
+    c.width=W*scale; c.height=(H+headH)*scale;
+    const ctx=c.getContext("2d");
+    ctx.scale(scale,scale);
+    ctx.fillStyle=cssVar("--surface-1")||"#fcfcfb";
+    ctx.fillRect(0,0,W,H+headH);
+    ctx.fillStyle=cssVar("--ink-1")||"#0b0b0b";
+    ctx.font="600 16px system-ui, -apple-system, 'PingFang HK', sans-serif";
+    ctx.fillText(t("chart.imgTitle"), 20, 27);
+    ctx.fillStyle=cssVar("--ink-3")||"#898781";
+    ctx.font="11px system-ui, -apple-system, 'PingFang HK', sans-serif";
+    ctx.fillText(fmtDate(new Date().toISOString())+" · "+t("chart.imgCredit"), 150, 27);
+    ctx.drawImage(img, 0, headH, W, H);
+    URL.revokeObjectURL(url);
+    c.toBlob(b=>downloadBlob(b, "attachment-map-"+stamp()+".png"), "image/png");
+  };
+  img.onerror = ()=>{ URL.revokeObjectURL(url); onFail && onFail(); };
+  img.src = url;
+}
+</script>
+<script>
+"use strict";
+/* ═══════════ 主程式 · App (views, quiz flow, records, backup) ═══════════ */
+
+/* ── 檢視切換 · view switching ── */
+const VIEWS = ["landing","home","quiz","result","map","records","collab"];
+let currentView = "landing";
+function show(view){
+  currentView = view;
+  VIEWS.forEach(v=>document.getElementById("view-"+v).classList.toggle("hide", v!==view));
+  document.querySelectorAll("nav.tabs button").forEach(b=>{
+    const owns = b.dataset.view===view || (b.dataset.view==="home" && (view==="quiz"||view==="result"));
+    b.setAttribute("aria-selected", owns?"true":"false");
+  });
+  if(view==="landing") renderLanding();
+  if(view==="map") renderMap();
+  if(view==="records"){ renderRecords(); renderDataStats(); }
+  if(view==="home") renderHome();
+  if(view==="collab") renderCollabHistory();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+document.getElementById("homeLink").addEventListener("click",e=>{ e.preventDefault(); show("landing"); });
+document.getElementById("landingStart").addEventListener("click",()=>show("home"));
+document.getElementById("landingMap").addEventListener("click",()=>show("map"));
+function renderLanding(){
+  const has = db.people.some(p=>p.results.length);
+  document.getElementById("landingMap").classList.toggle("hide", !has);
+}
+
+/* ── 語言切換 · language toggle ── */
+document.getElementById("langBtn").addEventListener("click",()=>{
+  setLang(LANG==="zh" ? "en" : "zh");
+  refreshLang();
+});
+function refreshLang(){
+  applyI18n();
+  renderHome();
+  renderCollabItems();
+  renderDataStats();
+  if(currentView==="quiz" && quiz) renderQuestion();
+  else if(currentView==="result" && lastResult) renderResult(lastResult);
+  else show(currentView);
+}
+
+/* ── 主題切換 · theme toggle ── */
+document.getElementById("themeBtn").addEventListener("click",()=>{
+  const r=document.documentElement;
+  const dark = r.dataset.theme==="dark" || (!r.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+  r.dataset.theme = dark ? "light" : "dark";
+  if(currentView==="map") renderMap();
+  if(currentView==="result" && lastResult) renderResult(lastResult);
+});
+
+/* ── 測驗首頁 · quiz home ── */
+let selType = "general", selExisting = null;
+function renderHome(){
+  const tr = document.getElementById("relTypes");
+  tr.innerHTML = "";
+  REL_KEYS.forEach(k=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="chip"; b.textContent=t("rel."+k);
+    b.setAttribute("aria-pressed", k===selType && !selExisting ? "true":"false");
+    b.addEventListener("click",()=>{ selType=k; selExisting=null;
+      if(k==="general") document.getElementById("personName").value=t("rel.general.short");
+      renderHome(); });
+    tr.appendChild(b);
+  });
+  const ex = document.getElementById("existingPeople");
+  const row = document.getElementById("existingRow");
+  ex.innerHTML="";
+  if(db.people.length){
+    row.classList.remove("hide");
+    db.people.forEach(p=>{
+      const b=document.createElement("button");
+      b.type="button"; b.className="chip";
+      b.textContent = p.name+" · "+p.results.length+(LANG==="zh"?" 次":"×");
+      b.setAttribute("aria-pressed", selExisting===p.id?"true":"false");
+      b.addEventListener("click",()=>{ selExisting = selExisting===p.id?null:p.id; renderHome(); });
+      ex.appendChild(b);
+    });
+  } else row.classList.add("hide");
+}
+
+/* ── 作答流程 · quiz flow ── */
+let quiz = null, lastResult = null;
+document.getElementById("startBtn").addEventListener("click",()=>{
+  let person;
+  if(selExisting){
+    person = db.people.find(p=>p.id===selExisting);
+  }else{
+    const name = document.getElementById("personName").value.trim() ||
+                 (selType==="general" ? t("rel.general.short") : t("rel."+selType));
+    person = db.people.find(p=>p.name===name);
+    if(!person){
+      person = {id:uid(), name, type:selType, slot: db.people.length % SLOT_VARS.length, results:[]};
+    }
+  }
+  quiz = {person, i:0, answers:Array(9).fill(0), isNew: !db.people.some(p=>p.id===person.id)};
+  renderQuestion();
+  show("quiz");
+});
+document.getElementById("quitBtn").addEventListener("click",()=>{ quiz=null; show("home"); });
+document.getElementById("prevBtn").addEventListener("click",()=>{ if(quiz && quiz.i>0){ quiz.i--; renderQuestion(); } });
+
+function renderQuestion(){
+  document.getElementById("quizWho").textContent = tp("quiz.who",{name:quiz.person.name, type:t("rel."+quiz.person.type)});
+  document.getElementById("qnum").textContent = tp("quiz.qnum",{n:quiz.i+1});
+  document.getElementById("qtext").textContent = t("questions")[quiz.i];
+  document.getElementById("pbar").style.width = (quiz.i/9*100)+"%";
+  document.getElementById("prevBtn").disabled = quiz.i===0;
+  const sc = document.getElementById("scale7");
+  sc.innerHTML="";
+  for(let v=1; v<=7; v++){
+    const b=document.createElement("button");
+    b.type="button"; b.textContent=v;
+    b.setAttribute("aria-pressed", quiz.answers[quiz.i]===v?"true":"false");
+    b.addEventListener("click",()=>{
+      quiz.answers[quiz.i]=v;
+      if(quiz.i<8){ quiz.i++; renderQuestion(); }
+      else finishQuiz();
+    });
+    sc.appendChild(b);
+  }
+}
+
+function finishQuiz(){
+  const s = scoreAnswers(quiz.answers);
+  const st = styleOf(s.anxiety, s.avoidance);
+  const rec = {date:new Date().toISOString(), answers:quiz.answers.slice(), anxiety:s.anxiety, avoidance:s.avoidance, style:st};
+  if(quiz.isNew) db.people.push(quiz.person);
+  quiz.person.results.push(rec);
+  saveDb();
+  lastResult = {person:quiz.person, rec};
+  quiz=null;
+  renderResult(lastResult);
+  show("result");
+}
+
+function styleColor(styleKey){
+  return {secure:"var(--s2)", anxious:"var(--s4)", avoidant:"var(--s1)", fearful:"var(--s6)"}[styleKey];
+}
+
+function renderResult({person, rec}){
+  const st = t("styles")[rec.style];
+  document.getElementById("resultCard").innerHTML =
+    '<p class="tiny">'+esc(person.name)+"（"+t("rel."+person.type)+"）· "+fmtDate(rec.date)+"</p>"+
+    "<h2>"+t("result.styleIs")+'<span class="badge" style="background:'+styleColor(rec.style)+'">'+st.name+"</span></h2>"+
+    '<div class="tiles">'+
+      '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">'+t("result.anxLabel")+"</div></div>"+
+      '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">'+t("result.avdLabel")+"</div></div>"+
+    "</div>"+
+    "<p>"+st.desc+"</p><h3>"+t("result.tipTitle")+"</h3><p class='muted'>"+st.tip+"</p>"+
+    (person.results.length>1 ? '<p class="tiny">'+tp("result.nth",{name:esc(person.name), n:person.results.length})+"</p>" : "");
+  const box=document.getElementById("resultChart");
+  box.innerHTML="";
+  box.appendChild(buildChart({highlight:person.id}));
+}
+document.getElementById("toMapBtn").addEventListener("click",()=>show("map"));
+document.getElementById("againBtn").addEventListener("click",()=>{ selExisting=null; show("home"); });
+
+/* ── 地形圖 · map view ── */
+const hiddenPeople = new Set();
+function renderMap(){
+  const lg=document.getElementById("legend");
+  lg.innerHTML="";
+  db.people.filter(p=>p.results.length).forEach(p=>{
+    const b=document.createElement("button");
+    b.type="button";
+    b.setAttribute("aria-pressed", hiddenPeople.has(p.id)?"false":"true");
+    const d=document.createElement("span");
+    d.className="dot"; d.style.background=slotColor(p.slot);
+    b.appendChild(d);
+    b.appendChild(document.createTextNode(p.name));
+    b.addEventListener("click",()=>{
+      hiddenPeople.has(p.id)?hiddenPeople.delete(p.id):hiddenPeople.add(p.id);
+      renderMap();
+    });
+    lg.appendChild(b);
+  });
+  const box=document.getElementById("mapChart");
+  box.innerHTML="";
+  if(db.people.some(p=>p.results.length)){
+    box.appendChild(buildChart({hidden:hiddenPeople, onPoint:showPointInfo}));
+  }else{
+    box.innerHTML='<p class="muted">'+t("map.empty")+"</p>";
+  }
+  document.getElementById("pointInfo").classList.add("hide");
+}
+function showPointInfo(p, r){
+  const el=document.getElementById("pointInfo");
+  const st=t("styles")[r.style];
+  el.classList.remove("hide");
+  el.innerHTML="<strong>"+esc(p.name)+"</strong>（"+t("rel."+p.type)+"）· "+fmtDate(r.date)+
+    " — <span style='color:"+styleColor(r.style)+";font-weight:700'>"+st.name+"</span>："+
+    t("th.anx")+" "+r.anxiety.toFixed(2)+"、"+t("th.avd")+" "+r.avoidance.toFixed(2);
+}
+document.getElementById("mapImgBtn").addEventListener("click",()=>{
+  const svg = document.querySelector("#mapChart svg");
+  if(!svg){ alert(t("map.noData")); return; }
+  exportChartPng(svg, ()=>alert(t("map.imgFail")));
+});
+
+/* ── 紀錄 · records ── */
+function renderRecords(){
+  const box=document.getElementById("recordsBody");
+  if(!db.people.length){ box.innerHTML='<p class="muted">'+t("records.empty")+"</p>"; return; }
+  let h="";
+  db.people.forEach(p=>{
+    h+='<h3><span class="dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+slotColor(p.slot)+'"></span> '+
+       esc(p.name)+' <span class="tiny">（'+t("rel."+p.type)+'）</span> '+
+       '<button class="del" data-delp="'+p.id+'">'+t("records.deletePerson")+"</button></h3>";
+    if(p.results.length){
+      h+="<table><thead><tr><th>"+t("th.date")+"</th><th>"+t("th.anx")+"</th><th>"+t("th.avd")+"</th><th>"+t("th.style")+"</th><th></th></tr></thead><tbody>";
+      p.results.forEach((r,i)=>{
+        h+="<tr><td>"+fmtDate(r.date)+"</td><td>"+r.anxiety.toFixed(2)+"</td><td>"+r.avoidance.toFixed(2)+
+           "</td><td>"+t("styles")[r.style].name+'</td><td><button class="del" data-delp="'+p.id+'" data-delr="'+i+'">'+t("records.delete")+"</button></td></tr>";
+      });
+      h+="</tbody></table>";
+    } else h+='<p class="tiny">'+t("records.none")+"</p>";
+  });
+  box.innerHTML=h;
+  box.querySelectorAll("button.del").forEach(b=>b.addEventListener("click",()=>{
+    const pid=b.dataset.delp, ri=b.dataset.delr;
+    const p=db.people.find(q=>q.id===pid);
+    if(!p) return;
+    if(ri!=null){
+      if(confirm(tp("records.confirmDelRec",{name:p.name, date:fmtDate(p.results[ri].date)}))){
+        p.results.splice(+ri,1); saveDb(); renderRecords();
+      }
+    }else{
+      if(confirm(tp("records.confirmDelPerson",{name:p.name, n:p.results.length}))){
+        db.people=db.people.filter(q=>q.id!==pid); saveDb(); renderRecords();
+      }
+    }
+  }));
+}
+
+/* ── 關係檢核表 · relationship checklist ── */
+let collabAns = Array(15).fill(0);
+function renderCollabItems(){
+  const box=document.getElementById("collabItems");
+  box.innerHTML="";
+  t("collabItems").forEach((txt,i)=>{
+    const d=document.createElement("div");
+    d.className="clitem";
+    d.innerHTML="<p>"+(i+1)+". "+txt+"</p>";
+    const row=document.createElement("div");
+    row.className="likert5";
+    for(let v=1; v<=5; v++){
+      const b=document.createElement("button");
+      b.type="button"; b.textContent=v;
+      b.setAttribute("aria-pressed", collabAns[i]===v?"true":"false");
+      b.addEventListener("click",()=>{
+        collabAns[i]=v;
+        row.querySelectorAll("button").forEach((bb,idx)=>bb.setAttribute("aria-pressed", idx+1===v?"true":"false"));
+      });
+      row.appendChild(b);
+    }
+    d.appendChild(row);
+    const a=document.createElement("div");
+    a.className="anchors";
+    a.innerHTML="<span>"+t("collab.anchorLow")+"</span><span>"+t("collab.anchorHigh")+"</span>";
+    d.appendChild(a);
+    box.appendChild(d);
+  });
+}
+document.getElementById("collabScoreBtn").addEventListener("click",()=>{
+  if(collabAns.some(v=>!v)){ alert(t("collab.unanswered")); return; }
+  const total=collabAns.reduce((a,b)=>a+b,0);
+  const name=document.getElementById("collabName").value.trim()||t("collab.unnamed");
+  let band, bandColor;
+  if(total>=60){ band=t("collab.bandHigh"); bandColor="var(--good)"; }
+  else if(total>=45){ band=t("collab.bandMid"); bandColor="var(--warn)"; }
+  else { band=t("collab.bandLow"); bandColor="var(--serious)"; }
+  db.collab.push({id:uid(), name, date:new Date().toISOString(), answers:collabAns.slice(), total});
+  saveDb();
+  document.getElementById("collabResult").innerHTML=
+    '<div class="tile" style="margin-top:14px"><div class="v">'+total+' <span class="tiny">/ 75</span></div>'+
+    '<div class="l">'+tp("collab.resultLabel",{name:esc(name)})+"</div></div>"+
+    '<p style="border-left:4px solid '+bandColor+';padding-left:10px" class="muted">'+band+"</p>"+
+    '<p class="tiny">'+t("collab.bandNote")+"</p>";
+  collabAns=Array(15).fill(0);
+  renderCollabItems();
+  renderCollabHistory();
+});
+function renderCollabHistory(){
+  const box=document.getElementById("collabHistory");
+  if(!db.collab.length){ box.innerHTML=""; return; }
+  let h="<h3>"+t("collab.historyTitle")+"</h3><table><thead><tr><th>"+t("th.date")+"</th><th>"+t("th.person")+"</th><th>"+t("th.total")+"</th><th></th></tr></thead><tbody>";
+  db.collab.forEach((c,i)=>{
+    h+="<tr><td>"+fmtDate(c.date)+"</td><td>"+esc(c.name)+"</td><td>"+c.total+' / 75</td>'+
+       '<td><button class="del" data-i="'+i+'">'+t("records.delete")+"</button></td></tr>";
+  });
+  h+="</tbody></table>";
+  box.innerHTML=h;
+  box.querySelectorAll("button.del").forEach(b=>b.addEventListener("click",()=>{
+    if(confirm(t("collab.confirmDel"))){ db.collab.splice(+b.dataset.i,1); saveDb(); renderCollabHistory(); }
+  }));
+}
+
+/* ── 匯出／匯入 · export / import ── */
+document.getElementById("exportBtn").addEventListener("click",()=>{
+  downloadBlob(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),
+    "attachment-data-"+stamp()+".json");
+});
+let pendingImport=null;
+document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change",e=>{
+  const f=e.target.files[0];
+  if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const d=JSON.parse(rd.result);
+      if(!d || !Array.isArray(d.people)) throw new Error("bad");
+      d.collab=Array.isArray(d.collab)?d.collab:[];
+      pendingImport=normalizeDb(d);
+      const s=dbStats(pendingImport);
+      document.getElementById("importSummary").textContent=tp("import.summary",s);
+      document.getElementById("importDlg").showModal();
+    }catch(err){ alert(t("import.bad")); }
+    e.target.value="";
+  };
+  rd.readAsText(f);
+});
+document.getElementById("importCancel").addEventListener("click",()=>{ pendingImport=null; document.getElementById("importDlg").close(); });
+document.getElementById("importReplace").addEventListener("click",()=>{
+  if(pendingImport) replaceDb(pendingImport);
+  finishImport();
+});
+document.getElementById("importMerge").addEventListener("click",()=>{
+  if(pendingImport) mergeDb(pendingImport);
+  finishImport();
+});
+function finishImport(){
+  pendingImport=null;
+  document.getElementById("importDlg").close();
+  hiddenPeople.clear();
+  renderDataStats(); renderHome();
+  alert(t("import.done"));
+}
+function renderDataStats(){
+  document.getElementById("dataStats").textContent=tp("records.stats", dbStats());
+}
+document.getElementById("wipeBtn").addEventListener("click",()=>{
+  if(confirm(t("records.wipeConfirm1")) && confirm(t("records.wipeConfirm2"))){
+    wipeDb(); hiddenPeople.clear();
+    renderDataStats(); renderHome(); alert(t("records.wiped"));
+  }
+});
+
+/* ── 啟動 · boot ── */
+applyI18n();
+renderLanding();
+renderHome();
+renderCollabItems();
+renderDataStats();
+</script>
+</body>
+</html>
