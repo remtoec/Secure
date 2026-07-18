@@ -200,9 +200,10 @@ a{color:var(--accent)}
     <p class="tiny" id="quizWho"></p>
     <div class="progress"><div id="pbar" style="width:0%"></div></div>
     <p class="tiny" id="qnum"></p>
+    <p class="tiny" data-i18n="quiz.specificReminder"></p>
     <p class="qtext" id="qtext"></p>
     <div class="scale" id="scale7"></div>
-    <div class="anchors"><span data-i18n="quiz.anchorLow"></span><span data-i18n="quiz.anchorHigh"></span></div>
+    <div class="anchors"><span data-i18n="quiz.anchorLow"></span><span data-i18n="quiz.anchorMid"></span><span data-i18n="quiz.anchorHigh"></span></div>
     <div class="quiznav">
       <button class="ghost" id="prevBtn" type="button" data-i18n="quiz.prev"></button>
       <button class="ghost" id="quitBtn" type="button" data-i18n="quiz.quit"></button>
@@ -311,39 +312,44 @@ zh: {
 
   "landing.eyebrow": "書識圈 ×《Secure》讀書會工具",
   "landing.title": "每段關係，都有自己的座標",
-  "landing.body": "依附研究數十年來的一個重要發現：依附風格並非一個固定的「人格標籤」——你面對媽媽時可以是安全型，面對伴侶時卻可能偏向焦慮型。Amir Levine 在《Secure》一書中對此有深入淺出的討論。這個小工具採用研究中廣泛使用的兩個維度，透過 9 條簡單題目，為你和每一位重要的人計算<strong>焦慮</strong>與<strong>迴避</strong>兩個分數，繪成一張屬於你的「依附地形圖」；隔一段時間重測，更可以看到每段關係隨時間移動的軌跡。",
+  "landing.body": "依附不是一個貼在身上的人格標籤，而是一套在關係中尋找安全的反應方式。你和某些人相處時可以很安定，遇到另一個人卻變得緊張、退開，或反覆確認對方還在不在。Amir Levine 在《Secure》中用「依附地形圖」說明這件事：把每段重要關係分開看，記下它在<strong>焦慮</strong>與<strong>迴避</strong>兩個維度上的位置。這個工具用 9 條題目幫你做同一件事；過一段時間再測，就能看到一段關係有沒有變得更安全，或仍在哪些地方拉扯。",
   "landing.start": "開始測驗 →",
   "landing.viewMap": "查看我的地形圖",
   "landing.privacyTitle": "🔒 你的私隱",
-  "landing.privacyBody": "無需登入、無需帳號——所有紀錄<strong>只儲存在此裝置的瀏覽器內</strong>，不會上傳到任何伺服器，連名字也不會離開你部機。想備份、轉用新裝置，或與書友互相比較，隨時可以在「紀錄」頁<strong>匯出／匯入</strong>資料檔。",
-  "landing.howTitle": "可以點樣用？",
-  "landing.howBody": "<strong>逐段關係測</strong>：伴侶、媽媽、爸爸、好友、同事⋯⋯每位對象一種顏色，全部畫在同一張圖上。<br><strong>隔期重測</strong>：關係會變，座標也會移動——地形圖會為你連起每次紀錄的軌跡。<br><strong>關係檢核</strong>：15 條「這段關係值得投入嗎？」檢核表，讀書會討論一流。",
+  "landing.privacyBody": "不用登入，也不用開帳號。所有紀錄<strong>只會留在此裝置的瀏覽器內</strong>，不會上傳到伺服器；你輸入的名稱也不會離開這部裝置。如要備份、換機，或在讀書會中自願分享，可到「紀錄」頁<strong>匯出／匯入</strong>資料檔。",
+  "landing.howTitle": "怎樣使用",
+  "landing.howBody": "<strong>一次只看一段關係</strong>：伴侶、母親、父親、好友、同事⋯⋯每位對象用一種顏色，放在同一張圖上。<br><strong>隔一段時間再測</strong>：如果互動方式改變，座標也會移動；多次紀錄會連成軌跡。<br><strong>再看日常互動</strong>：15 條安全關係檢核，幫你逐項看這段關係是否穩定、可回應、值得繼續投入。",
   "landing.disclaimer": "本工具僅供教育、自我了解及讀書會討論之用，並非臨床診斷。",
 
   "home.title": "開始新測驗",
-  "home.body": "就<strong>某一段特定關係</strong>回答 9 條題目（1–7 分）。你可以為不同的人分別作答，也可以為已有的對象重測，觀察變化。",
+  "home.body": "請先選定<strong>一位具體對象</strong>，再回答 9 條題目（1–7 分）。不要用「我平時的人際關係」作答；同一個你，在不同關係裡可能有不同反應。",
   "home.q1": "1 · 這次評估的是哪一段關係？",
-  "home.q2": "2 · 為這位對象改個名稱或代號",
+  "home.q2": "2 · 為這位對象填一個名稱或代號",
   "home.namePh": "例如：媽媽、阿明、太太⋯⋯",
   "home.nameHint": "名稱只儲存在你自己的裝置上，不會上傳到任何地方。",
-  "home.retestTitle": "或：為已有的對象重測",
+  "home.retestTitle": "或重測已有對象",
   "home.start": "開始作答 →",
   "home.times": "次",
+  "home.recordOne": "次",
+  "home.recordMany": "次",
   "home.stylesTitle": "四種依附風格",
-  "home.stylesBody": "<strong>安全型</strong>：低焦慮、低迴避——親密自在，信任對方也信任自己。<br><strong>焦慮型</strong>：高焦慮、低迴避——渴望親近，卻常擔心對方不夠在乎自己。<br><strong>迴避型</strong>：低焦慮、高迴避——重視獨立，傾向與人保持情感距離。<br><strong>恐懼迴避型</strong>：高焦慮、高迴避——既渴望親密又害怕受傷，時近時遠。",
-  "home.stylesNote": "依附風格並非「與生俱來、一成不變」——它會隨關係、隨時間改變。這正是本工具讓你反覆記錄的原因。",
+  "home.stylesBody": "<strong>安全型</strong>：親近時大致安定，也能給彼此空間。<br><strong>焦慮型</strong>：很在意關係是否穩固，容易留意冷淡、延遲回覆或距離變化。<br><strong>迴避型</strong>：需要自主和空間；關係一靠近，身體和情緒可能先想退開。<br><strong>恐懼迴避型</strong>：一方面想靠近，一方面怕靠近後受傷，因此在拉近與退開之間擺盪。",
+  "home.stylesNote": "這些分類不是判決。它們描述的是某段關係此刻如何影響你的安全感、距離感和注意力。",
 
   "quiz.who": "評估對象：{name}（{type}）",
   "quiz.qnum": "第 {n} 題／共 9 題",
   "quiz.prev": "← 上一題",
   "quiz.quit": "離開測驗",
   "quiz.anchorLow": "1 非常不同意",
+  "quiz.anchorMid": "4 中立／不確定",
   "quiz.anchorHigh": "7 非常同意",
+  "quiz.specificReminder": "請只想這一位對象：你在這段關係裡通常會怎樣反應？",
 
-  "result.styleIs": "這段關係目前屬於：",
+  "result.styleIs": "這段關係目前落在：",
+  "result.snapshotNote": "請把結果當成一張當下的地圖：它描述這段關係如何牽動你，不替你或對方下定論。",
   "result.anxLabel": "焦慮分數（第 7–9 題平均，1–7）",
   "result.avdLabel": "迴避分數（第 1–6 題平均，1–7）",
-  "result.tipTitle": "給你的貼士",
+  "result.tipTitle": "可以留意的地方",
   "result.nth": "這是你對「{name}」的第 {n} 次紀錄——到地形圖看看變化軌跡。",
   "result.chartTitle": "你的依附地形圖",
   "result.chartNote": "虛線（4 分）為象限分界。左下角＝最安全。",
@@ -351,9 +357,9 @@ zh: {
   "result.again": "再測另一段關係",
 
   "map.title": "依附地形圖",
-  "map.body": "每種顏色代表一位對象；同一對象若有多次紀錄，會以線連接（淡色＝較早，實色＝最新），讓你看到關係隨時間的移動。點按圖上的點可查看詳情。",
+  "map.body": "每種顏色代表一位對象。同一對象有多次紀錄時，圖上會用線連起來；淡色是較早紀錄，實色是最新紀錄。你可以看見哪些關係穩定下來，哪些仍在靠近與退開之間移動。點按圖上的點可查看詳情。",
   "map.saveImg": "🖼 將地形圖儲存為圖片",
-  "map.bookTip": "《Secure》提示：你可以隨時回到這張圖，加入新的對象，或檢視你與某人的依附風格是否已隨時間改變。",
+  "map.bookTip": "《Secure》的重點不是把人分類，而是看見：安全感會受不同關係影響，也能透過新的互動慢慢改寫。",
   "map.empty": "還沒有任何紀錄——先到「測驗」為一段關係作答吧。",
   "map.noData": "地形圖還沒有任何資料。",
   "map.imgFail": "圖片產生失敗，請重試。",
@@ -392,18 +398,19 @@ zh: {
   "import.bad": "無法讀取：這不是有效的依附地形圖備份檔。",
   "import.done": "匯入完成！",
 
-  "collab.title": "這段關係值得投入嗎？——安全關係檢核表",
-  "collab.body": "《Secure》書末的 15 條檢核題（1 非常不同意 – 5 非常同意），幫你檢視一段關係是否 <strong>CARRP</strong>——一致（Consistent）、可得（Available）、有回應（Responsive）、可靠（Reliable）、可預測（Predictable）——以及日常微小互動（SIMIs）的品質。",
+  "collab.title": "這段關係值得繼續投入嗎？——安全關係檢核表",
+  "collab.body": "這 15 條檢核題（1 非常不同意 – 5 非常同意）用來看一段關係的日常質地：對方是否穩定出現、能回應、說到做到，互動是否讓你慢慢安定下來。《Secure》把這些特質整理為 <strong>CARRP</strong>：一致（Consistent）、可得（Available）、有回應（Responsive）、可靠（Reliable）、可預測（Predictable）；也提醒我們留意日常微小互動（SIMIs）。",
   "collab.whoTitle": "評估對象",
   "collab.whoPh": "這段關係的對象（例如：阿明）",
   "collab.calc": "計算總分",
+  "collab.clear": "開始新的檢核",
   "collab.unanswered": "還有題目未作答。",
   "collab.unnamed": "未命名",
   "collab.resultLabel": "「{name}」的安全關係總分",
-  "collab.bandHigh": "這段關係展現出高度的安全特質，值得繼續投入。",
-  "collab.bandMid": "這段關係有不錯的基礎，但部分範疇值得留意——看看哪幾題分數偏低。",
-  "collab.bandLow": "這段關係在多個安全指標上偏低。書中建議：先嘗試 CARRP 式介入，若持續沒有改善，可考慮「調低音量、降低優先次序」。",
-  "collab.bandNote": "分界僅供參考，重點是逐題檢視：哪些範疇強？哪些弱？（書中原表只計總分。）",
+  "collab.bandHigh": "這段關係有不少安全基礎：互動大致穩定，也能承載更多投入。",
+  "collab.bandMid": "這段關係有可用的基礎，但安全感並不平均。請回頭看分數偏低的題目：問題多出在回應、穩定，還是消耗？",
+  "collab.bandLow": "多個安全指標偏低，代表這段關係可能正在消耗你。可以先嘗試把需要說清楚，觀察對方能否更一致、更可回應；若長期沒有改變，就要考慮降低這段關係在生活中的優先次序。",
+  "collab.bandNote": "總分只是一個入口。真正值得看的，是哪幾種互動令你安定，哪幾種互動反覆令你失去安全感。（書中原表只計總分。）",
   "collab.anchorLow": "非常不同意", "collab.anchorHigh": "非常同意",
   "collab.historyTitle": "過往檢核紀錄",
   "collab.confirmDel": "刪除這筆檢核紀錄？",
@@ -429,7 +436,7 @@ zh: {
     "這段關係讓我感到公平、平衡。",
     "在這段關係中，我感到被聆聽、被看見、被重視。",
     "我也讓對方感到被聆聽、被看見、被重視。",
-    "這個人在互動中不會刻意冷落我、排擠我，或對我木無表情。",
+    "這個人在互動中不會刻意冷落我、排擠我，或用冷淡沉默回應我。",
     "這個人願意聆聽不同觀點，並尋求共識。",
     "這個人會支持我、撐我。",
     "我與這個人的日常微小互動（SIMIs）大多是正面的。",
@@ -442,17 +449,17 @@ zh: {
 
   "styles": {
     secure:  {name:"安全型",
-      desc:"低焦慮、低迴避。你在這段關係中能自在地親近對方、表達需要，也不太擔心被拋棄。這是最有利雙方成長的依附狀態。",
-      tip:"繼續保持 CARRP——一致、可得、有回應、可靠、可預測。安全感是會傳染的：你的穩定也會令身邊的人更安全。"},
+      desc:"低焦慮、低迴避。這段關係大致讓你放心：你可以靠近，也可以保留自己的步伐；有需要時說得出口，對方不在眼前時也不會一直佔住你的注意力。",
+      tip:"可以留意哪些日常互動讓你安定下來：準時回覆、願意解釋、衝突後仍肯修補。這些細節就是安全感累積的地方。"},
     anxious: {name:"焦慮型",
-      desc:"高焦慮、低迴避。你渴望親近這個人，但常擔心對方不夠在乎你、可能離開你，情緒容易隨對方的一舉一動起伏。",
-      tip:"焦慮型的敏銳其實是「知覺超能力」。留意「抗議行為—後悔」循環；直接、平靜地說出需要，並觀察對方是否 CARRP——值得的人會用行動讓你安心。"},
+      desc:"高焦慮、低迴避。這段關係很容易牽動你：一句遲來的回覆、一點語氣變化，都可能讓你開始推想對方是否不在乎，或準備離開。",
+      tip:"先把身體和注意力拉回來，再把需要說清楚。與其反覆追問自己是不是太多，不如觀察對方能否穩定回應、願意修補、說到做到。"},
     avoidant:{name:"迴避型",
-      desc:"低焦慮、高迴避。你重視獨立和空間，不習慣向這個人打開心扉，親密貼近反而令你不自在。",
-      tip:"需要距離並非罪過，但長期迴避會令對方被觸發、關係惡性循環。嘗試小步分享感受，主動給予微小而穩定的回應（正面的 SIMIs）。"},
+      desc:"低焦慮、高迴避。這段關係一靠近，你可能先想保留距離：少說一點、慢一點回應，或把需要收起來，免得被捲入太多。",
+      tip:"距離可以保護你，但如果對方只能感到你退開，關係會更難安定。可以從很小的回應開始：交代一下、承認一下、約定下一次再談。"},
     fearful: {name:"恐懼迴避型",
-      desc:"高焦慮、高迴避。你既渴望親密又害怕受傷，於是時而靠近、時而抽離，關係中經常感到拉扯。",
-      tip:"這往往與過往受傷的經驗有關。從最安全、最 CARRP 的關係開始練習信任；若困擾持續，尋求心理專業協助是很值得的投資。"},
+      desc:"高焦慮、高迴避。這段關係同時喚起想靠近和想退開的反應：靠近時怕受傷，退開後又怕失去，於是很難找到穩定位置。",
+      tip:"先不用逼自己立刻信任或立刻離開。比較有用的是分辨：哪些互動真的帶來安全，哪些只是短暫安撫焦慮。若拉扯長期影響生活，請尋求心理專業協助。"},
   },
 },
 
@@ -463,7 +470,7 @@ en: {
   "btn.theme": "🌗 Theme",
   "btn.lang": "中",
 
-  "nav.quiz": "Quiz", "nav.map": "Map", "nav.records": "Records", "nav.collab": "Checklist",
+  "nav.quiz": "Quiz", "nav.map": "Map", "nav.records": "Records", "nav.collab": "Relationship Check",
 
   "rel.general": "General attachment style", "rel.partner": "Partner", "rel.mother": "Mother", "rel.father": "Father",
   "rel.family": "Family", "rel.friend": "Friend", "rel.colleague": "Colleague", "rel.other": "Other",
@@ -471,36 +478,41 @@ en: {
 
   "landing.eyebrow": "A Bookfort × Secure book-club tool",
   "landing.title": "Every relationship has its own coordinates",
-  "landing.body": "A key finding from decades of attachment research: attachment style is not a fixed personality label — you can be secure with your mum yet lean anxious with your partner. Dr. Amir Levine discusses this in depth in <em>Secure</em>. This little tool uses the two dimensions widely used in the research — <strong>anxiety</strong> and <strong>avoidance</strong> — to score 9 short questions about one specific relationship and plot it on your personal “attachment topography” map. Retake it over time and watch each relationship move.",
+  "landing.body": "Attachment is not a personality label. It is a safety system that comes alive in specific relationships. With one person you may feel steady; with another, you may scan for signs of distance, pull back, or keep checking whether the bond is still there. In <em>Secure</em>, Amir Levine uses attachment topography to look at these relationships one by one. This tool plots each relationship across two research-backed dimensions — <strong>anxiety</strong> and <strong>avoidance</strong>. Retake it later to see whether a relationship is becoming safer, or where it still pulls you off balance.",
   "landing.start": "Start the quiz →",
   "landing.viewMap": "View my map",
   "landing.privacyTitle": "🔒 Your privacy",
   "landing.privacyBody": "No login, no account — every record is stored <strong>only in this device's browser</strong>. Nothing is uploaded anywhere; even the names never leave your phone. To back up, move to a new device, or compare with friends, use <strong>export / import</strong> on the Records page anytime.",
   "landing.howTitle": "How to use it",
-  "landing.howBody": "<strong>One relationship at a time</strong>: partner, mum, dad, best friend, colleague… each person gets a colour on the same map.<br><strong>Retake over time</strong>: relationships change and coordinates move — the map draws the trajectory between your records.<br><strong>Relationship checklist</strong>: a 15-item “is this relationship worth investing in?” check — great for book-club discussion.",
+  "landing.howBody": "<strong>Look at one relationship at a time</strong>: partner, mum, dad, close friend, colleague… each person gets a colour on the same map.<br><strong>Come back later</strong>: when the pattern changes, the coordinates move; repeated records become a trajectory.<br><strong>Check the daily texture</strong>: the 15-item security checklist helps you examine whether this relationship is steady, responsive, and worth further investment.",
   "landing.disclaimer": "For education, self-reflection and book-club discussion only — not a clinical diagnosis.",
 
   "home.title": "Start a new quiz",
-  "home.body": "Answer 9 questions (scored 1–7) about <strong>one specific relationship</strong>. You can assess different people separately, or retest someone to track change.",
+  "home.body": "Choose <strong>one specific person</strong>, then answer 9 questions on a 1–7 scale. Do not answer for your relationships in general; the same person can react differently in different bonds.",
   "home.q1": "1 · Which relationship are you assessing?",
   "home.q2": "2 · Give this person a name or nickname",
   "home.namePh": "e.g. Mum, Alex, my wife…",
   "home.nameHint": "Names are stored only on your own device and never uploaded.",
   "home.retestTitle": "Or: retest someone you've assessed before",
   "home.start": "Begin →",
-  "home.times": "",
+  "home.times": "records",
+  "home.recordOne": "record",
+  "home.recordMany": "records",
   "home.stylesTitle": "The four attachment styles",
-  "home.stylesBody": "<strong>Secure</strong>: low anxiety, low avoidance — comfortable with closeness, trusting of both of you.<br><strong>Anxious</strong>: high anxiety, low avoidance — craves closeness but often worries the other person doesn't care enough.<br><strong>Avoidant</strong>: low anxiety, high avoidance — values independence and keeps emotional distance.<br><strong>Fearful-avoidant</strong>: high on both — longs for intimacy yet fears getting hurt, swinging near and far.",
-  "home.stylesNote": "Attachment style is not fixed at birth — it shifts across relationships and over time. That's exactly why this tool lets you keep recording.",
+  "home.stylesBody": "<strong>Secure</strong>: closeness feels mostly safe, and there is room for both people to breathe.<br><strong>Anxious</strong>: the relationship feels fragile, so delayed replies, shifts in tone, or distance can take up a lot of attention.<br><strong>Avoidant</strong>: independence matters; when closeness increases, pulling back may feel safer than staying present.<br><strong>Fearful-avoidant</strong>: closeness is wanted and feared at the same time, so the relationship can swing between approach and retreat.",
+  "home.stylesNote": "These are not verdicts on character. They describe how a particular relationship is shaping safety, distance, and attention right now.",
 
   "quiz.who": "Assessing: {name} ({type})",
   "quiz.qnum": "Question {n} of 9",
   "quiz.prev": "← Back",
   "quiz.quit": "Exit quiz",
   "quiz.anchorLow": "1 Strongly disagree",
+  "quiz.anchorMid": "4 Neutral / unsure",
   "quiz.anchorHigh": "7 Strongly agree",
+  "quiz.specificReminder": "Keep this one person in mind: how do you usually respond in this relationship?",
 
-  "result.styleIs": "Right now, this relationship reads as: ",
+  "result.styleIs": "This relationship currently falls in: ",
+  "result.snapshotNote": "Read this as a map of the current bond: it describes how this relationship affects you, not who either of you permanently are.",
   "result.anxLabel": "Anxiety score (mean of Q7–9, 1–7)",
   "result.avdLabel": "Avoidance score (mean of Q1–6, 1–7)",
   "result.tipTitle": "A tip for you",
@@ -511,9 +523,9 @@ en: {
   "result.again": "Assess another relationship",
 
   "map.title": "Attachment topography",
-  "map.body": "Each colour is one person; repeated records are joined by a line (faded = earlier, solid = latest) so you can watch a relationship move over time. Tap a dot for details.",
+  "map.body": "Each colour represents one person. When the same person has several records, the chart connects them with a line: faded points are earlier, solid points are latest. The movement shows which relationships are settling, and which still pull between closeness and distance. Tap a dot for details.",
   "map.saveImg": "🖼 Save map as an image",
-  "map.bookTip": "Tip from Secure: come back to this chart anytime to add new people, or to check whether your attachment style with someone has changed over time.",
+  "map.bookTip": "The point of the map is not to sort people into boxes. It helps you see how different relationships affect safety, and how repeated interactions can slowly rewrite the pattern.",
   "map.empty": "No records yet — head to the Quiz tab and assess a relationship first.",
   "map.noData": "The map has no data yet.",
   "map.imgFail": "Couldn't generate the image — please try again.",
@@ -553,17 +565,18 @@ en: {
   "import.done": "Import complete!",
 
   "collab.title": "Is this relationship worth investing in? — Security checklist",
-  "collab.body": "15 check items (1 strongly disagree – 5 strongly agree) to review whether a relationship is <strong>CARRP</strong> — Consistent, Available, Responsive, Reliable, Predictable — and how the small everyday interactions (SIMIs) feel. Discussed in detail in <em>Secure</em>.",
+  "collab.body": "These 15 items (1 strongly disagree – 5 strongly agree) look at the daily texture of a relationship: whether the person shows up, responds, follows through, and helps your system settle. <em>Secure</em> gathers these qualities under <strong>CARRP</strong>: Consistent, Available, Responsive, Reliable, Predictable, and asks us to pay attention to the seemingly insignificant minor interactions (SIMIs) that happen every day.",
   "collab.whoTitle": "Who are you assessing?",
   "collab.whoPh": "The person in this relationship (e.g. Alex)",
   "collab.calc": "Calculate total",
+  "collab.clear": "Start a new checklist",
   "collab.unanswered": "Some items are still unanswered.",
   "collab.unnamed": "Unnamed",
   "collab.resultLabel": "Security total for “{name}”",
-  "collab.bandHigh": "This relationship shows strongly secure qualities — worth continuing to invest in.",
-  "collab.bandMid": "A decent foundation, but some areas deserve attention — look at which items scored low.",
-  "collab.bandLow": "Several security indicators are low. The book's suggestion: try CARRP-style repairs first; if nothing improves, consider turning down the volume and lowering this relationship's priority.",
-  "collab.bandNote": "The cut-offs are only a rough guide — the real value is reviewing item by item: where is this relationship strong, and where is it weak? (The book's original table only records a total.)",
+  "collab.bandHigh": "This relationship has a strong base of security: the interaction is mostly steady, and it can likely hold further investment.",
+  "collab.bandMid": "There is a usable foundation here, but security is uneven. Look back at the low-scoring items: is the strain about responsiveness, reliability, or emotional cost?",
+  "collab.bandLow": "Several security indicators are low, which may mean this relationship is costing you more than it gives back. You can first state your needs clearly and watch whether the person becomes more consistent and responsive. If the pattern does not change, consider lowering this relationship’s priority in your life.",
+  "collab.bandNote": "The total is only an entry point. What matters is item-by-item: which interactions help you settle, and which repeatedly take away your sense of safety? (The book's original table only records a total.)",
   "collab.anchorLow": "Strongly disagree", "collab.anchorHigh": "Strongly agree",
   "collab.historyTitle": "Past checklists",
   "collab.confirmDel": "Delete this checklist record?",
@@ -603,17 +616,17 @@ en: {
 
   "styles": {
     secure:  {name:"Secure",
-      desc:"Low anxiety, low avoidance. In this relationship you're comfortable getting close, expressing needs, and you don't worry much about being left. This is the state that lets both people grow.",
-      tip:"Keep being CARRP — consistent, available, responsive, reliable, predictable. Security is contagious: your steadiness makes the people around you more secure too."},
+      desc:"Low anxiety, low avoidance. This relationship mostly lets you settle: you can move closer, keep your own pace, ask for what you need, and not have the bond occupy your attention all the time.",
+      tip:"Notice the concrete interactions that create that steadiness: timely replies, explanations when plans change, repair after conflict, and enough predictability to let both people get on with life."},
     anxious: {name:"Anxious",
-      desc:"High anxiety, low avoidance. You crave closeness with this person but often worry they don't care enough or might leave, and your mood tracks their every move.",
-      tip:"Anxious sensitivity is really a perceptual superpower. Watch the protest-behaviour → regret cycle; state your needs directly and calmly, and check whether this person is CARRP — the right people reassure you through action."},
+      desc:"High anxiety, low avoidance. This relationship easily takes hold of your attention: a late reply or small shift in tone can start the question of whether the other person still cares or might leave.",
+      tip:"Settle your body first, then state the need plainly. Instead of asking whether you are asking for too much, watch whether the other person can respond, repair, and follow through with some consistency."},
     avoidant:{name:"Avoidant",
-      desc:"Low anxiety, high avoidance. You value independence and space, rarely open up to this person, and too much closeness feels uncomfortable.",
-      tip:"Needing distance is no crime, but chronic avoidance triggers the other person and feeds a vicious cycle. Try sharing feelings in small steps and offering small, steady positive responses (positive SIMIs)."},
+      desc:"Low anxiety, high avoidance. When this relationship moves closer, distance may feel safer: saying less, replying later, or keeping needs private can become ways to stay in control.",
+      tip:"Distance can protect you, but if the other person only experiences withdrawal, the bond becomes harder to steady. Start with small signals: explain briefly, acknowledge what happened, or agree on when to return to the conversation."},
     fearful: {name:"Fearful-avoidant",
-      desc:"High anxiety and high avoidance. You long for intimacy yet fear getting hurt, so you swing between approaching and withdrawing, and the relationship often feels like a tug-of-war.",
-      tip:"This pattern often traces back to past hurt. Practise trust starting from your safest, most CARRP relationship — and if the distress persists, professional support is a worthwhile investment."},
+      desc:"High anxiety and high avoidance. This relationship activates both wishes at once: to come close and to get away. Closeness can feel risky; distance can feel like loss.",
+      tip:"You do not have to force immediate trust or make a dramatic exit. Start by separating what genuinely creates safety from what only quiets panic for a moment. If the push-pull pattern is affecting daily life, professional support can help."},
   },
 },
 };
@@ -953,7 +966,8 @@ function renderHome(){
     db.people.forEach(p=>{
       const b=document.createElement("button");
       b.type="button"; b.className="chip";
-      b.textContent = p.name+" · "+p.results.length+(LANG==="zh"?" 次":"×");
+      const unit = p.results.length===1 ? t("home.recordOne") : t("home.recordMany");
+      b.textContent = p.name+" · "+p.results.length+" "+unit;
       b.setAttribute("aria-pressed", selExisting===p.id?"true":"false");
       b.addEventListener("click",()=>{ selExisting = selExisting===p.id?null:p.id; renderHome(); });
       ex.appendChild(b);
@@ -986,7 +1000,7 @@ function renderQuestion(){
   document.getElementById("quizWho").textContent = tp("quiz.who",{name:quiz.person.name, type:t("rel."+quiz.person.type)});
   document.getElementById("qnum").textContent = tp("quiz.qnum",{n:quiz.i+1});
   document.getElementById("qtext").textContent = t("questions")[quiz.i];
-  document.getElementById("pbar").style.width = (quiz.i/9*100)+"%";
+  document.getElementById("pbar").style.width = ((quiz.i+1)/9*100)+"%";
   document.getElementById("prevBtn").disabled = quiz.i===0;
   const sc = document.getElementById("scale7");
   sc.innerHTML="";
@@ -1029,6 +1043,7 @@ function renderResult({person, rec}){
       '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">'+t("result.anxLabel")+"</div></div>"+
       '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">'+t("result.avdLabel")+"</div></div>"+
     "</div>"+
+    '<p class="tiny">'+t("result.snapshotNote")+"</p>"+
     "<p>"+st.desc+"</p><h3>"+t("result.tipTitle")+"</h3><p class='muted'>"+st.tip+"</p>"+
     (person.results.length>1 ? '<p class="tiny">'+tp("result.nth",{name:esc(person.name), n:person.results.length})+"</p>" : "");
   const box=document.getElementById("resultChart");
@@ -1158,9 +1173,13 @@ document.getElementById("collabScoreBtn").addEventListener("click",()=>{
     '<div class="tile" style="margin-top:14px"><div class="v">'+total+' <span class="tiny">/ 75</span></div>'+
     '<div class="l">'+tp("collab.resultLabel",{name:esc(name)})+"</div></div>"+
     '<p style="border-left:4px solid '+bandColor+';padding-left:10px" class="muted">'+band+"</p>"+
-    '<p class="tiny">'+t("collab.bandNote")+"</p>";
-  collabAns=Array(15).fill(0);
-  renderCollabItems();
+    '<p class="tiny">'+t("collab.bandNote")+"</p>"+
+    '<p><button class="ghost" id="collabClearBtn" type="button">'+t("collab.clear")+"</button></p>";
+  document.getElementById("collabClearBtn").addEventListener("click",()=>{
+    collabAns=Array(15).fill(0);
+    document.getElementById("collabResult").innerHTML="";
+    renderCollabItems();
+  });
   renderCollabHistory();
 });
 function renderCollabHistory(){
