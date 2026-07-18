@@ -73,7 +73,7 @@ function renderHome(){
     db.people.forEach(p=>{
       const b=document.createElement("button");
       b.type="button"; b.className="chip";
-      b.textContent = p.name+" · "+p.results.length+(LANG==="zh"?" 次":"×");
+      b.textContent = p.name+" · "+p.results.length+" "+t("home.times");
       b.setAttribute("aria-pressed", selExisting===p.id?"true":"false");
       b.addEventListener("click",()=>{ selExisting = selExisting===p.id?null:p.id; renderHome(); });
       ex.appendChild(b);
@@ -106,7 +106,7 @@ function renderQuestion(){
   document.getElementById("quizWho").textContent = tp("quiz.who",{name:quiz.person.name, type:t("rel."+quiz.person.type)});
   document.getElementById("qnum").textContent = tp("quiz.qnum",{n:quiz.i+1});
   document.getElementById("qtext").textContent = t("questions")[quiz.i];
-  document.getElementById("pbar").style.width = (quiz.i/9*100)+"%";
+  document.getElementById("pbar").style.width = ((quiz.i+1)/9*100)+"%";
   document.getElementById("prevBtn").disabled = quiz.i===0;
   const sc = document.getElementById("scale7");
   sc.innerHTML="";
@@ -149,6 +149,7 @@ function renderResult({person, rec}){
       '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">'+t("result.anxLabel")+"</div></div>"+
       '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">'+t("result.avdLabel")+"</div></div>"+
     "</div>"+
+    '<p class="tiny">'+t("result.snapshotNote")+"</p>"+
     "<p>"+st.desc+"</p><h3>"+t("result.tipTitle")+"</h3><p class='muted'>"+st.tip+"</p>"+
     (person.results.length>1 ? '<p class="tiny">'+tp("result.nth",{name:esc(person.name), n:person.results.length})+"</p>" : "");
   const box=document.getElementById("resultChart");
@@ -278,9 +279,13 @@ document.getElementById("collabScoreBtn").addEventListener("click",()=>{
     '<div class="tile" style="margin-top:14px"><div class="v">'+total+' <span class="tiny">/ 75</span></div>'+
     '<div class="l">'+tp("collab.resultLabel",{name:esc(name)})+"</div></div>"+
     '<p style="border-left:4px solid '+bandColor+';padding-left:10px" class="muted">'+band+"</p>"+
-    '<p class="tiny">'+t("collab.bandNote")+"</p>";
-  collabAns=Array(15).fill(0);
-  renderCollabItems();
+    '<p class="tiny">'+t("collab.bandNote")+"</p>"+
+    '<p><button class="ghost" id="collabClearBtn" type="button">'+t("collab.clear")+"</button></p>";
+  document.getElementById("collabClearBtn").addEventListener("click",()=>{
+    collabAns=Array(15).fill(0);
+    document.getElementById("collabResult").innerHTML="";
+    renderCollabItems();
+  });
   renderCollabHistory();
 });
 function renderCollabHistory(){
