@@ -1,28 +1,28 @@
-/* ═══════════ 紅線 · The Red Thread ═══════════
-   Design language: an invisible thread ties you to the people you love.
-   Porcelain paper, plum ink, one crimson accent; Song-serif voice for
+/* ═══════════ 安全基地 · Secure Base ═══════════
+   Design language: a fixed point you can leave and return to.
+   Sand paper, moss ink, one harbour-teal accent; Song-serif voice for
    the words that matter, quiet sans for the machinery. */
 
 :root{
   color-scheme: light;
-  --page:#f7f3f1; --surface-1:#fdfbfa;
-  --ink-1:#2c2226; --ink-2:#5f5257; --ink-3:#95888c;
-  --grid:#eae2e0; --axis:#cfc3c2; --ring:rgba(44,34,38,.10);
-  --accent:#b23a52; --accent-soft:#f0dbe0; --accent-ink:#ffffff;
+  --page:#f4f1ea; --surface-1:#fcfaf5;
+  --ink-1:#262a22; --ink-2:#5c6153; --ink-3:#8f9486;
+  --grid:#e6e2d5; --axis:#c8c4b4; --ring:rgba(38,42,34,.10);
+  --accent:#2f6e60; --accent-soft:#dce9e2; --accent-ink:#ffffff;
   --s1:#2a78d6; --s2:#008300; --s3:#e87ba4; --s4:#eda100;
   --s5:#1baf7a; --s6:#eb6834; --s7:#4a3aa7; --s8:#e34948;
   --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
   --serif:"Songti TC","Noto Serif TC","Songti SC","Source Han Serif TC","PMingLiU",Georgia,"Times New Roman",serif;
   --sans:system-ui,-apple-system,"Segoe UI","PingFang HK","PingFang TC","Microsoft JhengHei",sans-serif;
-  --shadow:0 1px 2px rgba(44,34,38,.05), 0 4px 16px rgba(44,34,38,.04);
+  --shadow:0 1px 2px rgba(38,42,34,.05), 0 4px 16px rgba(38,42,34,.04);
 }
 @media (prefers-color-scheme: dark){
   :root:where(:not([data-theme="light"])){
     color-scheme: dark;
-    --page:#141014; --surface-1:#1e181c;
-    --ink-1:#f4edef; --ink-2:#c5b8bc; --ink-3:#93868a;
-    --grid:#2e262b; --axis:#453a40; --ring:rgba(244,237,239,.10);
-    --accent:#e06e88; --accent-soft:#3a232b; --accent-ink:#1a1216;
+    --page:#111411; --surface-1:#1a1e1a;
+    --ink-1:#edf0e9; --ink-2:#c1c6b9; --ink-3:#8f9486;
+    --grid:#2a2e28; --axis:#41463d; --ring:rgba(237,240,233,.10);
+    --accent:#63b3a1; --accent-soft:#233b34; --accent-ink:#101512;
     --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
     --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
     --shadow:none;
@@ -30,10 +30,10 @@
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
-  --page:#141014; --surface-1:#1e181c;
-  --ink-1:#f4edef; --ink-2:#c5b8bc; --ink-3:#93868a;
-  --grid:#2e262b; --axis:#453a40; --ring:rgba(244,237,239,.10);
-  --accent:#e06e88; --accent-soft:#3a232b; --accent-ink:#1a1216;
+  --page:#111411; --surface-1:#1a1e1a;
+  --ink-1:#edf0e9; --ink-2:#c1c6b9; --ink-3:#8f9486;
+  --grid:#2a2e28; --axis:#41463d; --ring:rgba(237,240,233,.10);
+  --accent:#63b3a1; --accent-soft:#233b34; --accent-ink:#101512;
   --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
   --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
   --shadow:none;
@@ -81,14 +81,12 @@ nav.tabs button[aria-selected="true"]::after{
 .muted{color:var(--ink-2);font-size:.92rem}
 .tiny{color:var(--ink-3);font-size:.8rem}
 
-/* ── 紅線 hero 動畫 · the drawn thread ── */
-.thread{display:block;width:100%;max-width:340px;height:52px;margin:14px 0 6px}
+/* ── 安全基地 hero 動畫 · out from the base, and back ── */
+.thread{display:block;width:100%;max-width:340px;height:56px;margin:14px 0 6px}
 .thread .th-line{stroke:var(--accent);stroke-width:2;stroke-linecap:round;fill:none;
-  stroke-dasharray:400;stroke-dashoffset:400;animation:th-draw 1.8s .35s cubic-bezier(.5,0,.3,1) forwards}
+  stroke-dasharray:660;stroke-dashoffset:660;animation:th-draw 2.2s .35s cubic-bezier(.5,0,.3,1) forwards}
 .thread .th-dot{fill:var(--accent)}
-.thread .th-dot2{opacity:0;animation:th-appear .5s 1.9s ease forwards}
 @keyframes th-draw{to{stroke-dashoffset:0}}
-@keyframes th-appear{to{opacity:1}}
 
 /* ── 按鈕 · buttons ── */
 button{transition:transform .12s ease, background-color .15s ease, color .15s ease, border-color .15s ease}
@@ -189,7 +187,7 @@ td .del{color:var(--crit);background:none;border:none;cursor:pointer;font-size:.
 
 /* ── 其他 · misc ── */
 dialog{border:1px solid var(--ring);border-radius:18px;background:var(--surface-1);color:var(--ink-1);max-width:420px;padding:22px}
-dialog::backdrop{background:rgba(20,12,16,.5)}
+dialog::backdrop{background:rgba(14,18,14,.5)}
 dialog h2{font-family:var(--serif)}
 .hide{display:none !important}
 footer.app{margin-top:30px;color:var(--ink-3);font-size:.78rem;line-height:1.8;
@@ -203,5 +201,4 @@ section{animation:fade-up .4s ease}
 @media (prefers-reduced-motion: reduce){
   *{transition:none !important;animation:none !important}
   .thread .th-line{stroke-dashoffset:0}
-  .thread .th-dot2{opacity:1}
 }

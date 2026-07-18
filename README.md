@@ -98,16 +98,24 @@ unaffected (legacy Chinese labels from v1 data are migrated in `js/store.js`,
 `css/style.css` (`--s1…--s8` are the per-person series colours; defined for
 light, OS-dark and the in-app toggle). The chart reads them at render time.
 
-**Design language (「紅線 · The Red Thread」)** — porcelain paper, plum ink,
-one crimson accent; Song-serif (`--serif`) for titles/questions/style names,
-sans (`--sans`) for UI. Signature elements: the self-drawing thread on the
-landing hero (inline SVG + `th-draw` keyframes), the quiz progress thread
-with a knot (`.progress`), the graduated dot scale (`.dotv` — dot size grows
-with intensity; the tapped answer's verbal label shows in `#scaleLabel`),
-and a faint warm wash on the map's secure quadrant (in `js/chart.js`). All
-motion sits behind `prefers-reduced-motion`. Keep the accent to one hue —
-the series colours in the chart are a separate, CVD-validated palette.
-Copy rule: keep wording plain and factual — no poetic taglines.
+**Design language (「安全基地 · Secure Base」)** — sand paper, moss ink, one
+harbour-teal accent; Song-serif (`--serif`) for titles/questions/style names,
+sans (`--sans`) for UI. The hero line draws a path that leaves a base dot and
+returns to it — Levine's secure-base image (explore, come back). Other
+signature elements: the quiz progress line with a knot (`.progress`), the
+graduated dot scale (`.dotv` — size encodes intensity; the tapped answer's
+verbal label shows in `#scaleLabel`), and a faint teal wash on the map's
+secure quadrant (`js/chart.js`). All motion sits behind
+`prefers-reduced-motion`; series colours in the chart are a separate,
+CVD-validated palette.
+
+**Copy rules** — all UI copy follows `docs/translation-principles.md`
+(supplied by the club): concrete verbs and situations over abstractions, a
+situation → mechanism → consequence progression, no template profundity
+(「不是A而是B」 and kin), every attachment style keeps its dignity and its
+cost. Content is grounded in Levine's *Secure* and his Big Brains interview
+(secure base, dependency paradox, protest behaviour, CARRP, SIMIs, <10%
+childhood correlation). Read the principles file before editing wording.
 
 **Rename the club branding** — search `書識圈` / `Bookfort` in `js/i18n.js`
 (`app.club`, `landing.eyebrow`, `chart.imgCredit`).
