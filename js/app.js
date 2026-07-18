@@ -158,8 +158,10 @@ function finishQuiz(){
   show("result");
 }
 
+/* 風格標籤底色：固定深色，配白字在深淺兩種主題下都夠對比
+   （圖上的每人顏色是另一套，與此無關） */
 function styleColor(styleKey){
-  return {secure:"var(--s2)", anxious:"var(--s4)", avoidant:"var(--s1)", fearful:"var(--s6)"}[styleKey];
+  return {secure:"#2e7d32", anxious:"#9a6400", avoidant:"#1c5cab", fearful:"#b5451d"}[styleKey];
 }
 
 function renderResult({person, rec}){
@@ -215,7 +217,7 @@ function showPointInfo(p, r){
   const st=t("styles")[r.style];
   el.classList.remove("hide");
   el.innerHTML="<strong>"+esc(p.name)+"</strong>（"+t("rel."+p.type)+"）· "+fmtDate(r.date)+
-    " — <span style='color:"+styleColor(r.style)+";font-weight:700'>"+st.name+"</span>："+
+    ' <span class="badge badge-sm" style="background:'+styleColor(r.style)+'">'+st.name+"</span> "+
     t("th.anx")+" "+r.anxiety.toFixed(2)+"、"+t("th.avd")+" "+r.avoidance.toFixed(2);
 }
 document.getElementById("mapImgBtn").addEventListener("click",()=>{

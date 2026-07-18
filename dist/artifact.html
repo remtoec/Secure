@@ -156,6 +156,7 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 .tile .l{font-size:.8rem;color:var(--ink-2)}
 .badge{display:inline-block;padding:6px 16px;border-radius:99px;font-weight:700;font-size:1.02rem;
   color:#fff;font-family:var(--serif);letter-spacing:.06em;animation:badge-in .5s cubic-bezier(.2,.9,.3,1.2)}
+.badge-sm{padding:2px 10px;font-size:.85rem;animation:none}
 @keyframes badge-in{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
 
 /* ── 地形圖 · chart ── */
@@ -392,11 +393,11 @@ zh: {
 
   "landing.eyebrow": "書識圈 ×《Secure》讀書會",
   "landing.title": "每段關係，都有自己的座標",
-  "landing.body": "依附系統的工作很簡單：人腦隨時在確認，親近的人此刻找不找得到、靠不靠得住。答案穩定，人就放得開，去冒險、去專心做自己的事；答案飄忽，注意力就被抽走，用來查看訊息、猜語氣、盤算下一步。Levine 常用小孩做例子：照顧者在房間，小孩自顧自玩玩具；照顧者一走開，玩具立刻失去吸引力。大人的機制相同，只是對象換了人。<br><br>研究用兩條軸描述你在一段關係中的位置：<strong>焦慮</strong>，你多常擔心對方不夠在乎你；<strong>迴避</strong>，你依賴對方時有多自在。你對媽媽、對伴侶、對好友，可以落在三個不同的位置；成人依附與童年的關聯亦不足一成，位置會隨經驗移動。所以這個工具逐段關係測量，並讓你隔一段時間重測，把移動畫在同一張圖上。",
+  "landing.body": "依附系統的工作很簡單：人腦隨時在確認，親近的人此刻找不找得到、靠不靠得住。答案穩定，人就放得開，去冒險、去專心做自己的事；答案飄忽，注意力就被抽走，用來查看訊息、猜語氣、盤算下一步。Levine 常用小孩做例子：照顧者在房間，小孩自顧自玩玩具；照顧者一走開，玩具立刻失去吸引力。大人的機制相同，只是對象換了人。<br><br>研究用兩條軸描述你在一段關係中的位置：<strong>焦慮</strong>，你多常擔心對方不夠在乎你；<strong>迴避</strong>，你依賴對方時有多自在。你對媽媽、對伴侶、對好友，可以各自落在不同的位置；成人依附與童年的關聯亦不足一成，位置會隨經驗移動。所以這個工具逐段關係測量，並讓你隔一段時間重測，把移動畫在同一張圖上。",
   "landing.start": "開始測驗 →",
   "landing.viewMap": "查看我的地形圖",
   "landing.privacyTitle": "🔒 你的私隱",
-  "landing.privacyBody": "無需登入、無需帳號——所有紀錄<strong>只儲存在此裝置的瀏覽器內</strong>，不會上傳到任何伺服器，連名稱也不會離開你的裝置。想備份、轉用新裝置，或與書友互相比較，隨時可以在「紀錄」頁<strong>匯出／匯入</strong>資料檔。",
+  "landing.privacyBody": "無需登入、無需帳號：所有紀錄<strong>只儲存在此裝置的瀏覽器內</strong>，不會上傳到任何伺服器，連名稱也不會離開你的裝置。想備份、轉用新裝置，或與書友互相比較，隨時可以在「紀錄」頁<strong>匯出／匯入</strong>資料檔。",
   "landing.howTitle": "可以怎樣使用？",
   "landing.howBody": "<strong>逐段關係測</strong>：伴侶、媽媽、爸爸、好友、同事，每人一種顏色，畫在同一張圖上。<br><strong>隔期重測</strong>：關係變了，位置會移動，圖上會連出軌跡。<br><strong>關係檢核</strong>：15 條題目，檢視一段關係經不經得起投入，適合讀書會逐條討論。",
   "landing.disclaimer": "本工具僅供教育、自我了解及讀書會討論之用，並非臨床診斷。",
@@ -434,7 +435,7 @@ zh: {
   "result.anxLabel": "焦慮分數（第 7–9 題平均，1–7）",
   "result.avdLabel": "迴避分數（第 1–6 題平均，1–7）",
   "result.tipTitle": "可以怎樣做",
-  "result.nth": "這是你對「{name}」的第 {n} 次紀錄——到地形圖看看變化軌跡。",
+  "result.nth": "這是你對「{name}」的第 {n} 次紀錄，到地形圖可以看到移動的軌跡。",
   "result.chartTitle": "你的依附地形圖",
   "result.chartNote": "虛線（4 分）為象限分界。左下角＝最安全。",
   "result.viewMap": "查看完整地形圖",
@@ -483,7 +484,7 @@ zh: {
   "import.done": "匯入完成！",
 
   "collab.title": "這段關係值得投入嗎？——安全關係檢核表",
-  "collab.body": "《Secure》書末的 15 條檢核題（1 非常不同意 – 5 非常同意），幫你檢視一段關係是否 <strong>CARRP</strong>——一致（Consistent）、可得（Available）、有回應（Responsive）、可靠（Reliable）、可預測（Predictable）——以及日常微小互動（SIMIs）的品質。",
+  "collab.body": "《Secure》書末的 15 條檢核題（1 非常不同意 – 5 非常同意）。<strong>CARRP</strong> 問的是一個人是否一致（Consistent）、可得（Available）、有回應（Responsive）、可靠（Reliable）、可預測（Predictable）；<strong>SIMIs</strong> 指日常那些看似微不足道的小互動。這 15 條題目，檢視的就是這兩樣東西在這段關係中的狀態。",
   "collab.whoTitle": "評估對象",
   "collab.whoPh": "這段關係的對象（例如：阿明）",
   "collab.calc": "計算總分",
@@ -491,7 +492,7 @@ zh: {
   "collab.unanswered": "還有題目未作答。",
   "collab.unnamed": "未命名",
   "collab.resultLabel": "「{name}」的安全關係總分",
-  "collab.bandHigh": "多數安全指標都亮綠燈。這段關係經得起投入，繼續用 CARRP 的方式維持它。",
+  "collab.bandHigh": "大部分指標都拿到高分。這段關係經得起投入，繼續用 CARRP 的方式維持。",
   "collab.bandMid": "基礎不差，但有幾題分數偏低。逐題看回去，那幾題就是要修補的位置。",
   "collab.bandLow": "多項安全指標偏低。書中的次序是：先用 CARRP 的方式修補日常互動；認真試過仍沒有改善，就調低音量，降低這段關係的優先次序。",
   "collab.bandNote": "分界僅供參考，重點是逐題檢視：哪些範疇強？哪些弱？（書中原表只計總分。）",
@@ -547,13 +548,13 @@ zh: {
     secure:  {name:"安全型",
       desc:"焦慮低、迴避也低。在這段關係裏，你不用花力氣確認對方走不走，省下來的注意力可以放回生活。有事直接說，對方也接得住。",
       descGeneral:"焦慮低、迴避也低。整體而言，你不用花太多力氣確認別人走不走，注意力可以放在生活本身。",
-      tip:"這種穩定靠日常維持：對方需要時在場、有回應、說到做到（書中簡稱 CARRP）。Levine 有一條吵架規則值得試：一次只准一個人發脾氣，另一個負責穩住場面。你穩，身邊的人也會慢慢穩。"},
+      tip:"這種穩定靠日常維持：對方需要時在場、有回應、說到做到（書中簡稱 CARRP）。Levine 有一條吵架規則值得試：一次只准一個人發脾氣，另一個負責穩住場面。你保持穩定，身邊的人也會慢慢安定下來。"},
     anxious: {name:"焦慮型",
       desc:"焦慮高、迴避低。你想靠近這個人，但一直在確認：他在乎我嗎？今晚會回覆嗎？別人看不見的細節你都看見，然後開始解讀，停不下來。",
       descGeneral:"焦慮高、迴避低。整體而言，你對關係的變化很敏感，常常在確認自己在別人心中的位置，也容易被這件事消耗。",
-      tip:"你的敏感是真的：關係出問題，你通常最早知道。消耗你的是後面那段：試探、發脾氣或冷戰，事後又後悔（Levine 稱之為抗議行為）。下次跳過試探，直接講需要，然後看對方的反應。可靠的人會用行動讓你放心；令你長期猜來猜去的人，那份不安本身就是資訊。"},
+      tip:"你的敏感是真的：關係出問題，你通常最早知道。消耗你的是後面那段：試探、發脾氣或冷戰，事後又後悔（Levine 稱之為抗議行為）。下次跳過試探，直接講需要，然後看對方的反應。可靠的人會用行動讓你放心。如果需要已經講得清楚，幾個月後你仍然在猜，問題就未必在你的焦慮。"},
     avoidant:{name:"迴避型",
-      desc:"焦慮低、迴避高。你習慣自己搞定：事情自己處理，情緒自己消化。這個人想再靠近，你會覺得空間被壓縮，自然退開。",
+      desc:"焦慮低、迴避高。你習慣凡事自己來：問題自己處理，情緒自己消化。這個人想再靠近，你會覺得空間被壓縮，自然退開。",
       descGeneral:"焦慮低、迴避高。整體而言，你最信任自己；別人走得太近，你會自然讓出距離。",
       tip:"需要空間有它的來歷，不必自責。要留意的是下一步：對方把退開讀成拒絕，於是追得更緊，你就退得更遠。Levine 建議由最小的互動入手：訊息當日回，或講一件今天真正在意的事。距離仍然由你控制，只是讓對方知道你在。"},
     fearful: {name:"恐懼迴避型",
@@ -669,7 +670,7 @@ en: {
   "import.done": "Import complete!",
 
   "collab.title": "Is this relationship worth investing in? — Security checklist",
-  "collab.body": "15 check items (1 strongly disagree – 5 strongly agree) to review whether a relationship is <strong>CARRP</strong> — Consistent, Available, Responsive, Reliable, Predictable — and how the small everyday interactions (SIMIs) feel. Discussed in detail in <em>Secure</em>.",
+  "collab.body": "15 items (1 strongly disagree – 5 strongly agree) from the end of <em>Secure</em>. <strong>CARRP</strong> asks whether a person is consistent, available, responsive, reliable and predictable; <strong>SIMIs</strong> are the small everyday interactions. The checklist reads how both are doing in this relationship.",
   "collab.whoTitle": "Who are you assessing?",
   "collab.whoPh": "The person in this relationship (e.g. Alex)",
   "collab.calc": "Calculate total",
@@ -738,7 +739,7 @@ en: {
     anxious: {name:"Anxious",
       desc:"High anxiety, low avoidance. You want this person close, and you keep checking: do they care? Will they reply tonight? You notice details others miss, then read into them, and it's hard to stop.",
       descGeneral:"High anxiety, low avoidance. Overall, you're quick to sense change in your relationships and often check where you stand — which is exactly what wears you out.",
-      tip:"Your sensitivity is real: when something is wrong in a relationship, you usually know first. What drains you is the next part — testing, blowing up or going cold, then regretting it (Levine calls this protest behaviour). Next time, skip the test and say the need directly, then watch the response. Reliable people reassure you with actions; someone who keeps you guessing for months is also giving you information."},
+      tip:"Your sensitivity is real: when something is wrong in a relationship, you usually know first. What drains you is the next part — testing, blowing up or going cold, then regretting it (Levine calls this protest behaviour). Next time, skip the test and say the need directly, then watch the response. Reliable people reassure you with actions. If you've said the need plainly and months later you're still guessing, the problem may no longer be your anxiety."},
     avoidant:{name:"Avoidant",
       desc:"Low anxiety, high avoidance. You handle things yourself: problems solved alone, feelings processed alone. When this person steps closer, the space feels tight and you naturally pull back.",
       descGeneral:"Low anxiety, high avoidance. Overall, you trust yourself most; when people come too close, you instinctively make room.",
@@ -1003,9 +1004,10 @@ function exportChartPng(svg, onFail){
     ctx.fillStyle=cssVar("--ink-1")||"#0b0b0b";
     ctx.font="600 16px system-ui, -apple-system, 'PingFang HK', sans-serif";
     ctx.fillText(t("chart.imgTitle"), 20, 27);
+    const titleW=ctx.measureText(t("chart.imgTitle")).width;
     ctx.fillStyle=cssVar("--ink-3")||"#898781";
     ctx.font="11px system-ui, -apple-system, 'PingFang HK', sans-serif";
-    ctx.fillText(fmtDate(new Date().toISOString())+" · "+t("chart.imgCredit"), 150, 27);
+    ctx.fillText(fmtDate(new Date().toISOString())+" · "+t("chart.imgCredit"), 20+titleW+14, 27);
     ctx.drawImage(img, 0, headH, W, H);
     URL.revokeObjectURL(url);
     c.toBlob(b=>downloadBlob(b, "attachment-map-"+stamp()+".png"), "image/png");
@@ -1175,8 +1177,10 @@ function finishQuiz(){
   show("result");
 }
 
+/* 風格標籤底色：固定深色，配白字在深淺兩種主題下都夠對比
+   （圖上的每人顏色是另一套，與此無關） */
 function styleColor(styleKey){
-  return {secure:"var(--s2)", anxious:"var(--s4)", avoidant:"var(--s1)", fearful:"var(--s6)"}[styleKey];
+  return {secure:"#2e7d32", anxious:"#9a6400", avoidant:"#1c5cab", fearful:"#b5451d"}[styleKey];
 }
 
 function renderResult({person, rec}){
@@ -1232,7 +1236,7 @@ function showPointInfo(p, r){
   const st=t("styles")[r.style];
   el.classList.remove("hide");
   el.innerHTML="<strong>"+esc(p.name)+"</strong>（"+t("rel."+p.type)+"）· "+fmtDate(r.date)+
-    " — <span style='color:"+styleColor(r.style)+";font-weight:700'>"+st.name+"</span>："+
+    ' <span class="badge badge-sm" style="background:'+styleColor(r.style)+'">'+st.name+"</span> "+
     t("th.anx")+" "+r.anxiety.toFixed(2)+"、"+t("th.avd")+" "+r.avoidance.toFixed(2);
 }
 document.getElementById("mapImgBtn").addEventListener("click",()=>{

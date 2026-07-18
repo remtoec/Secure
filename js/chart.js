@@ -111,9 +111,10 @@ function exportChartPng(svg, onFail){
     ctx.fillStyle=cssVar("--ink-1")||"#0b0b0b";
     ctx.font="600 16px system-ui, -apple-system, 'PingFang HK', sans-serif";
     ctx.fillText(t("chart.imgTitle"), 20, 27);
+    const titleW=ctx.measureText(t("chart.imgTitle")).width;
     ctx.fillStyle=cssVar("--ink-3")||"#898781";
     ctx.font="11px system-ui, -apple-system, 'PingFang HK', sans-serif";
-    ctx.fillText(fmtDate(new Date().toISOString())+" · "+t("chart.imgCredit"), 150, 27);
+    ctx.fillText(fmtDate(new Date().toISOString())+" · "+t("chart.imgCredit"), 20+titleW+14, 27);
     ctx.drawImage(img, 0, headH, W, H);
     URL.revokeObjectURL(url);
     c.toBlob(b=>downloadBlob(b, "attachment-map-"+stamp()+".png"), "image/png");
