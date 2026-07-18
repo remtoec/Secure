@@ -28,6 +28,9 @@ function buildChart(opt){
     if(text!=null) e.textContent=text;
     svg.appendChild(e); return e;
   }
+  // 安全象限微暈 · the harbour: a barely-there warm wash on the secure quadrant
+  el("rect",{x:x(1), y:y(4), width:x(4)-x(1), height:y(1)-y(4),
+    fill:cssVar("--accent")||"#b23a52", opacity:.05});
   // 格線 · gridlines
   for(let v=1; v<=7; v++){
     el("line",{x1:x(v),y1:m.t,x2:x(v),y2:m.t+ih,stroke:grid,"stroke-width":1});
@@ -41,8 +44,9 @@ function buildChart(opt){
   // 座標軸 · axes
   el("line",{x1:m.l,y1:m.t+ih,x2:m.l+iw,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
   el("line",{x1:m.l,y1:m.t,x2:m.l,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
-  // 象限浮水印 · quadrant watermarks
-  const wm={"font-size":15,fill:ink3,opacity:.55,"text-anchor":"middle","font-weight":600};
+  // 象限浮水印 · quadrant watermarks (serif, like chapter titles)
+  const wm={"font-size":15,fill:ink3,opacity:.55,"text-anchor":"middle","font-weight":600,
+    "font-family":"'Songti TC','Noto Serif TC','Songti SC',Georgia,serif"};
   el("text",Object.assign({x:x(2.5),y:y(2.4)},wm), t("chart.secure"));
   el("text",Object.assign({x:x(5.5),y:y(2.4)},wm), t("chart.anxious"));
   el("text",Object.assign({x:x(2.5),y:y(5.8)},wm), t("chart.avoidant"));

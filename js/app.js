@@ -105,7 +105,9 @@ document.getElementById("prevBtn").addEventListener("click",()=>{ if(quiz && qui
 function renderQuestion(){
   document.getElementById("quizWho").textContent = tp("quiz.who",{name:quiz.person.name, type:t("rel."+quiz.person.type)});
   document.getElementById("qnum").textContent = tp("quiz.qnum",{n:quiz.i+1});
-  document.getElementById("qtext").textContent = t("questions")[quiz.i];
+  const qt = document.getElementById("qtext");
+  qt.textContent = t("questions")[quiz.i];
+  qt.classList.remove("qanim"); void qt.offsetWidth; qt.classList.add("qanim");
   document.getElementById("pbar").style.width = ((quiz.i+1)/9*100)+"%";
   document.getElementById("prevBtn").disabled = quiz.i===0;
   const sc = document.getElementById("scale7");
@@ -145,6 +147,7 @@ function renderResult({person, rec}){
   document.getElementById("resultCard").innerHTML =
     '<p class="tiny">'+esc(person.name)+"（"+t("rel."+person.type)+"）· "+fmtDate(rec.date)+"</p>"+
     "<h2>"+t("result.styleIs")+'<span class="badge" style="background:'+styleColor(rec.style)+'">'+st.name+"</span></h2>"+
+    (st.essence ? '<p class="essence">'+st.essence+"</p>" : "")+
     '<div class="tiles">'+
       '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">'+t("result.anxLabel")+"</div></div>"+
       '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">'+t("result.avdLabel")+"</div></div>"+

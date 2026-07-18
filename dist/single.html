@@ -5,103 +5,158 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>依附地形圖 · Attachment Topography</title>
 <style>
+/* ═══════════ 紅線 · The Red Thread ═══════════
+   Design language: an invisible thread ties you to the people you love.
+   Porcelain paper, plum ink, one crimson accent; Song-serif voice for
+   the words that matter, quiet sans for the machinery. */
+
 :root{
   color-scheme: light;
-  --surface-1:#fcfcfb; --page:#f9f9f7;
-  --ink-1:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
-  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10);
-  --accent:#2a78d6; --accent-ink:#ffffff;
+  --page:#f7f3f1; --surface-1:#fdfbfa;
+  --ink-1:#2c2226; --ink-2:#5f5257; --ink-3:#95888c;
+  --grid:#eae2e0; --axis:#cfc3c2; --ring:rgba(44,34,38,.10);
+  --accent:#b23a52; --accent-soft:#f0dbe0; --accent-ink:#ffffff;
   --s1:#2a78d6; --s2:#008300; --s3:#e87ba4; --s4:#eda100;
   --s5:#1baf7a; --s6:#eb6834; --s7:#4a3aa7; --s8:#e34948;
   --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+  --serif:"Songti TC","Noto Serif TC","Songti SC","Source Han Serif TC","PMingLiU",Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI","PingFang HK","PingFang TC","Microsoft JhengHei",sans-serif;
+  --shadow:0 1px 2px rgba(44,34,38,.05), 0 4px 16px rgba(44,34,38,.04);
 }
 @media (prefers-color-scheme: dark){
   :root:where(:not([data-theme="light"])){
     color-scheme: dark;
-    --surface-1:#1a1a19; --page:#0d0d0d;
-    --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
-    --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
-    --accent:#3987e5;
+    --page:#141014; --surface-1:#1e181c;
+    --ink-1:#f4edef; --ink-2:#c5b8bc; --ink-3:#93868a;
+    --grid:#2e262b; --axis:#453a40; --ring:rgba(244,237,239,.10);
+    --accent:#e06e88; --accent-soft:#3a232b; --accent-ink:#1a1216;
     --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
     --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
+    --shadow:none;
   }
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
-  --surface-1:#1a1a19; --page:#0d0d0d;
-  --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
-  --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
-  --accent:#3987e5;
+  --page:#141014; --surface-1:#1e181c;
+  --ink-1:#f4edef; --ink-2:#c5b8bc; --ink-3:#93868a;
+  --grid:#2e262b; --axis:#453a40; --ring:rgba(244,237,239,.10);
+  --accent:#e06e88; --accent-soft:#3a232b; --accent-ink:#1a1216;
   --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
   --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
+  --shadow:none;
 }
+
 *{box-sizing:border-box}
 body{
   margin:0; background:var(--page); color:var(--ink-1);
-  font-family:system-ui,-apple-system,"Segoe UI","PingFang HK","PingFang TC","Microsoft JhengHei",sans-serif;
-  line-height:1.65; -webkit-font-smoothing:antialiased;
+  font-family:var(--sans);
+  line-height:1.7; -webkit-font-smoothing:antialiased;
 }
 .wrap{max-width:860px;margin:0 auto;padding:16px 16px 96px}
-header.app{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:14px 4px 6px}
-header.app h1{font-size:1.45rem;margin:0;letter-spacing:.02em}
-header.app .sub{color:var(--ink-2);font-size:.85rem}
+
+/* ── 頁首 · header ── */
+header.app{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:18px 4px 4px}
+header.app h1{font-family:var(--serif);font-size:1.5rem;font-weight:700;margin:0;letter-spacing:.05em}
+header.app .sub{color:var(--ink-3);font-size:.78rem;letter-spacing:.06em}
 #langBtn,#themeBtn{border:1px solid var(--ring);background:var(--surface-1);color:var(--ink-2);
   border-radius:99px;padding:4px 12px;font-size:.8rem;cursor:pointer}
 #langBtn{margin-left:auto;font-weight:700;min-width:44px}
-nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 2px;position:sticky;top:0;background:var(--page);z-index:5}
+
+/* ── 導覽：紅線分頁 · thread tabs ── */
+nav.tabs{display:flex;gap:2px;overflow-x:auto;padding:10px 2px 0;position:sticky;top:0;background:var(--page);z-index:5}
 nav.tabs button{
-  flex:0 0 auto;border:1px solid var(--ring);background:var(--surface-1);color:var(--ink-2);
-  padding:8px 14px;border-radius:99px;font-size:.9rem;cursor:pointer;white-space:nowrap;
+  flex:0 0 auto;border:none;background:transparent;color:var(--ink-2);
+  padding:10px 14px 12px;font-size:.95rem;cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;font-family:var(--sans);position:relative;
 }
-nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
-.card{background:var(--surface-1);border:1px solid var(--ring);border-radius:16px;padding:18px 18px;margin:12px 0}
-.card h2{font-size:1.1rem;margin:0 0 6px}
-.card h3{font-size:1rem;margin:14px 0 6px}
-.card.hero{padding:26px 22px}
-.eyebrow{margin:0 0 8px;font-size:.75rem;letter-spacing:.14em;color:var(--accent);font-weight:700;text-transform:uppercase}
-.herotitle{font-size:1.55rem;line-height:1.35;margin:0 0 10px;text-wrap:balance}
-.muted{color:var(--ink-2);font-size:.9rem}
+nav.tabs button[aria-selected="true"]{
+  color:var(--accent);font-weight:700;border-bottom-color:var(--accent);
+}
+nav.tabs button[aria-selected="true"]::after{
+  content:"";position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);
+  width:6px;height:6px;border-radius:50%;background:var(--accent);
+}
+
+/* ── 卡片 · cards ── */
+.card{background:var(--surface-1);border:1px solid var(--ring);border-radius:18px;
+  padding:22px 20px;margin:14px 0;box-shadow:var(--shadow)}
+.card h2{font-family:var(--serif);font-size:1.15rem;margin:0 0 8px;letter-spacing:.03em}
+.card h3{font-size:.98rem;margin:16px 0 6px;font-weight:600}
+.card.hero{padding:30px 24px 26px}
+.eyebrow{margin:0 0 10px;font-size:.72rem;letter-spacing:.22em;color:var(--accent);font-weight:700;text-transform:uppercase}
+.herotitle{font-family:var(--serif);font-size:1.7rem;line-height:1.45;margin:0 0 6px;text-wrap:balance;font-weight:700}
+.heropoem{font-family:var(--serif);color:var(--ink-2);font-size:.98rem;margin:4px 0 10px;line-height:1.9}
+.muted{color:var(--ink-2);font-size:.92rem}
 .tiny{color:var(--ink-3);font-size:.8rem}
+
+/* ── 紅線 hero 動畫 · the drawn thread ── */
+.thread{display:block;width:100%;max-width:340px;height:52px;margin:14px 0 6px}
+.thread .th-line{stroke:var(--accent);stroke-width:2;stroke-linecap:round;fill:none;
+  stroke-dasharray:400;stroke-dashoffset:400;animation:th-draw 1.8s .35s cubic-bezier(.5,0,.3,1) forwards}
+.thread .th-dot{fill:var(--accent)}
+.thread .th-dot2{opacity:0;animation:th-appear .5s 1.9s ease forwards}
+@keyframes th-draw{to{stroke-dashoffset:0}}
+@keyframes th-appear{to{opacity:1}}
+
+/* ── 按鈕 · buttons ── */
+button{transition:transform .12s ease, background-color .15s ease, color .15s ease, border-color .15s ease}
 button.primary{
-  background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;
-  padding:12px 20px;font-size:1rem;font-weight:600;cursor:pointer;
+  background:var(--accent);color:var(--accent-ink);border:none;border-radius:99px;
+  padding:13px 26px;font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--sans);
+  box-shadow:var(--shadow);
 }
 button.ghost{
   background:transparent;color:var(--ink-2);border:1px solid var(--ring);
-  border-radius:12px;padding:10px 16px;font-size:.9rem;cursor:pointer;
+  border-radius:99px;padding:10px 18px;font-size:.9rem;cursor:pointer;
 }
 button:disabled{opacity:.4;cursor:not-allowed}
-button{transition:transform .12s ease, background-color .12s ease}
 button.primary:active,.scale button:active,.likert5 button:active{transform:scale(.96)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-@media (prefers-reduced-motion: reduce){*{transition:none !important}}
+
+/* ── 選項豆 · chips ── */
 .chiprow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .chip{border:1px solid var(--ring);background:var(--page);color:var(--ink-2);
-  border-radius:99px;padding:8px 14px;font-size:.9rem;cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  border-radius:99px;padding:8px 15px;font-size:.9rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
 input[type=text]{
   width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ring);
-  background:var(--page);color:var(--ink-1);font-size:1rem;
+  background:var(--page);color:var(--ink-1);font-size:1rem;font-family:var(--sans);
 }
-/* quiz */
-.progress{height:6px;background:var(--grid);border-radius:99px;overflow:hidden;margin:10px 0 18px}
-.progress>div{height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
-.qtext{font-size:1.2rem;font-weight:600;min-height:3.2em;margin:6px 0 4px}
-.scale{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:14px 0 6px}
+input[type=text]:focus{border-color:var(--accent);outline:none}
+
+/* ── 作答：線與結 · quiz thread & knot ── */
+.progress{height:2px;background:var(--grid);border-radius:99px;margin:16px 0 20px;position:relative}
+.progress>div{height:100%;background:var(--accent);border-radius:99px;transition:width .35s ease;position:relative}
+.progress>div::after{
+  content:"";position:absolute;right:-4px;top:50%;transform:translateY(-50%);
+  width:9px;height:9px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft);
+}
+.qtext{font-family:var(--serif);font-size:1.35rem;line-height:1.75;font-weight:600;
+  min-height:4.6em;margin:10px 0 4px;text-wrap:balance}
+.qanim{animation:fade-up .38s ease}
+.scale{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:16px 0 8px}
 .scale button{
-  min-height:52px;border-radius:12px;border:1px solid var(--ring);background:var(--page);
+  min-height:52px;border-radius:14px;border:1px solid var(--ring);background:var(--page);
   color:var(--ink-1);font-size:1.05rem;font-weight:600;cursor:pointer;
 }
+.scale button:hover{border-color:var(--accent)}
 .scale button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.anchors{display:flex;justify-content:space-between;font-size:.78rem;color:var(--ink-3)}
-.quiznav{display:flex;justify-content:space-between;margin-top:18px;gap:10px}
-/* result */
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
-.tile{background:var(--page);border:1px solid var(--ring);border-radius:14px;padding:12px 14px}
-.tile .v{font-size:1.9rem;font-weight:700;line-height:1.2}
-.tile .l{font-size:.82rem;color:var(--ink-2)}
-.badge{display:inline-block;padding:6px 14px;border-radius:99px;font-weight:700;font-size:1rem;color:#fff}
-/* chart */
+.anchors{display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink-3)}
+.quiznav{display:flex;justify-content:space-between;margin-top:20px;gap:10px}
+
+/* ── 結果 · result ── */
+.essence{font-family:var(--serif);font-size:1.18rem;line-height:1.9;color:var(--ink-1);
+  border-left:2px solid var(--accent);padding-left:14px;margin:16px 0 10px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.tile{background:var(--page);border:1px solid var(--ring);border-radius:14px;padding:13px 15px}
+.tile .v{font-size:1.9rem;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
+.tile .l{font-size:.8rem;color:var(--ink-2)}
+.badge{display:inline-block;padding:6px 16px;border-radius:99px;font-weight:700;font-size:1.02rem;
+  color:#fff;font-family:var(--serif);letter-spacing:.06em;animation:badge-in .5s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes badge-in{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+
+/* ── 地形圖 · chart ── */
 .chartbox{overflow-x:auto}
 figure.viz{margin:8px 0}
 figure.viz svg{display:block;max-width:100%;height:auto}
@@ -111,23 +166,39 @@ figure.viz svg{display:block;max-width:100%;height:auto}
 .legend button[aria-pressed="false"]{opacity:.35}
 .legend .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
 .pointinfo{border:1px dashed var(--axis);border-radius:12px;padding:10px 14px;margin-top:10px;font-size:.9rem;color:var(--ink-2)}
-/* records */
+
+/* ── 紀錄 · records ── */
 table{width:100%;border-collapse:collapse;font-size:.9rem}
 th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
-th{color:var(--ink-3);font-weight:600;font-size:.8rem}
+th{color:var(--ink-3);font-weight:600;font-size:.78rem;letter-spacing:.04em}
 td .del{color:var(--crit);background:none;border:none;cursor:pointer;font-size:.85rem}
-/* checklist */
+
+/* ── 檢核表 · checklist ── */
 .likert5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0 2px}
-.likert5 button{min-height:44px;border-radius:10px;border:1px solid var(--ring);background:var(--page);
+.likert5 button{min-height:44px;border-radius:12px;border:1px solid var(--ring);background:var(--page);
   color:var(--ink-1);font-weight:600;cursor:pointer}
 .likert5 button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.clitem{padding:12px 0;border-bottom:1px solid var(--grid)}
+.clitem{padding:13px 0;border-bottom:1px solid var(--grid)}
 .clitem p{margin:0 0 4px;font-size:.95rem}
-dialog{border:1px solid var(--ring);border-radius:16px;background:var(--surface-1);color:var(--ink-1);max-width:420px;padding:20px}
-dialog::backdrop{background:rgba(0,0,0,.45)}
+
+/* ── 其他 · misc ── */
+dialog{border:1px solid var(--ring);border-radius:18px;background:var(--surface-1);color:var(--ink-1);max-width:420px;padding:22px}
+dialog::backdrop{background:rgba(20,12,16,.5)}
+dialog h2{font-family:var(--serif)}
 .hide{display:none !important}
-footer.app{margin-top:28px;color:var(--ink-3);font-size:.78rem;line-height:1.7}
+footer.app{margin-top:30px;color:var(--ink-3);font-size:.78rem;line-height:1.8;
+  border-top:1px solid var(--grid);padding-top:16px}
 a{color:var(--accent)}
+
+/* ── 進場 · view entrance ── */
+section{animation:fade-up .4s ease}
+@keyframes fade-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+  .thread .th-line{stroke-dashoffset:0}
+  .thread .th-dot2{opacity:1}
+}
 </style>
 </head>
 <body>
@@ -152,6 +223,12 @@ a{color:var(--accent)}
   <div class="card hero">
     <p class="eyebrow" data-i18n="landing.eyebrow"></p>
     <h2 class="herotitle" data-i18n="landing.title"></h2>
+    <svg class="thread" viewBox="0 0 340 52" aria-hidden="true">
+      <circle class="th-dot" cx="10" cy="26" r="5"/>
+      <path class="th-line" d="M15 26 C 55 4, 105 48, 160 26 S 265 4, 322 26"/>
+      <circle class="th-dot th-dot2" cx="329" cy="26" r="5"/>
+    </svg>
+    <p class="heropoem" data-i18n="landing.poem"></p>
     <p class="muted" data-i18n-html="landing.body"></p>
     <p style="margin-top:18px">
       <button class="primary" id="landingStart" type="button" data-i18n="landing.start"></button>
@@ -310,10 +387,11 @@ zh: {
   "rel.family": "家人", "rel.friend": "朋友", "rel.colleague": "同事", "rel.other": "其他",
   "rel.general.short": "一般",
 
-  "landing.eyebrow": "書識圈 ×《Secure》讀書會工具",
+  "landing.eyebrow": "書識圈 ×《Secure》· 一場自我探索",
   "landing.title": "每段關係，都有自己的座標",
+  "landing.poem": "傳說裏，有一條看不見的線，把你和你重視的人繫在一起。這裏，我們試着把這些線畫出來——看看每一條線，此刻停在甚麼位置。",
   "landing.body": "依附研究數十年來的一個重要發現：依附風格並非一個固定的「人格標籤」——你面對媽媽時可以是安全型，面對伴侶時卻可能偏向焦慮型。Amir Levine 在《Secure》一書中對此有深入淺出的討論。本工具採用研究中廣泛使用的兩個維度，透過 9 條簡單題目，為你和每一位重要的人計算<strong>焦慮</strong>與<strong>迴避</strong>兩個分數，繪成一張屬於你的「依附地形圖」；隔一段時間重測，更可以看到每段關係隨時間移動的軌跡。",
-  "landing.start": "開始測驗 →",
+  "landing.start": "開始探索 →",
   "landing.viewMap": "查看我的地形圖",
   "landing.privacyTitle": "🔒 你的私隱",
   "landing.privacyBody": "無需登入、無需帳號——所有紀錄<strong>只儲存在此裝置的瀏覽器內</strong>，不會上傳到任何伺服器，連名稱也不會離開你的裝置。想備份、轉用新裝置，或與書友互相比較，隨時可以在「紀錄」頁<strong>匯出／匯入</strong>資料檔。",
@@ -446,16 +524,16 @@ zh: {
   ],
 
   "styles": {
-    secure:  {name:"安全型",
+    secure:  {name:"安全型", essence:"你能安心靠近，也能安心做自己。",
       desc:"低焦慮、低迴避。你在這段關係中能自在地親近對方、表達需要，也不太擔心被拋棄。這是最有利雙方成長的依附狀態。",
       tip:"繼續保持 CARRP——一致、可得、有回應、可靠、可預測。安全感是會傳染的：你的穩定也會令身邊的人更安全。"},
-    anxious: {name:"焦慮型",
+    anxious: {name:"焦慮型", essence:"你愛得很深，也怕失去得很快。",
       desc:"高焦慮、低迴避。你渴望親近這個人，但常擔心對方不夠在乎你、可能離開你，情緒容易隨對方的一舉一動起伏。",
       tip:"焦慮型的敏銳可以是一種很有用的覺察力，但也容易被不安放大。留意「抗議行為—後悔」循環；直接、平靜地說出需要，並觀察對方是否 CARRP——值得的人會用行動讓你安心。"},
-    avoidant:{name:"迴避型",
+    avoidant:{name:"迴避型", essence:"有足夠的空間，你才感到安全。",
       desc:"低焦慮、高迴避。你重視獨立和空間，不習慣向這個人打開心扉，親密貼近反而令你不自在。",
       tip:"需要距離並非罪過，但長期迴避會令對方被觸發、關係惡性循環。嘗試小步分享感受，主動給予微小而穩定的回應（正面的 SIMIs）。"},
-    fearful: {name:"恐懼迴避型",
+    fearful: {name:"恐懼迴避型", essence:"你渴望靠近，又害怕被看見。",
       desc:"高焦慮、高迴避。你既渴望親密又害怕受傷，於是時而靠近、時而抽離，關係中經常感到拉扯。",
       tip:"這往往與過往受傷的經驗有關。從最安全、最 CARRP 的關係開始練習信任；若困擾持續，尋求心理專業協助是很值得的投資。"},
   },
@@ -474,10 +552,11 @@ en: {
   "rel.family": "Family", "rel.friend": "Friend", "rel.colleague": "Colleague", "rel.other": "Other",
   "rel.general.short": "General",
 
-  "landing.eyebrow": "A Bookfort × Secure book-club tool",
+  "landing.eyebrow": "Bookfort × Secure · a journey inward",
   "landing.title": "Every relationship has its own coordinates",
+  "landing.poem": "They say an invisible thread ties you to the people who matter to you. Here, we try to draw those threads — and see where each one rests, right now.",
   "landing.body": "A key finding from decades of attachment research: attachment style is not a fixed personality label — you can be secure with your mum yet lean anxious with your partner. Dr. Amir Levine discusses this in depth in <em>Secure</em>. This tool uses the two dimensions widely used in the research — <strong>anxiety</strong> and <strong>avoidance</strong> — to score 9 short questions about one specific relationship and plot it on your personal “attachment topography” map. Retake it over time and see how each relationship shifts.",
-  "landing.start": "Start the quiz →",
+  "landing.start": "Begin the journey →",
   "landing.viewMap": "View my map",
   "landing.privacyTitle": "🔒 Your privacy",
   "landing.privacyBody": "No login, no account — every record is stored <strong>only in this device's browser</strong>. Nothing is uploaded anywhere; even the names never leave your phone. To back up, move to a new device, or compare with friends, use <strong>export / import</strong> on the Records page anytime.",
@@ -611,16 +690,16 @@ en: {
   ],
 
   "styles": {
-    secure:  {name:"Secure",
+    secure:  {name:"Secure", essence:"You can come close, and still be yourself.",
       desc:"Low anxiety, low avoidance. In this relationship you're comfortable getting close, expressing needs, and you don't worry much about being left. This is the state that lets both people grow.",
       tip:"Keep being CARRP — consistent, available, responsive, reliable, predictable. Security is contagious: your steadiness makes the people around you more secure too."},
-    anxious: {name:"Anxious",
+    anxious: {name:"Anxious", essence:"You love deeply — and fear losing it just as deeply.",
       desc:"High anxiety, low avoidance. You crave closeness with this person but often worry they don't care enough or might leave, and your emotions may rise and fall with their signals.",
       tip:"Anxious sensitivity can be a useful form of awareness, but it can also be amplified by insecurity. Watch the protest-behaviour → regret cycle; state your needs directly and calmly, and check whether this person is CARRP — the right people reassure you through action."},
-    avoidant:{name:"Avoidant",
+    avoidant:{name:"Avoidant", essence:"Space is where you feel safe.",
       desc:"Low anxiety, high avoidance. You value independence and space, rarely open up to this person, and too much closeness feels uncomfortable.",
       tip:"Needing distance is no crime, but chronic avoidance triggers the other person and feeds a vicious cycle. Try sharing feelings in small steps and offering small, steady positive responses (positive SIMIs)."},
-    fearful: {name:"Fearful-avoidant",
+    fearful: {name:"Fearful-avoidant", essence:"You long to be close, yet fear being seen.",
       desc:"High anxiety and high avoidance. You long for intimacy yet fear getting hurt, so you swing between approaching and withdrawing, and the relationship often feels like a tug-of-war.",
       tip:"This pattern often traces back to past hurt. Practise trust starting from your safest, most CARRP relationship — and if the distress persists, professional support is a worthwhile investment."},
   },
@@ -796,6 +875,9 @@ function buildChart(opt){
     if(text!=null) e.textContent=text;
     svg.appendChild(e); return e;
   }
+  // 安全象限微暈 · the harbour: a barely-there warm wash on the secure quadrant
+  el("rect",{x:x(1), y:y(4), width:x(4)-x(1), height:y(1)-y(4),
+    fill:cssVar("--accent")||"#b23a52", opacity:.05});
   // 格線 · gridlines
   for(let v=1; v<=7; v++){
     el("line",{x1:x(v),y1:m.t,x2:x(v),y2:m.t+ih,stroke:grid,"stroke-width":1});
@@ -809,8 +891,9 @@ function buildChart(opt){
   // 座標軸 · axes
   el("line",{x1:m.l,y1:m.t+ih,x2:m.l+iw,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
   el("line",{x1:m.l,y1:m.t,x2:m.l,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
-  // 象限浮水印 · quadrant watermarks
-  const wm={"font-size":15,fill:ink3,opacity:.55,"text-anchor":"middle","font-weight":600};
+  // 象限浮水印 · quadrant watermarks (serif, like chapter titles)
+  const wm={"font-size":15,fill:ink3,opacity:.55,"text-anchor":"middle","font-weight":600,
+    "font-family":"'Songti TC','Noto Serif TC','Songti SC',Georgia,serif"};
   el("text",Object.assign({x:x(2.5),y:y(2.4)},wm), t("chart.secure"));
   el("text",Object.assign({x:x(5.5),y:y(2.4)},wm), t("chart.anxious"));
   el("text",Object.assign({x:x(2.5),y:y(5.8)},wm), t("chart.avoidant"));
@@ -994,7 +1077,9 @@ document.getElementById("prevBtn").addEventListener("click",()=>{ if(quiz && qui
 function renderQuestion(){
   document.getElementById("quizWho").textContent = tp("quiz.who",{name:quiz.person.name, type:t("rel."+quiz.person.type)});
   document.getElementById("qnum").textContent = tp("quiz.qnum",{n:quiz.i+1});
-  document.getElementById("qtext").textContent = t("questions")[quiz.i];
+  const qt = document.getElementById("qtext");
+  qt.textContent = t("questions")[quiz.i];
+  qt.classList.remove("qanim"); void qt.offsetWidth; qt.classList.add("qanim");
   document.getElementById("pbar").style.width = ((quiz.i+1)/9*100)+"%";
   document.getElementById("prevBtn").disabled = quiz.i===0;
   const sc = document.getElementById("scale7");
@@ -1034,6 +1119,7 @@ function renderResult({person, rec}){
   document.getElementById("resultCard").innerHTML =
     '<p class="tiny">'+esc(person.name)+"（"+t("rel."+person.type)+"）· "+fmtDate(rec.date)+"</p>"+
     "<h2>"+t("result.styleIs")+'<span class="badge" style="background:'+styleColor(rec.style)+'">'+st.name+"</span></h2>"+
+    (st.essence ? '<p class="essence">'+st.essence+"</p>" : "")+
     '<div class="tiles">'+
       '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">'+t("result.anxLabel")+"</div></div>"+
       '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">'+t("result.avdLabel")+"</div></div>"+

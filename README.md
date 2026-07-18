@@ -93,6 +93,15 @@ unaffected (legacy Chinese labels from v1 data are migrated in `js/store.js`,
 `css/style.css` (`--s1…--s8` are the per-person series colours; defined for
 light, OS-dark and the in-app toggle). The chart reads them at render time.
 
+**Design language (「紅線 · The Red Thread」)** — porcelain paper, plum ink,
+one crimson accent; Song-serif (`--serif`) for titles/questions/style names,
+sans (`--sans`) for UI. Signature elements: the self-drawing thread on the
+landing hero (inline SVG + `th-draw` keyframes), the quiz progress thread
+with a knot (`.progress`), the serif "essence" line on results (`.essence`),
+and a faint warm wash on the map's secure quadrant (in `js/chart.js`). All
+motion sits behind `prefers-reduced-motion`. Keep the accent to one hue —
+the series colours in the chart are a separate, CVD-validated palette.
+
 **Rename the club branding** — search `書識圈` / `Bookfort` in `js/i18n.js`
 (`app.club`, `landing.eyebrow`, `chart.imgCredit`).
 
