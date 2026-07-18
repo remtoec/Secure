@@ -72,10 +72,15 @@ no framework, no dependencies, works from `file://` as well as a web server.
 once per language (`zh` and `en` blocks). Strings with `{name}`-style
 placeholders are filled by `tp()`. Then rebuild (§4).
 
-**Change quiz questions** — `questions` arrays in `js/i18n.js` (keep both
-languages in the same order). If you change which items are reverse-scored,
-update `REVERSED` in `js/scoring.js`. Keep 9 items with the 6-avoidance +
-3-anxiety structure or the formulas and result labels stop being ECR-RS.
+**Change quiz questions** — `questions` (person-specific) **and**
+`questionsGeneral` (used when 一般依附風格 is selected — worded about "people
+close to me" instead of 「這個人」) in `js/i18n.js`; keep both languages and
+both variants in the same order. If you change which items are
+reverse-scored, update `REVERSED` in `js/scoring.js`. Keep 9 items with the
+6-avoidance + 3-anxiety structure or the formulas stop being ECR-RS.
+The general mode also uses `quiz.whoGeneral`, `quiz.generalReminder`,
+`result.styleIsGeneral`, `result.snapshotNoteGeneral` and each style's
+`descGeneral`.
 
 **Change checklist items or bands** — `collabItems` in `js/i18n.js`; band
 thresholds and colours in the `collabScoreBtn` handler in `js/app.js`.
@@ -97,10 +102,12 @@ light, OS-dark and the in-app toggle). The chart reads them at render time.
 one crimson accent; Song-serif (`--serif`) for titles/questions/style names,
 sans (`--sans`) for UI. Signature elements: the self-drawing thread on the
 landing hero (inline SVG + `th-draw` keyframes), the quiz progress thread
-with a knot (`.progress`), the serif "essence" line on results (`.essence`),
+with a knot (`.progress`), the graduated dot scale (`.dotv` — dot size grows
+with intensity; the tapped answer's verbal label shows in `#scaleLabel`),
 and a faint warm wash on the map's secure quadrant (in `js/chart.js`). All
 motion sits behind `prefers-reduced-motion`. Keep the accent to one hue —
 the series colours in the chart are a separate, CVD-validated palette.
+Copy rule: keep wording plain and factual — no poetic taglines.
 
 **Rename the club branding** — search `書識圈` / `Bookfort` in `js/i18n.js`
 (`app.club`, `landing.eyebrow`, `chart.imgCredit`).

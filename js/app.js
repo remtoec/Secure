@@ -103,23 +103,43 @@ document.getElementById("quitBtn").addEventListener("click",()=>{ quiz=null; sho
 document.getElementById("prevBtn").addEventListener("click",()=>{ if(quiz && quiz.i>0){ quiz.i--; renderQuestion(); } });
 
 function renderQuestion(){
-  document.getElementById("quizWho").textContent = tp("quiz.who",{name:quiz.person.name, type:t("rel."+quiz.person.type)});
+  // 一般依附風格用整體版題目與提示，避免「這個人」的矛盾
+  const isGen = quiz.person.type==="general";
+  document.getElementById("quizWho").textContent = isGen ? t("quiz.whoGeneral")
+    : tp("quiz.who",{name:quiz.person.name, type:t("rel."+quiz.person.type)});
+  document.getElementById("quizReminder").textContent = isGen ? t("quiz.generalReminder") : t("quiz.specificReminder");
   document.getElementById("qnum").textContent = tp("quiz.qnum",{n:quiz.i+1});
   const qt = document.getElementById("qtext");
-  qt.textContent = t("questions")[quiz.i];
+  qt.textContent = (isGen ? t("questionsGeneral") : t("questions"))[quiz.i];
   qt.classList.remove("qanim"); void qt.offsetWidth; qt.classList.add("qanim");
   document.getElementById("pbar").style.width = ((quiz.i+1)/9*100)+"%";
   document.getElementById("prevBtn").disabled = quiz.i===0;
+  const labels = t("scaleLabels");
+  const lab = document.getElementById("scaleLabel");
+  lab.textContent = quiz.answers[quiz.i] ? labels[quiz.answers[quiz.i]-1] : " ";
   const sc = document.getElementById("scale7");
   sc.innerHTML="";
   for(let v=1; v<=7; v++){
     const b=document.createElement("button");
-    b.type="button"; b.textContent=v;
+    b.type="button";
+    b.setAttribute("aria-label", v+" · "+labels[v-1]);
     b.setAttribute("aria-pressed", quiz.answers[quiz.i]===v?"true":"false");
+    const d=document.createElement("span");
+    d.className="dotv";
+    b.appendChild(d);
     b.addEventListener("click",()=>{
       quiz.answers[quiz.i]=v;
-      if(quiz.i<8){ quiz.i++; renderQuestion(); }
-      else finishQuiz();
+      lab.textContent = labels[v-1];
+      sc.querySelectorAll("button").forEach((bb,idx)=>{
+        bb.setAttribute("aria-pressed", idx+1===v?"true":"false");
+        bb.disabled = true; // 稍停讓選擇被看見，再前進
+      });
+      const at = quiz.i;
+      setTimeout(()=>{
+        if(!quiz || quiz.i!==at) return;
+        if(quiz.i<8){ quiz.i++; renderQuestion(); }
+        else finishQuiz();
+      }, 260);
     });
     sc.appendChild(b);
   }
@@ -144,16 +164,16 @@ function styleColor(styleKey){
 
 function renderResult({person, rec}){
   const st = t("styles")[rec.style];
+  const isGen = person.type==="general";
   document.getElementById("resultCard").innerHTML =
     '<p class="tiny">'+esc(person.name)+"（"+t("rel."+person.type)+"）· "+fmtDate(rec.date)+"</p>"+
-    "<h2>"+t("result.styleIs")+'<span class="badge" style="background:'+styleColor(rec.style)+'">'+st.name+"</span></h2>"+
-    (st.essence ? '<p class="essence">'+st.essence+"</p>" : "")+
+    "<h2>"+t(isGen?"result.styleIsGeneral":"result.styleIs")+'<span class="badge" style="background:'+styleColor(rec.style)+'">'+st.name+"</span></h2>"+
     '<div class="tiles">'+
       '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">'+t("result.anxLabel")+"</div></div>"+
       '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">'+t("result.avdLabel")+"</div></div>"+
     "</div>"+
-    '<p class="tiny">'+t("result.snapshotNote")+"</p>"+
-    "<p>"+st.desc+"</p><h3>"+t("result.tipTitle")+"</h3><p class='muted'>"+st.tip+"</p>"+
+    '<p class="tiny">'+t(isGen?"result.snapshotNoteGeneral":"result.snapshotNote")+"</p>"+
+    "<p>"+((isGen && st.descGeneral) ? st.descGeneral : st.desc)+"</p><h3>"+t("result.tipTitle")+"</h3><p class='muted'>"+st.tip+"</p>"+
     (person.results.length>1 ? '<p class="tiny">'+tp("result.nth",{name:esc(person.name), n:person.results.length})+"</p>" : "");
   const box=document.getElementById("resultChart");
   box.innerHTML="";
@@ -244,6 +264,7 @@ let collabAns = Array(15).fill(0);
 function renderCollabItems(){
   const box=document.getElementById("collabItems");
   box.innerHTML="";
+  const labels5 = t("scale5Labels");
   t("collabItems").forEach((txt,i)=>{
     const d=document.createElement("div");
     d.className="clitem";
@@ -252,8 +273,12 @@ function renderCollabItems(){
     row.className="likert5";
     for(let v=1; v<=5; v++){
       const b=document.createElement("button");
-      b.type="button"; b.textContent=v;
+      b.type="button";
+      b.setAttribute("aria-label", v+" · "+labels5[v-1]);
       b.setAttribute("aria-pressed", collabAns[i]===v?"true":"false");
+      const dot=document.createElement("span");
+      dot.className="dotv";
+      b.appendChild(dot);
       b.addEventListener("click",()=>{
         collabAns[i]=v;
         row.querySelectorAll("button").forEach((bb,idx)=>bb.setAttribute("aria-pressed", idx+1===v?"true":"false"));

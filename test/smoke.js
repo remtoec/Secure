@@ -44,6 +44,9 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   await page.click('#againBtn');
   await page.click('#relTypes .chip:has-text("一般依附風格")');
   await page.click('#startBtn');
+  await page.waitForSelector('#view-quiz:not(.hide)');
+  const gq = await page.textContent('#qtext');
+  console.log('General wording (no 這個人):', !gq.includes('這個人') && gq.includes('親近'));
   const answers2 = [7, 7, 7, 7, 1, 1, 1, 1, 1]; // avoid = (1*4+1*2)/6 = 1.00, anx = 1.00 → secure
   for (const a of answers2) {
     await page.waitForSelector('#view-quiz:not(.hide)');
@@ -128,9 +131,14 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   console.log('EN nav:', navTxt.includes('Quiz') && navTxt.includes('Map'));
   await page.click('nav.tabs button[data-view="home"]');
   console.log('EN rel chips:', (await page.textContent('#relTypes')).includes('Partner'));
+  await page.click('#relTypes .chip:has-text("Partner")');
+  await page.fill('#personName', 'Alex');
   await page.click('#startBtn');
   await page.waitForSelector('#view-quiz:not(.hide)');
   console.log('EN question:', (await page.textContent('#qtext')).includes('turn to this person'));
+  // scale is now 7 unlabelled dots with verbal labels: tap one, label appears
+  await page.click('#scale7 button:nth-child(6)');
+  console.log('EN scale label:', (await page.textContent('#scaleLabel')).includes('Agree'));
   await page.click('#quitBtn');
   await page.reload();
   console.log('EN persists after reload:', (await page.textContent('nav.tabs')).includes('Records'));

@@ -79,7 +79,6 @@ nav.tabs button[aria-selected="true"]::after{
 .card.hero{padding:30px 24px 26px}
 .eyebrow{margin:0 0 10px;font-size:.72rem;letter-spacing:.22em;color:var(--accent);font-weight:700;text-transform:uppercase}
 .herotitle{font-family:var(--serif);font-size:1.7rem;line-height:1.45;margin:0 0 6px;text-wrap:balance;font-weight:700}
-.heropoem{font-family:var(--serif);color:var(--ink-2);font-size:.98rem;margin:4px 0 10px;line-height:1.9}
 .muted{color:var(--ink-2);font-size:.92rem}
 .tiny{color:var(--ink-3);font-size:.8rem}
 
@@ -129,19 +128,30 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 .qtext{font-family:var(--serif);font-size:1.35rem;line-height:1.75;font-weight:600;
   min-height:4.6em;margin:10px 0 4px;text-wrap:balance}
 .qanim{animation:fade-up .38s ease}
-.scale{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:16px 0 8px}
-.scale button{
-  min-height:52px;border-radius:14px;border:1px solid var(--ring);background:var(--page);
-  color:var(--ink-1);font-size:1.05rem;font-weight:600;cursor:pointer;
+.scale{display:flex;align-items:center;justify-content:space-between;gap:2px;margin:18px 0 0}
+.scale button,.likert5 button{
+  flex:1;background:none;border:none;cursor:pointer;padding:0;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
 }
-.scale button:hover{border-color:var(--accent)}
-.scale button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.scale button{height:60px}
+.dotv{display:block;border-radius:50%;border:2px solid var(--axis);background:transparent;
+  transition:border-color .15s ease, background-color .15s ease, transform .15s ease}
+.scale button:nth-child(1) .dotv{width:42px;height:42px}
+.scale button:nth-child(2) .dotv{width:34px;height:34px}
+.scale button:nth-child(3) .dotv{width:27px;height:27px}
+.scale button:nth-child(4) .dotv{width:21px;height:21px}
+.scale button:nth-child(5) .dotv{width:27px;height:27px}
+.scale button:nth-child(6) .dotv{width:34px;height:34px}
+.scale button:nth-child(7) .dotv{width:42px;height:42px}
+.scale button:hover .dotv,.likert5 button:hover .dotv{border-color:var(--accent)}
+.scale button[aria-pressed="true"] .dotv,.likert5 button[aria-pressed="true"] .dotv{
+  background:var(--accent);border-color:var(--accent);transform:scale(1.08)}
+.scale button:disabled{opacity:1;cursor:default}
+.scalelabel{text-align:center;font-size:.88rem;color:var(--accent);font-weight:600;min-height:1.5em;margin:4px 0 0}
 .anchors{display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink-3)}
 .quiznav{display:flex;justify-content:space-between;margin-top:20px;gap:10px}
 
 /* ── 結果 · result ── */
-.essence{font-family:var(--serif);font-size:1.18rem;line-height:1.9;color:var(--ink-1);
-  border-left:2px solid var(--accent);padding-left:14px;margin:16px 0 10px}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 .tile{background:var(--page);border:1px solid var(--ring);border-radius:14px;padding:13px 15px}
 .tile .v{font-size:1.9rem;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
@@ -168,10 +178,13 @@ th{color:var(--ink-3);font-weight:600;font-size:.78rem;letter-spacing:.04em}
 td .del{color:var(--crit);background:none;border:none;cursor:pointer;font-size:.85rem}
 
 /* ── 檢核表 · checklist ── */
-.likert5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0 2px}
-.likert5 button{min-height:44px;border-radius:12px;border:1px solid var(--ring);background:var(--page);
-  color:var(--ink-1);font-weight:600;cursor:pointer}
-.likert5 button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.likert5{display:flex;align-items:center;justify-content:space-between;gap:2px;margin:8px 0 0}
+.likert5 button{height:48px}
+.likert5 button:nth-child(1) .dotv{width:34px;height:34px}
+.likert5 button:nth-child(2) .dotv{width:27px;height:27px}
+.likert5 button:nth-child(3) .dotv{width:21px;height:21px}
+.likert5 button:nth-child(4) .dotv{width:27px;height:27px}
+.likert5 button:nth-child(5) .dotv{width:34px;height:34px}
 .clitem{padding:13px 0;border-bottom:1px solid var(--grid)}
 .clitem p{margin:0 0 4px;font-size:.95rem}
 
@@ -222,7 +235,6 @@ section{animation:fade-up .4s ease}
       <path class="th-line" d="M15 26 C 55 4, 105 48, 160 26 S 265 4, 322 26"/>
       <circle class="th-dot th-dot2" cx="329" cy="26" r="5"/>
     </svg>
-    <p class="heropoem" data-i18n="landing.poem"></p>
     <p class="muted" data-i18n-html="landing.body"></p>
     <p style="margin-top:18px">
       <button class="primary" id="landingStart" type="button" data-i18n="landing.start"></button>
@@ -271,10 +283,11 @@ section{animation:fade-up .4s ease}
     <p class="tiny" id="quizWho"></p>
     <div class="progress"><div id="pbar" style="width:0%"></div></div>
     <p class="tiny" id="qnum"></p>
-    <p class="tiny" data-i18n="quiz.specificReminder"></p>
+    <p class="tiny" id="quizReminder"></p>
     <p class="qtext" id="qtext"></p>
     <div class="scale" id="scale7"></div>
     <div class="anchors"><span data-i18n="quiz.anchorLow"></span><span data-i18n="quiz.anchorMid"></span><span data-i18n="quiz.anchorHigh"></span></div>
+    <p class="scalelabel" id="scaleLabel">&nbsp;</p>
     <div class="quiznav">
       <button class="ghost" id="prevBtn" type="button" data-i18n="quiz.prev"></button>
       <button class="ghost" id="quitBtn" type="button" data-i18n="quiz.quit"></button>
@@ -381,11 +394,10 @@ zh: {
   "rel.family": "家人", "rel.friend": "朋友", "rel.colleague": "同事", "rel.other": "其他",
   "rel.general.short": "一般",
 
-  "landing.eyebrow": "書識圈 ×《Secure》· 一場自我探索",
+  "landing.eyebrow": "書識圈 ×《Secure》讀書會",
   "landing.title": "每段關係，都有自己的座標",
-  "landing.poem": "傳說裏，有一條看不見的線，把你和你重視的人繫在一起。這裏，我們試着把這些線畫出來——看看每一條線，此刻停在甚麼位置。",
   "landing.body": "依附研究數十年來的一個重要發現：依附風格並非一個固定的「人格標籤」——你面對媽媽時可以是安全型，面對伴侶時卻可能偏向焦慮型。Amir Levine 在《Secure》一書中對此有深入淺出的討論。本工具採用研究中廣泛使用的兩個維度，透過 9 條簡單題目，為你和每一位重要的人計算<strong>焦慮</strong>與<strong>迴避</strong>兩個分數，繪成一張屬於你的「依附地形圖」；隔一段時間重測，更可以看到每段關係隨時間移動的軌跡。",
-  "landing.start": "開始探索 →",
+  "landing.start": "開始測驗 →",
   "landing.viewMap": "查看我的地形圖",
   "landing.privacyTitle": "🔒 你的私隱",
   "landing.privacyBody": "無需登入、無需帳號——所有紀錄<strong>只儲存在此裝置的瀏覽器內</strong>，不會上傳到任何伺服器，連名稱也不會離開你的裝置。想備份、轉用新裝置，或與書友互相比較，隨時可以在「紀錄」頁<strong>匯出／匯入</strong>資料檔。",
@@ -410,13 +422,19 @@ zh: {
   "quiz.qnum": "第 {n} 題／共 9 題",
   "quiz.prev": "← 上一題",
   "quiz.quit": "離開測驗",
-  "quiz.anchorLow": "1 非常不同意",
-  "quiz.anchorMid": "4 中立／不確定",
-  "quiz.anchorHigh": "7 非常同意",
+  "quiz.anchorLow": "非常不同意",
+  "quiz.anchorMid": "中立",
+  "quiz.anchorHigh": "非常同意",
+  "scaleLabels": ["非常不同意","不同意","有點不同意","中立／不確定","有點同意","同意","非常同意"],
+  "scale5Labels": ["非常不同意","不同意","一般","同意","非常同意"],
   "quiz.specificReminder": "請根據你與這一位對象的關係作答，而不是整體人際關係。",
+  "quiz.generalReminder": "請根據你在親密關係中的整體經驗作答。",
+  "quiz.whoGeneral": "評估：你整體的依附傾向",
 
   "result.styleIs": "這段關係目前屬於：",
+  "result.styleIsGeneral": "你目前的整體依附傾向屬於：",
   "result.snapshotNote": "這是此刻、這段關係的自我觀察，不是固定標籤。",
+  "result.snapshotNoteGeneral": "這是此刻的自我觀察，不是固定標籤。",
   "result.anxLabel": "焦慮分數（第 7–9 題平均，1–7）",
   "result.avdLabel": "迴避分數（第 1–6 題平均，1–7）",
   "result.tipTitle": "給你的建議",
@@ -499,6 +517,18 @@ zh: {
     "我擔心這個人不會像我重視他／她一樣重視我。",
   ],
 
+  "questionsGeneral": [
+    "當我有需要時，向親近的人求助是有幫助的。",
+    "我通常會跟親近的人談我的困擾和憂慮。",
+    "遇到事情，我會找親近的人商量。",
+    "我覺得依靠別人是容易的。",
+    "我不太願意向別人打開心扉。",
+    "我寧願不讓別人知道我內心深處的感受。",
+    "我常常擔心親近的人並不真正關心我。",
+    "我害怕親近的人可能會離開我。",
+    "我擔心別人對我的重視，不如我對他們的重視。",
+  ],
+
   "collabItems": [
     "這個人把我的福祉放在心上。",
     "這個人願意付出，也願意接受。",
@@ -518,17 +548,21 @@ zh: {
   ],
 
   "styles": {
-    secure:  {name:"安全型", essence:"你能安心靠近，也能安心做自己。",
+    secure:  {name:"安全型",
       desc:"低焦慮、低迴避。你在這段關係中能自在地親近對方、表達需要，也不太擔心被拋棄。這是最有利雙方成長的依附狀態。",
+      descGeneral:"低焦慮、低迴避。整體而言，你能自在地與人親近、表達需要，也不太擔心被拋棄。",
       tip:"繼續保持 CARRP——一致、可得、有回應、可靠、可預測。安全感是會傳染的：你的穩定也會令身邊的人更安全。"},
-    anxious: {name:"焦慮型", essence:"你愛得很深，也怕失去得很快。",
+    anxious: {name:"焦慮型",
       desc:"高焦慮、低迴避。你渴望親近這個人，但常擔心對方不夠在乎你、可能離開你，情緒容易隨對方的一舉一動起伏。",
+      descGeneral:"高焦慮、低迴避。整體而言，你渴望與人親近，但常擔心對方不夠在乎你，情緒容易隨關係的狀態起伏。",
       tip:"焦慮型的敏銳可以是一種很有用的覺察力，但也容易被不安放大。留意「抗議行為—後悔」循環；直接、平靜地說出需要，並觀察對方是否 CARRP——值得的人會用行動讓你安心。"},
-    avoidant:{name:"迴避型", essence:"有足夠的空間，你才感到安全。",
+    avoidant:{name:"迴避型",
       desc:"低焦慮、高迴避。你重視獨立和空間，不習慣向這個人打開心扉，親密貼近反而令你不自在。",
+      descGeneral:"低焦慮、高迴避。整體而言，你重視獨立和空間，不習慣向人打開心扉，太過親近反而令你不自在。",
       tip:"需要距離並非罪過，但長期迴避會令對方被觸發、關係惡性循環。嘗試小步分享感受，主動給予微小而穩定的回應（正面的 SIMIs）。"},
-    fearful: {name:"恐懼迴避型", essence:"你渴望靠近，又害怕被看見。",
+    fearful: {name:"恐懼迴避型",
       desc:"高焦慮、高迴避。你既渴望親密又害怕受傷，於是時而靠近、時而抽離，關係中經常感到拉扯。",
+      descGeneral:"高焦慮、高迴避。整體而言，你既渴望親密又害怕受傷，時而靠近、時而抽離。",
       tip:"這往往與過往受傷的經驗有關。從最安全、最 CARRP 的關係開始練習信任；若困擾持續，尋求心理專業協助是很值得的投資。"},
   },
 },
@@ -546,11 +580,10 @@ en: {
   "rel.family": "Family", "rel.friend": "Friend", "rel.colleague": "Colleague", "rel.other": "Other",
   "rel.general.short": "General",
 
-  "landing.eyebrow": "Bookfort × Secure · a journey inward",
+  "landing.eyebrow": "Bookfort × Secure book club",
   "landing.title": "Every relationship has its own coordinates",
-  "landing.poem": "They say an invisible thread ties you to the people who matter to you. Here, we try to draw those threads — and see where each one rests, right now.",
   "landing.body": "A key finding from decades of attachment research: attachment style is not a fixed personality label — you can be secure with your mum yet lean anxious with your partner. Dr. Amir Levine discusses this in depth in <em>Secure</em>. This tool uses the two dimensions widely used in the research — <strong>anxiety</strong> and <strong>avoidance</strong> — to score 9 short questions about one specific relationship and plot it on your personal “attachment topography” map. Retake it over time and see how each relationship shifts.",
-  "landing.start": "Begin the journey →",
+  "landing.start": "Start the quiz →",
   "landing.viewMap": "View my map",
   "landing.privacyTitle": "🔒 Your privacy",
   "landing.privacyBody": "No login, no account — every record is stored <strong>only in this device's browser</strong>. Nothing is uploaded anywhere; even the names never leave your phone. To back up, move to a new device, or compare with friends, use <strong>export / import</strong> on the Records page anytime.",
@@ -575,13 +608,19 @@ en: {
   "quiz.qnum": "Question {n} of 9",
   "quiz.prev": "← Back",
   "quiz.quit": "Exit quiz",
-  "quiz.anchorLow": "1 Strongly disagree",
-  "quiz.anchorMid": "4 Neutral / unsure",
-  "quiz.anchorHigh": "7 Strongly agree",
+  "quiz.anchorLow": "Strongly disagree",
+  "quiz.anchorMid": "Neutral",
+  "quiz.anchorHigh": "Strongly agree",
+  "scaleLabels": ["Strongly disagree","Disagree","Slightly disagree","Neutral / unsure","Slightly agree","Agree","Strongly agree"],
+  "scale5Labels": ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"],
   "quiz.specificReminder": "Answer for this specific person, not your relationships in general.",
+  "quiz.generalReminder": "Answer from your overall experience in close relationships.",
+  "quiz.whoGeneral": "Assessing: your overall attachment pattern",
 
   "result.styleIs": "Right now, this relationship appears to be: ",
+  "result.styleIsGeneral": "Right now, your overall pattern appears to be: ",
   "result.snapshotNote": "This is a snapshot of this relationship, not a fixed label.",
+  "result.snapshotNoteGeneral": "This is a snapshot of where you are now, not a fixed label.",
   "result.anxLabel": "Anxiety score (mean of Q7–9, 1–7)",
   "result.avdLabel": "Avoidance score (mean of Q1–6, 1–7)",
   "result.tipTitle": "A tip for you",
@@ -665,6 +704,18 @@ en: {
     "I worry that this person won't care about me as much as I care about him or her.",
   ],
 
+  "questionsGeneral": [
+    "It helps to turn to the people I'm close to in times of need.",
+    "I usually discuss my problems and concerns with the people I'm close to.",
+    "I talk things over with the people in my life.",
+    "I find it easy to depend on others.",
+    "I don't feel comfortable opening up to others.",
+    "I prefer not to show others how I feel deep down.",
+    "I often worry that the people I care about don't really care for me.",
+    "I'm afraid the people I'm close to may abandon me.",
+    "I worry that others won't care about me as much as I care about them.",
+  ],
+
   "collabItems": [
     "This person keeps my well-being in mind.",
     "This person is willing both to give and to receive.",
@@ -684,17 +735,21 @@ en: {
   ],
 
   "styles": {
-    secure:  {name:"Secure", essence:"You can come close, and still be yourself.",
+    secure:  {name:"Secure",
       desc:"Low anxiety, low avoidance. In this relationship you're comfortable getting close, expressing needs, and you don't worry much about being left. This is the state that lets both people grow.",
+      descGeneral:"Low anxiety, low avoidance. Overall, you're comfortable getting close and expressing needs, without much fear of being left.",
       tip:"Keep being CARRP — consistent, available, responsive, reliable, predictable. Security is contagious: your steadiness makes the people around you more secure too."},
-    anxious: {name:"Anxious", essence:"You love deeply — and fear losing it just as deeply.",
+    anxious: {name:"Anxious",
       desc:"High anxiety, low avoidance. You crave closeness with this person but often worry they don't care enough or might leave, and your emotions may rise and fall with their signals.",
+      descGeneral:"High anxiety, low avoidance. Overall, you crave closeness but often worry that others don't care enough, and your mood tracks how your relationships are going.",
       tip:"Anxious sensitivity can be a useful form of awareness, but it can also be amplified by insecurity. Watch the protest-behaviour → regret cycle; state your needs directly and calmly, and check whether this person is CARRP — the right people reassure you through action."},
-    avoidant:{name:"Avoidant", essence:"Space is where you feel safe.",
+    avoidant:{name:"Avoidant",
       desc:"Low anxiety, high avoidance. You value independence and space, rarely open up to this person, and too much closeness feels uncomfortable.",
+      descGeneral:"Low anxiety, high avoidance. Overall, you value independence and space, rarely open up, and too much closeness feels uncomfortable.",
       tip:"Needing distance is no crime, but chronic avoidance triggers the other person and feeds a vicious cycle. Try sharing feelings in small steps and offering small, steady positive responses (positive SIMIs)."},
-    fearful: {name:"Fearful-avoidant", essence:"You long to be close, yet fear being seen.",
+    fearful: {name:"Fearful-avoidant",
       desc:"High anxiety and high avoidance. You long for intimacy yet fear getting hurt, so you swing between approaching and withdrawing, and the relationship often feels like a tug-of-war.",
+      descGeneral:"High anxiety and high avoidance. Overall, you long for intimacy yet fear getting hurt, swinging between approaching and withdrawing.",
       tip:"This pattern often traces back to past hurt. Practise trust starting from your safest, most CARRP relationship — and if the distress persists, professional support is a worthwhile investment."},
   },
 },
@@ -1069,23 +1124,43 @@ document.getElementById("quitBtn").addEventListener("click",()=>{ quiz=null; sho
 document.getElementById("prevBtn").addEventListener("click",()=>{ if(quiz && quiz.i>0){ quiz.i--; renderQuestion(); } });
 
 function renderQuestion(){
-  document.getElementById("quizWho").textContent = tp("quiz.who",{name:quiz.person.name, type:t("rel."+quiz.person.type)});
+  // 一般依附風格用整體版題目與提示，避免「這個人」的矛盾
+  const isGen = quiz.person.type==="general";
+  document.getElementById("quizWho").textContent = isGen ? t("quiz.whoGeneral")
+    : tp("quiz.who",{name:quiz.person.name, type:t("rel."+quiz.person.type)});
+  document.getElementById("quizReminder").textContent = isGen ? t("quiz.generalReminder") : t("quiz.specificReminder");
   document.getElementById("qnum").textContent = tp("quiz.qnum",{n:quiz.i+1});
   const qt = document.getElementById("qtext");
-  qt.textContent = t("questions")[quiz.i];
+  qt.textContent = (isGen ? t("questionsGeneral") : t("questions"))[quiz.i];
   qt.classList.remove("qanim"); void qt.offsetWidth; qt.classList.add("qanim");
   document.getElementById("pbar").style.width = ((quiz.i+1)/9*100)+"%";
   document.getElementById("prevBtn").disabled = quiz.i===0;
+  const labels = t("scaleLabels");
+  const lab = document.getElementById("scaleLabel");
+  lab.textContent = quiz.answers[quiz.i] ? labels[quiz.answers[quiz.i]-1] : " ";
   const sc = document.getElementById("scale7");
   sc.innerHTML="";
   for(let v=1; v<=7; v++){
     const b=document.createElement("button");
-    b.type="button"; b.textContent=v;
+    b.type="button";
+    b.setAttribute("aria-label", v+" · "+labels[v-1]);
     b.setAttribute("aria-pressed", quiz.answers[quiz.i]===v?"true":"false");
+    const d=document.createElement("span");
+    d.className="dotv";
+    b.appendChild(d);
     b.addEventListener("click",()=>{
       quiz.answers[quiz.i]=v;
-      if(quiz.i<8){ quiz.i++; renderQuestion(); }
-      else finishQuiz();
+      lab.textContent = labels[v-1];
+      sc.querySelectorAll("button").forEach((bb,idx)=>{
+        bb.setAttribute("aria-pressed", idx+1===v?"true":"false");
+        bb.disabled = true; // 稍停讓選擇被看見，再前進
+      });
+      const at = quiz.i;
+      setTimeout(()=>{
+        if(!quiz || quiz.i!==at) return;
+        if(quiz.i<8){ quiz.i++; renderQuestion(); }
+        else finishQuiz();
+      }, 260);
     });
     sc.appendChild(b);
   }
@@ -1110,16 +1185,16 @@ function styleColor(styleKey){
 
 function renderResult({person, rec}){
   const st = t("styles")[rec.style];
+  const isGen = person.type==="general";
   document.getElementById("resultCard").innerHTML =
     '<p class="tiny">'+esc(person.name)+"（"+t("rel."+person.type)+"）· "+fmtDate(rec.date)+"</p>"+
-    "<h2>"+t("result.styleIs")+'<span class="badge" style="background:'+styleColor(rec.style)+'">'+st.name+"</span></h2>"+
-    (st.essence ? '<p class="essence">'+st.essence+"</p>" : "")+
+    "<h2>"+t(isGen?"result.styleIsGeneral":"result.styleIs")+'<span class="badge" style="background:'+styleColor(rec.style)+'">'+st.name+"</span></h2>"+
     '<div class="tiles">'+
       '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">'+t("result.anxLabel")+"</div></div>"+
       '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">'+t("result.avdLabel")+"</div></div>"+
     "</div>"+
-    '<p class="tiny">'+t("result.snapshotNote")+"</p>"+
-    "<p>"+st.desc+"</p><h3>"+t("result.tipTitle")+"</h3><p class='muted'>"+st.tip+"</p>"+
+    '<p class="tiny">'+t(isGen?"result.snapshotNoteGeneral":"result.snapshotNote")+"</p>"+
+    "<p>"+((isGen && st.descGeneral) ? st.descGeneral : st.desc)+"</p><h3>"+t("result.tipTitle")+"</h3><p class='muted'>"+st.tip+"</p>"+
     (person.results.length>1 ? '<p class="tiny">'+tp("result.nth",{name:esc(person.name), n:person.results.length})+"</p>" : "");
   const box=document.getElementById("resultChart");
   box.innerHTML="";
@@ -1210,6 +1285,7 @@ let collabAns = Array(15).fill(0);
 function renderCollabItems(){
   const box=document.getElementById("collabItems");
   box.innerHTML="";
+  const labels5 = t("scale5Labels");
   t("collabItems").forEach((txt,i)=>{
     const d=document.createElement("div");
     d.className="clitem";
@@ -1218,8 +1294,12 @@ function renderCollabItems(){
     row.className="likert5";
     for(let v=1; v<=5; v++){
       const b=document.createElement("button");
-      b.type="button"; b.textContent=v;
+      b.type="button";
+      b.setAttribute("aria-label", v+" · "+labels5[v-1]);
       b.setAttribute("aria-pressed", collabAns[i]===v?"true":"false");
+      const dot=document.createElement("span");
+      dot.className="dotv";
+      b.appendChild(dot);
       b.addEventListener("click",()=>{
         collabAns[i]=v;
         row.querySelectorAll("button").forEach((bb,idx)=>bb.setAttribute("aria-pressed", idx+1===v?"true":"false"));
