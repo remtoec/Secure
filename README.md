@@ -17,7 +17,8 @@ Users answer 9 questions (1–7 Likert) about **one specific relationship**, get
 anxiety score and an avoidance score, and see the relationship plotted on a
 four-quadrant "attachment topography" map. Multiple people each get a colour on
 one shared map; retakes draw a dated trajectory. A separate 15-item checklist
-("is this relationship worth investing in?") gives a 15–75 total. Everything is
+("is this relationship worth investing in?") gives a 15–75 total and lists
+the lower-scoring items as discussion prompts — no verdict bands. Everything is
 stored in the browser's localStorage — no accounts, no server — with JSON
 export/import for backup and a PNG export of the map.
 
@@ -40,8 +41,9 @@ it did not invent it.
 
 Implemented in `js/scoring.js` (`REVERSED`, `scoreAnswers`, `styleOf`).
 The chart draws x = anxiety, y = avoidance, 1–7, dashed lines at 4 — matching
-the book's figures. Checklist bands (60+/45+/<45) are our own rough guide, not
-from the book; they live in `js/app.js` (`collabScoreBtn` handler).
+the book's figures. The checklist deliberately renders **no verdict bands**:
+the book only records a total, so the app shows the total plus any items
+scored ≤3 as discussion prompts (`collabScoreBtn` handler in `js/app.js`).
 
 ---
 
@@ -82,8 +84,9 @@ The general mode also uses `quiz.whoGeneral`, `quiz.generalReminder`,
 `result.styleIsGeneral`, `result.snapshotNoteGeneral` and each style's
 `descGeneral`.
 
-**Change checklist items or bands** — `collabItems` in `js/i18n.js`; band
-thresholds and colours in the `collabScoreBtn` handler in `js/app.js`.
+**Change checklist items** — `collabItems` in `js/i18n.js`. The result view
+lists items scored ≤3 (threshold in the `collabScoreBtn` handler in
+`js/app.js`); it deliberately gives no pass/fail verdict.
 
 **Add a relationship type** — add the key to `REL_KEYS` in `js/i18n.js` and a
 `rel.<key>` label in both languages. Types are stored as keys, so old data is
@@ -99,15 +102,19 @@ unaffected (legacy Chinese labels from v1 data are migrated in `js/store.js`,
 light, OS-dark and the in-app toggle). The chart reads them at render time.
 
 **Design language (「安全基地 · Secure Base」)** — sand paper, moss ink, one
-harbour-teal accent; Song-serif (`--serif`) for titles/questions/style names,
-sans (`--sans`) for UI. The hero line draws a path that leaves a base dot and
-returns to it — Levine's secure-base image (explore, come back). Other
-signature elements: the quiz progress line with a knot (`.progress`), the
-graduated dot scale (`.dotv` — size encodes intensity; the tapped answer's
-verbal label shows in `#scaleLabel`), and a faint teal wash on the map's
-secure quadrant (`js/chart.js`). All motion sits behind
-`prefers-reduced-motion`; series colours in the chart are a separate,
-CVD-validated palette.
+harbour-teal accent; serif (`--serif`) for titles/questions/style names, sans
+(`--sans`) for UI. A 165 KB subset of Noto Serif TC (weight 600, OFL licence
+— see `fonts/LICENSE.txt`) is self-hosted so Android renders the serif voice
+too; it covers every character currently in `js/i18n.js`, with per-glyph
+fallback to system fonts if new characters are added (re-subset if wording
+changes a lot). The hero line draws a path that leaves a base dot and returns
+to it — Levine's secure-base image. Other signature elements: the quiz
+progress line with a knot (`.progress`) and the graduated dot scale (`.dotv`;
+the tapped answer's verbal label shows in `#scaleLabel`). The map has no
+quadrant tinting on purpose — the labels state the facts, the chart doesn't
+rank. All motion sits behind `prefers-reduced-motion`; series colours are a
+separate, CVD-validated palette. Result badges use their own fixed dark
+palette for contrast, unrelated to the per-person chart colours.
 
 **Copy rules** — all UI copy follows `docs/translation-principles.md`
 (supplied by the club): concrete verbs and situations over abstractions, a
@@ -129,14 +136,13 @@ node build.js        # rebuilds dist/single.html (self-contained) + dist/artifac
 git add -A && git commit -m "..." && git push
 ```
 
-Pushing to `claude/attachment-quiz-traditional-chinese-s99i85` triggers
-`.github/workflows/deploy-pages.yml`, which uploads the whole repo to GitHub
-Pages (~1 minute). Remember to run `build.js` before committing if you changed
-any source file, or `dist/single.html` will lag behind the modular app.
-
-To deploy from a different branch later (e.g. after merging to `main`), change
-the branch name under `on.push.branches` in the workflow file. Pages source
-must stay set to "GitHub Actions" (repo Settings → Pages).
+Pushing to `main` **or** `claude/attachment-quiz-traditional-chinese-s99i85`
+triggers `.github/workflows/deploy-pages.yml`, which uploads the whole repo to
+GitHub Pages (~1 minute). Remember to run `build.js` before committing if you
+changed any source file, or `dist/single.html` will lag behind the modular
+app. `main` mirrors the working branch; prefer committing to `main` going
+forward, and set it as the repo's default branch in Settings → Branches.
+Pages source must stay set to "GitHub Actions" (repo Settings → Pages).
 
 ---
 

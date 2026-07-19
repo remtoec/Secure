@@ -12,7 +12,7 @@
   --s1:#2a78d6; --s2:#008300; --s3:#e87ba4; --s4:#eda100;
   --s5:#1baf7a; --s6:#eb6834; --s7:#4a3aa7; --s8:#e34948;
   --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
-  --serif:"Songti TC","Noto Serif TC","Songti SC","Source Han Serif TC","PMingLiU",Georgia,"Times New Roman",serif;
+  --serif:"BF Serif","Songti TC","Noto Serif TC","Songti SC","Source Han Serif TC","PMingLiU",Georgia,"Times New Roman",serif;
   --sans:system-ui,-apple-system,"Segoe UI","PingFang HK","PingFang TC","Microsoft JhengHei",sans-serif;
   --shadow:0 1px 2px rgba(38,42,34,.05), 0 4px 16px rgba(38,42,34,.04);
 }
@@ -39,6 +39,13 @@
   --shadow:none;
 }
 
+/* 自載宋體子集（Noto Serif TC 600, OFL）；缺字時逐字回退到系統字型 */
+@font-face{
+  font-family:"BF Serif";
+  src:url("../fonts/serif-subset.woff2") format("woff2");
+  font-weight:100 900;
+  font-display:swap;
+}
 *{box-sizing:border-box}
 body{
   margin:0; background:var(--page); color:var(--ink-1);

@@ -1,0 +1,5 @@
+The file serif-subset.woff2 is a character subset of Noto Serif TC
+(instanced at weight 600), copyright Google and the Noto Project Authors,
+licensed under the SIL Open Font License 1.1:
+https://openfontlicense.org
+Source: https://github.com/google/fonts/tree/main/ofl/notoseriftc

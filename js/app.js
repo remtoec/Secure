@@ -299,17 +299,24 @@ document.getElementById("collabScoreBtn").addEventListener("click",()=>{
   if(collabAns.some(v=>!v)){ alert(t("collab.unanswered")); return; }
   const total=collabAns.reduce((a,b)=>a+b,0);
   const name=document.getElementById("collabName").value.trim()||t("collab.unnamed");
-  let band, bandColor;
-  if(total>=60){ band=t("collab.bandHigh"); bandColor="var(--good)"; }
-  else if(total>=45){ band=t("collab.bandMid"); bandColor="var(--warn)"; }
-  else { band=t("collab.bandLow"); bandColor="var(--serious)"; }
   db.collab.push({id:uid(), name, date:new Date().toISOString(), answers:collabAns.slice(), total});
   saveDb();
+  // 不下判決：總分之外，列出分數較低的題目，留給讀書會討論
+  const items=t("collabItems");
+  const lows=collabAns.map((v,i)=>({v,i})).filter(q=>q.v<=3);
+  let review;
+  if(lows.length){
+    review='<h3>'+t("collab.lowTitle")+'</h3><p class="muted">'+t("collab.lowIntro")+"</p><ul class='muted'>"+
+      lows.map(q=>"<li>"+(q.i+1)+". "+items[q.i]+'（'+q.v+" / 5）</li>").join("")+"</ul>";
+  }else{
+    review='<p class="muted">'+t("collab.allHigh")+"</p>";
+  }
   document.getElementById("collabResult").innerHTML=
     '<div class="tile" style="margin-top:14px"><div class="v">'+total+' <span class="tiny">/ 75</span></div>'+
     '<div class="l">'+tp("collab.resultLabel",{name:esc(name)})+"</div></div>"+
-    '<p style="border-left:4px solid '+bandColor+';padding-left:10px" class="muted">'+band+"</p>"+
-    '<p class="tiny">'+t("collab.bandNote")+"</p>"+
+    review+
+    '<p class="tiny">'+t("collab.bookOrder")+"</p>"+
+    '<p class="tiny">'+t("collab.totalNote")+"</p>"+
     '<p><button class="ghost" id="collabClearBtn" type="button">'+t("collab.clear")+"</button></p>";
   document.getElementById("collabClearBtn").addEventListener("click",()=>{
     collabAns=Array(15).fill(0);

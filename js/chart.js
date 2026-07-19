@@ -28,9 +28,6 @@ function buildChart(opt){
     if(text!=null) e.textContent=text;
     svg.appendChild(e); return e;
   }
-  // 安全象限微暈 · the harbour: a barely-there warm wash on the secure quadrant
-  el("rect",{x:x(1), y:y(4), width:x(4)-x(1), height:y(1)-y(4),
-    fill:cssVar("--accent")||"#b23a52", opacity:.05});
   // 格線 · gridlines
   for(let v=1; v<=7; v++){
     el("line",{x1:x(v),y1:m.t,x2:x(v),y2:m.t+ih,stroke:grid,"stroke-width":1});

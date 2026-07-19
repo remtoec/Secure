@@ -10,8 +10,11 @@ const path = require("path");
 const root = __dirname;
 let html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 
-// inline the stylesheet
-const css = fs.readFileSync(path.join(root, "css/style.css"), "utf8");
+// inline the stylesheet, with the subset font embedded as a data URI
+let css = fs.readFileSync(path.join(root, "css/style.css"), "utf8");
+const fontB64 = fs.readFileSync(path.join(root, "fonts/serif-subset.woff2")).toString("base64");
+css = css.replace('url("../fonts/serif-subset.woff2")',
+  'url("data:font/woff2;base64,' + fontB64 + '")');
 html = html.replace('<link rel="stylesheet" href="css/style.css">', "<style>\n" + css + "</style>");
 
 // inline the scripts, preserving order
