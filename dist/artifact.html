@@ -7,7 +7,7 @@
 :root{
   color-scheme: light;
   --page:#f4f1ea; --surface-1:#fcfaf5;
-  --ink-1:#262a22; --ink-2:#5c6153; --ink-3:#8f9486;
+  --ink-1:#262a22; --ink-2:#5c6153; --ink-3:#6a6f63;
   --grid:#e6e2d5; --axis:#c8c4b4; --ring:rgba(38,42,34,.10);
   --accent:#2f6e60; --accent-soft:#dce9e2; --accent-ink:#ffffff;
   --s1:#2a78d6; --s2:#008300; --s3:#e87ba4; --s4:#eda100;
@@ -87,7 +87,7 @@ nav.tabs button[aria-selected="true"]::after{
 .eyebrow{margin:0 0 10px;font-size:.72rem;letter-spacing:.22em;color:var(--accent);font-weight:700;text-transform:uppercase}
 .herotitle{font-family:var(--serif);font-size:1.7rem;line-height:1.45;margin:0 0 6px;text-wrap:balance;font-weight:700}
 .muted{color:var(--ink-2);font-size:.92rem}
-.tiny{color:var(--ink-3);font-size:.8rem}
+.tiny{color:var(--ink-3);font-size:.84rem}
 
 /* ── 安全基地 hero 動畫 · out from the base, and back ── */
 .thread{display:block;width:100%;max-width:340px;height:56px;margin:14px 0 6px}
@@ -153,7 +153,7 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
   background:var(--accent);border-color:var(--accent);transform:scale(1.08)}
 .scale button:disabled{opacity:1;cursor:default}
 .scalelabel{text-align:center;font-size:.88rem;color:var(--accent);font-weight:600;min-height:1.5em;margin:4px 0 0}
-.anchors{display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink-3)}
+.anchors{display:flex;justify-content:space-between;font-size:.78rem;color:var(--ink-3)}
 .quiznav{display:flex;justify-content:space-between;margin-top:20px;gap:10px}
 
 /* ── 結果 · result ── */
@@ -162,7 +162,8 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 .tile .v{font-size:1.9rem;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
 .tile .l{font-size:.8rem;color:var(--ink-2)}
 .badge{display:inline-block;padding:6px 16px;border-radius:99px;font-weight:700;font-size:1.02rem;
-  color:#fff;font-family:var(--serif);letter-spacing:.06em;animation:badge-in .5s cubic-bezier(.2,.9,.3,1.2)}
+  background:var(--accent);color:var(--accent-ink);font-family:var(--serif);letter-spacing:.06em;
+  animation:badge-in .5s cubic-bezier(.2,.9,.3,1.2)}
 .badge-sm{padding:2px 10px;font-size:.85rem;animation:none}
 @keyframes badge-in{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
 
@@ -421,7 +422,7 @@ zh: {
   "home.recordMany": "次",
   "home.stylesTitle": "四種依附風格",
   "home.stylesBody": "<strong>安全型</strong>：擔心少，靠近也自在。可以依賴對方，也接得住對方的依賴；吵完架，往往是先道歉的那一個。<br><strong>焦慮型</strong>：對關係的變化極敏感，別人未察覺的裂縫你先看見。代價是訊息一慢、語氣一冷，你就開始反覆檢查和解讀，很難停下來。<br><strong>迴避型</strong>：靠自己最安心。事情自己解決，情緒自己消化；對方想再走近一步，你會本能地退半步。<br><strong>恐懼迴避型</strong>：想靠近時怕受傷，退開後又掛念。兩股力同時拉，最耗神。",
-  "home.stylesNote": "成人依附與童年的關聯不足一成，其餘來自後來的關係經驗。位置會移動，所以值得隔一段時間再量一次。",
+  "home.stylesNote": "四種風格描述的是某段關係此刻如何影響你，不是性格判決。成人依附與童年的關聯不足一成，其餘來自後來的關係經驗；位置會移動，所以值得隔一段時間再量。",
 
   "quiz.who": "評估對象：{name}（{type}）",
   "quiz.qnum": "第 {n} 題／共 9 題",
@@ -432,7 +433,7 @@ zh: {
   "quiz.anchorHigh": "非常同意",
   "scaleLabels": ["非常不同意","不同意","有點不同意","中立／不確定","有點同意","同意","非常同意"],
   "scale5Labels": ["非常不同意","不同意","一般","同意","非常同意"],
-  "quiz.specificReminder": "請根據你與這一位對象的關係作答，而不是整體人際關係。",
+  "quiz.specificReminder": "請只想這一位對象：你在這段關係裏通常會怎樣反應？",
   "quiz.generalReminder": "請根據你在親密關係中的整體經驗作答。",
   "quiz.whoGeneral": "評估：你整體的依附傾向",
 
@@ -559,7 +560,7 @@ zh: {
       descGeneral:"焦慮低、迴避也低。整體而言，你不用花太多力氣確認別人走不走，注意力可以放在生活本身。",
       tip:"這種穩定靠日常維持：對方需要時在場、有回應、說到做到（書中簡稱 CARRP）。Levine 有一條吵架規則值得試：一次只准一個人發脾氣，另一個負責穩住場面。你保持穩定，身邊的人也會慢慢安定下來。"},
     anxious: {name:"焦慮型",
-      desc:"焦慮高、迴避低。你想靠近這個人，但一直在確認：他在乎我嗎？今晚會回覆嗎？別人看不見的細節你都看見，然後開始解讀，停不下來。",
+      desc:"焦慮高、迴避低。這段關係很容易佔住你的注意力：他在乎我嗎？今晚會回覆嗎？別人看不見的細節你都看見，然後開始解讀，停不下來。",
       descGeneral:"焦慮高、迴避低。整體而言，你對關係的變化很敏感，常常在確認自己在別人心中的位置，也容易被這件事消耗。",
       tip:"你的敏感是真的：關係出問題，你通常最早知道。消耗你的是後面那段：試探、發脾氣或冷戰，事後又後悔（Levine 稱之為抗議行為）。下次跳過試探，直接講需要，然後看對方的反應。可靠的人會用行動讓你放心。如果需要已經講得清楚，幾個月後你仍然在猜，問題就未必在你的焦慮。"},
     avoidant:{name:"迴避型",
@@ -569,7 +570,7 @@ zh: {
     fearful: {name:"恐懼迴避型",
       desc:"焦慮和迴避都高。靠近的時候怕受傷，退開之後又掛念。兩種反應都在保護你，只是方向相反，所以特別累。",
       descGeneral:"焦慮和迴避都高。整體而言，你想靠近又怕受傷，退開了又掛念，經常在兩種反應之間來回。",
-      tip:"這種拉扯通常有來歷，很多時和過去被傷害的經驗有關。先在你最穩定的一段關係裏練習：說一句真話，看對方接不接得住；接得住，下次再多說一點。如果拉扯持續影響生活，找專業人士談一次是值得的。"},
+      tip:"不用逼自己立刻信任，也不用立刻離開。這種拉扯通常有來歷，很多時和過去被傷害的經驗有關。先在你最穩定的一段關係裏練習：說一句真話，看對方接不接得住；接得住，下次再多說一點。如果拉扯持續影響生活，找專業人士談一次是值得的。"},
   },
 },
 
@@ -609,7 +610,7 @@ en: {
   "home.recordMany": "records",
   "home.stylesTitle": "The four attachment styles",
   "home.stylesBody": "<strong>Secure</strong>: worries little, comfortable up close. Can depend and be depended on; often the first to apologise after a fight.<br><strong>Anxious</strong>: finely tuned to change — you spot cracks in a relationship before anyone else. The cost: a slow reply or a cool tone starts a loop of checking and re-reading.<br><strong>Avoidant</strong>: safest relying on yourself. Problems solved alone, feelings processed alone; when someone steps closer, you step back.<br><strong>Fearful-avoidant</strong>: wants closeness and braces against it at once. Both pulls protect you, in opposite directions.",
-  "home.stylesNote": "Less than a tenth of adult attachment traces back to childhood; the rest is built from later relationships. Positions move, which is why it's worth measuring again after a while.",
+  "home.stylesNote": "The four styles describe how a particular relationship is affecting you right now — not a verdict on character. Less than a tenth of adult attachment traces back to childhood; positions move, which is why it's worth measuring again.",
 
   "quiz.who": "Assessing: {name} ({type})",
   "quiz.qnum": "Question {n} of 9",
@@ -620,7 +621,7 @@ en: {
   "quiz.anchorHigh": "Strongly agree",
   "scaleLabels": ["Strongly disagree","Disagree","Slightly disagree","Neutral / unsure","Slightly agree","Agree","Strongly agree"],
   "scale5Labels": ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"],
-  "quiz.specificReminder": "Answer for this specific person, not your relationships in general.",
+  "quiz.specificReminder": "Keep this one person in mind: how do you usually respond in this relationship?",
   "quiz.generalReminder": "Answer from your overall experience in close relationships.",
   "quiz.whoGeneral": "Assessing: your overall attachment pattern",
 
@@ -748,7 +749,7 @@ en: {
       descGeneral:"Low anxiety, low avoidance. Overall, you spend little energy checking where you stand with people, so attention goes back into your own life.",
       tip:"Steadiness is maintained day by day: be there when it matters, respond, do what you said (the book's shorthand is CARRP). Levine's argument rule is worth trying: only one person gets to be upset at a time — the other holds the room steady. When you stay steady, people around you settle too."},
     anxious: {name:"Anxious",
-      desc:"High anxiety, low avoidance. You want this person close, and you keep checking: do they care? Will they reply tonight? You notice details others miss, then read into them, and it's hard to stop.",
+      desc:"High anxiety, low avoidance. This relationship takes hold of your attention: do they care? Will they reply tonight? You notice details others miss, then read into them, and it's hard to stop.",
       descGeneral:"High anxiety, low avoidance. Overall, you're quick to sense change in your relationships and often check where you stand — which is exactly what wears you out.",
       tip:"Your sensitivity is real: when something is wrong in a relationship, you usually know first. What drains you is the next part — testing, blowing up or going cold, then regretting it (Levine calls this protest behaviour). Next time, skip the test and say the need directly, then watch the response. Reliable people reassure you with actions. If you've said the need plainly and months later you're still guessing, the problem may no longer be your anxiety."},
     avoidant:{name:"Avoidant",
@@ -758,7 +759,7 @@ en: {
     fearful: {name:"Fearful-avoidant",
       desc:"Anxiety and avoidance both high. Coming close, you brace for the hurt; pulling away, you miss them. Both reactions protect you, just in opposite directions — which is why it's so tiring.",
       descGeneral:"Anxiety and avoidance both high. Overall, you move between wanting closeness and bracing against it, and the back-and-forth is what exhausts you.",
-      tip:"This push-pull usually has a history, often in past hurt. Practise in your steadiest relationship first: say one true thing and see if it's received; if it is, say a little more next time. If the push-pull keeps disrupting your life, one conversation with a professional is a worthwhile step."},
+      tip:"You don't have to force trust right away, or walk away right away. This push-pull usually has a history, often in past hurt. Practise in your steadiest relationship first: say one true thing and see if it's received; if it is, say a little more next time. If the push-pull keeps disrupting your life, one conversation with a professional is a worthwhile step."},
   },
 },
 };
@@ -936,8 +937,8 @@ function buildChart(opt){
   for(let v=1; v<=7; v++){
     el("line",{x1:x(v),y1:m.t,x2:x(v),y2:m.t+ih,stroke:grid,"stroke-width":1});
     el("line",{x1:m.l,y1:y(v),x2:m.l+iw,y2:y(v),stroke:grid,"stroke-width":1});
-    el("text",{x:x(v),y:m.t+ih+18,"text-anchor":"middle","font-size":11,fill:ink3}, v);
-    el("text",{x:m.l-10,y:y(v)+4,"text-anchor":"end","font-size":11,fill:ink3}, v);
+    el("text",{x:x(v),y:m.t+ih+18,"text-anchor":"middle","font-size":12.5,fill:ink3}, v);
+    el("text",{x:m.l-10,y:y(v)+4,"text-anchor":"end","font-size":12.5,fill:ink3}, v);
   }
   // 象限分界（4 分虛線）· quadrant split
   el("line",{x1:x(4),y1:m.t,x2:x(4),y2:m.t+ih,stroke:ink2,"stroke-width":1.5,"stroke-dasharray":"4 4"});
@@ -946,17 +947,17 @@ function buildChart(opt){
   el("line",{x1:m.l,y1:m.t+ih,x2:m.l+iw,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
   el("line",{x1:m.l,y1:m.t,x2:m.l,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
   // 象限浮水印 · quadrant watermarks (serif, like chapter titles)
-  const wm={"font-size":15,fill:ink3,opacity:.55,"text-anchor":"middle","font-weight":600,
+  const wm={"font-size":17,fill:ink3,opacity:.55,"text-anchor":"middle","font-weight":600,
     "font-family":"'Songti TC','Noto Serif TC','Songti SC',Georgia,serif"};
   el("text",Object.assign({x:x(2.5),y:y(2.4)},wm), t("chart.secure"));
   el("text",Object.assign({x:x(5.5),y:y(2.4)},wm), t("chart.anxious"));
   el("text",Object.assign({x:x(2.5),y:y(5.8)},wm), t("chart.avoidant"));
   el("text",Object.assign({x:x(5.5),y:y(5.8)},wm), t("chart.fearful"));
   // 軸標題 · axis titles
-  el("text",{x:m.l+iw/2,y:H-26,"text-anchor":"middle","font-size":12,fill:ink2}, t("chart.xAxis"));
-  const yl=el("text",{x:14,y:m.t+ih/2,"text-anchor":"middle","font-size":12,fill:ink2}, t("chart.yAxis"));
+  el("text",{x:m.l+iw/2,y:H-26,"text-anchor":"middle","font-size":14,fill:ink2}, t("chart.xAxis"));
+  const yl=el("text",{x:14,y:m.t+ih/2,"text-anchor":"middle","font-size":14,fill:ink2}, t("chart.yAxis"));
   yl.setAttribute("transform","rotate(-90 14 "+(m.t+ih/2)+")");
-  el("text",{x:m.l+4,y:H-26,"font-size":11,fill:ink3}, t("chart.mostSecure"));
+  el("text",{x:m.l+4,y:H-26,"font-size":12.5,fill:ink3}, t("chart.mostSecure"));
 
   // 資料點 · data points
   db.people.forEach(p=>{
@@ -979,7 +980,7 @@ function buildChart(opt){
       dot.appendChild(tt);
       if(latest){
         const lx=Math.min(q.cx+10, m.l+iw-4);
-        el("text",{x:lx,y:q.cy-10,"font-size":12,fill:cssVar("--ink-1"),"font-weight":600,
+        el("text",{x:lx,y:q.cy-10,"font-size":14,fill:cssVar("--ink-1"),"font-weight":600,
           "text-anchor": q.cx>m.l+iw-70?"end":"start",
           stroke:surface,"stroke-width":3,"paint-order":"stroke"}, p.name);
       }
@@ -1185,23 +1186,19 @@ function finishQuiz(){
   show("result");
 }
 
-/* 風格標籤底色：固定深色，配白字在深淺兩種主題下都夠對比
-   （圖上的每人顏色是另一套，與此無關） */
-function styleColor(styleKey){
-  return {secure:"#2e7d32", anxious:"#9a6400", avoidant:"#1c5cab", fearful:"#b5451d"}[styleKey];
-}
+/* 風格標籤一律用同一種安靜的底色：名稱是資訊，顏色不該暗示嚴重程度 */
 
 function renderResult({person, rec}){
   const st = t("styles")[rec.style];
   const isGen = person.type==="general";
   document.getElementById("resultCard").innerHTML =
     '<p class="tiny">'+esc(person.name)+"（"+t("rel."+person.type)+"）· "+fmtDate(rec.date)+"</p>"+
-    "<h2>"+t(isGen?"result.styleIsGeneral":"result.styleIs")+'<span class="badge" style="background:'+styleColor(rec.style)+'">'+st.name+"</span></h2>"+
+    "<h2>"+t(isGen?"result.styleIsGeneral":"result.styleIs")+'<span class="badge">'+st.name+"</span></h2>"+
     '<div class="tiles">'+
       '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">'+t("result.anxLabel")+"</div></div>"+
       '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">'+t("result.avdLabel")+"</div></div>"+
     "</div>"+
-    '<p class="tiny">'+t(isGen?"result.snapshotNoteGeneral":"result.snapshotNote")+"</p>"+
+    '<p class="muted">'+t(isGen?"result.snapshotNoteGeneral":"result.snapshotNote")+"</p>"+
     "<p>"+((isGen && st.descGeneral) ? st.descGeneral : st.desc)+"</p><h3>"+t("result.tipTitle")+"</h3><p class='muted'>"+st.tip+"</p>"+
     (person.results.length>1 ? '<p class="tiny">'+tp("result.nth",{name:esc(person.name), n:person.results.length})+"</p>" : "");
   const box=document.getElementById("resultChart");
@@ -1244,7 +1241,7 @@ function showPointInfo(p, r){
   const st=t("styles")[r.style];
   el.classList.remove("hide");
   el.innerHTML="<strong>"+esc(p.name)+"</strong>（"+t("rel."+p.type)+"）· "+fmtDate(r.date)+
-    ' <span class="badge badge-sm" style="background:'+styleColor(r.style)+'">'+st.name+"</span> "+
+    ' <span class="badge badge-sm">'+st.name+"</span> "+
     t("th.anx")+" "+r.anxiety.toFixed(2)+"、"+t("th.avd")+" "+r.avoidance.toFixed(2);
 }
 document.getElementById("mapImgBtn").addEventListener("click",()=>{

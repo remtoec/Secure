@@ -47,7 +47,7 @@ zh: {
   "home.recordMany": "次",
   "home.stylesTitle": "四種依附風格",
   "home.stylesBody": "<strong>安全型</strong>：擔心少，靠近也自在。可以依賴對方，也接得住對方的依賴；吵完架，往往是先道歉的那一個。<br><strong>焦慮型</strong>：對關係的變化極敏感，別人未察覺的裂縫你先看見。代價是訊息一慢、語氣一冷，你就開始反覆檢查和解讀，很難停下來。<br><strong>迴避型</strong>：靠自己最安心。事情自己解決，情緒自己消化；對方想再走近一步，你會本能地退半步。<br><strong>恐懼迴避型</strong>：想靠近時怕受傷，退開後又掛念。兩股力同時拉，最耗神。",
-  "home.stylesNote": "成人依附與童年的關聯不足一成，其餘來自後來的關係經驗。位置會移動，所以值得隔一段時間再量一次。",
+  "home.stylesNote": "四種風格描述的是某段關係此刻如何影響你，不是性格判決。成人依附與童年的關聯不足一成，其餘來自後來的關係經驗；位置會移動，所以值得隔一段時間再量。",
 
   "quiz.who": "評估對象：{name}（{type}）",
   "quiz.qnum": "第 {n} 題／共 9 題",
@@ -58,7 +58,7 @@ zh: {
   "quiz.anchorHigh": "非常同意",
   "scaleLabels": ["非常不同意","不同意","有點不同意","中立／不確定","有點同意","同意","非常同意"],
   "scale5Labels": ["非常不同意","不同意","一般","同意","非常同意"],
-  "quiz.specificReminder": "請根據你與這一位對象的關係作答，而不是整體人際關係。",
+  "quiz.specificReminder": "請只想這一位對象：你在這段關係裏通常會怎樣反應？",
   "quiz.generalReminder": "請根據你在親密關係中的整體經驗作答。",
   "quiz.whoGeneral": "評估：你整體的依附傾向",
 
@@ -185,7 +185,7 @@ zh: {
       descGeneral:"焦慮低、迴避也低。整體而言，你不用花太多力氣確認別人走不走，注意力可以放在生活本身。",
       tip:"這種穩定靠日常維持：對方需要時在場、有回應、說到做到（書中簡稱 CARRP）。Levine 有一條吵架規則值得試：一次只准一個人發脾氣，另一個負責穩住場面。你保持穩定，身邊的人也會慢慢安定下來。"},
     anxious: {name:"焦慮型",
-      desc:"焦慮高、迴避低。你想靠近這個人，但一直在確認：他在乎我嗎？今晚會回覆嗎？別人看不見的細節你都看見，然後開始解讀，停不下來。",
+      desc:"焦慮高、迴避低。這段關係很容易佔住你的注意力：他在乎我嗎？今晚會回覆嗎？別人看不見的細節你都看見，然後開始解讀，停不下來。",
       descGeneral:"焦慮高、迴避低。整體而言，你對關係的變化很敏感，常常在確認自己在別人心中的位置，也容易被這件事消耗。",
       tip:"你的敏感是真的：關係出問題，你通常最早知道。消耗你的是後面那段：試探、發脾氣或冷戰，事後又後悔（Levine 稱之為抗議行為）。下次跳過試探，直接講需要，然後看對方的反應。可靠的人會用行動讓你放心。如果需要已經講得清楚，幾個月後你仍然在猜，問題就未必在你的焦慮。"},
     avoidant:{name:"迴避型",
@@ -195,7 +195,7 @@ zh: {
     fearful: {name:"恐懼迴避型",
       desc:"焦慮和迴避都高。靠近的時候怕受傷，退開之後又掛念。兩種反應都在保護你，只是方向相反，所以特別累。",
       descGeneral:"焦慮和迴避都高。整體而言，你想靠近又怕受傷，退開了又掛念，經常在兩種反應之間來回。",
-      tip:"這種拉扯通常有來歷，很多時和過去被傷害的經驗有關。先在你最穩定的一段關係裏練習：說一句真話，看對方接不接得住；接得住，下次再多說一點。如果拉扯持續影響生活，找專業人士談一次是值得的。"},
+      tip:"不用逼自己立刻信任，也不用立刻離開。這種拉扯通常有來歷，很多時和過去被傷害的經驗有關。先在你最穩定的一段關係裏練習：說一句真話，看對方接不接得住；接得住，下次再多說一點。如果拉扯持續影響生活，找專業人士談一次是值得的。"},
   },
 },
 
@@ -235,7 +235,7 @@ en: {
   "home.recordMany": "records",
   "home.stylesTitle": "The four attachment styles",
   "home.stylesBody": "<strong>Secure</strong>: worries little, comfortable up close. Can depend and be depended on; often the first to apologise after a fight.<br><strong>Anxious</strong>: finely tuned to change — you spot cracks in a relationship before anyone else. The cost: a slow reply or a cool tone starts a loop of checking and re-reading.<br><strong>Avoidant</strong>: safest relying on yourself. Problems solved alone, feelings processed alone; when someone steps closer, you step back.<br><strong>Fearful-avoidant</strong>: wants closeness and braces against it at once. Both pulls protect you, in opposite directions.",
-  "home.stylesNote": "Less than a tenth of adult attachment traces back to childhood; the rest is built from later relationships. Positions move, which is why it's worth measuring again after a while.",
+  "home.stylesNote": "The four styles describe how a particular relationship is affecting you right now — not a verdict on character. Less than a tenth of adult attachment traces back to childhood; positions move, which is why it's worth measuring again.",
 
   "quiz.who": "Assessing: {name} ({type})",
   "quiz.qnum": "Question {n} of 9",
@@ -246,7 +246,7 @@ en: {
   "quiz.anchorHigh": "Strongly agree",
   "scaleLabels": ["Strongly disagree","Disagree","Slightly disagree","Neutral / unsure","Slightly agree","Agree","Strongly agree"],
   "scale5Labels": ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"],
-  "quiz.specificReminder": "Answer for this specific person, not your relationships in general.",
+  "quiz.specificReminder": "Keep this one person in mind: how do you usually respond in this relationship?",
   "quiz.generalReminder": "Answer from your overall experience in close relationships.",
   "quiz.whoGeneral": "Assessing: your overall attachment pattern",
 
@@ -374,7 +374,7 @@ en: {
       descGeneral:"Low anxiety, low avoidance. Overall, you spend little energy checking where you stand with people, so attention goes back into your own life.",
       tip:"Steadiness is maintained day by day: be there when it matters, respond, do what you said (the book's shorthand is CARRP). Levine's argument rule is worth trying: only one person gets to be upset at a time — the other holds the room steady. When you stay steady, people around you settle too."},
     anxious: {name:"Anxious",
-      desc:"High anxiety, low avoidance. You want this person close, and you keep checking: do they care? Will they reply tonight? You notice details others miss, then read into them, and it's hard to stop.",
+      desc:"High anxiety, low avoidance. This relationship takes hold of your attention: do they care? Will they reply tonight? You notice details others miss, then read into them, and it's hard to stop.",
       descGeneral:"High anxiety, low avoidance. Overall, you're quick to sense change in your relationships and often check where you stand — which is exactly what wears you out.",
       tip:"Your sensitivity is real: when something is wrong in a relationship, you usually know first. What drains you is the next part — testing, blowing up or going cold, then regretting it (Levine calls this protest behaviour). Next time, skip the test and say the need directly, then watch the response. Reliable people reassure you with actions. If you've said the need plainly and months later you're still guessing, the problem may no longer be your anxiety."},
     avoidant:{name:"Avoidant",
@@ -384,7 +384,7 @@ en: {
     fearful: {name:"Fearful-avoidant",
       desc:"Anxiety and avoidance both high. Coming close, you brace for the hurt; pulling away, you miss them. Both reactions protect you, just in opposite directions — which is why it's so tiring.",
       descGeneral:"Anxiety and avoidance both high. Overall, you move between wanting closeness and bracing against it, and the back-and-forth is what exhausts you.",
-      tip:"This push-pull usually has a history, often in past hurt. Practise in your steadiest relationship first: say one true thing and see if it's received; if it is, say a little more next time. If the push-pull keeps disrupting your life, one conversation with a professional is a worthwhile step."},
+      tip:"You don't have to force trust right away, or walk away right away. This push-pull usually has a history, often in past hurt. Practise in your steadiest relationship first: say one true thing and see if it's received; if it is, say a little more next time. If the push-pull keeps disrupting your life, one conversation with a professional is a worthwhile step."},
   },
 },
 };

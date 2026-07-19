@@ -158,23 +158,19 @@ function finishQuiz(){
   show("result");
 }
 
-/* 風格標籤底色：固定深色，配白字在深淺兩種主題下都夠對比
-   （圖上的每人顏色是另一套，與此無關） */
-function styleColor(styleKey){
-  return {secure:"#2e7d32", anxious:"#9a6400", avoidant:"#1c5cab", fearful:"#b5451d"}[styleKey];
-}
+/* 風格標籤一律用同一種安靜的底色：名稱是資訊，顏色不該暗示嚴重程度 */
 
 function renderResult({person, rec}){
   const st = t("styles")[rec.style];
   const isGen = person.type==="general";
   document.getElementById("resultCard").innerHTML =
     '<p class="tiny">'+esc(person.name)+"（"+t("rel."+person.type)+"）· "+fmtDate(rec.date)+"</p>"+
-    "<h2>"+t(isGen?"result.styleIsGeneral":"result.styleIs")+'<span class="badge" style="background:'+styleColor(rec.style)+'">'+st.name+"</span></h2>"+
+    "<h2>"+t(isGen?"result.styleIsGeneral":"result.styleIs")+'<span class="badge">'+st.name+"</span></h2>"+
     '<div class="tiles">'+
       '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">'+t("result.anxLabel")+"</div></div>"+
       '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">'+t("result.avdLabel")+"</div></div>"+
     "</div>"+
-    '<p class="tiny">'+t(isGen?"result.snapshotNoteGeneral":"result.snapshotNote")+"</p>"+
+    '<p class="muted">'+t(isGen?"result.snapshotNoteGeneral":"result.snapshotNote")+"</p>"+
     "<p>"+((isGen && st.descGeneral) ? st.descGeneral : st.desc)+"</p><h3>"+t("result.tipTitle")+"</h3><p class='muted'>"+st.tip+"</p>"+
     (person.results.length>1 ? '<p class="tiny">'+tp("result.nth",{name:esc(person.name), n:person.results.length})+"</p>" : "");
   const box=document.getElementById("resultChart");
@@ -217,7 +213,7 @@ function showPointInfo(p, r){
   const st=t("styles")[r.style];
   el.classList.remove("hide");
   el.innerHTML="<strong>"+esc(p.name)+"</strong>（"+t("rel."+p.type)+"）· "+fmtDate(r.date)+
-    ' <span class="badge badge-sm" style="background:'+styleColor(r.style)+'">'+st.name+"</span> "+
+    ' <span class="badge badge-sm">'+st.name+"</span> "+
     t("th.anx")+" "+r.anxiety.toFixed(2)+"、"+t("th.avd")+" "+r.avoidance.toFixed(2);
 }
 document.getElementById("mapImgBtn").addEventListener("click",()=>{

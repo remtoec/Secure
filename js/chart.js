@@ -32,8 +32,8 @@ function buildChart(opt){
   for(let v=1; v<=7; v++){
     el("line",{x1:x(v),y1:m.t,x2:x(v),y2:m.t+ih,stroke:grid,"stroke-width":1});
     el("line",{x1:m.l,y1:y(v),x2:m.l+iw,y2:y(v),stroke:grid,"stroke-width":1});
-    el("text",{x:x(v),y:m.t+ih+18,"text-anchor":"middle","font-size":11,fill:ink3}, v);
-    el("text",{x:m.l-10,y:y(v)+4,"text-anchor":"end","font-size":11,fill:ink3}, v);
+    el("text",{x:x(v),y:m.t+ih+18,"text-anchor":"middle","font-size":12.5,fill:ink3}, v);
+    el("text",{x:m.l-10,y:y(v)+4,"text-anchor":"end","font-size":12.5,fill:ink3}, v);
   }
   // 象限分界（4 分虛線）· quadrant split
   el("line",{x1:x(4),y1:m.t,x2:x(4),y2:m.t+ih,stroke:ink2,"stroke-width":1.5,"stroke-dasharray":"4 4"});
@@ -42,17 +42,17 @@ function buildChart(opt){
   el("line",{x1:m.l,y1:m.t+ih,x2:m.l+iw,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
   el("line",{x1:m.l,y1:m.t,x2:m.l,y2:m.t+ih,stroke:axis,"stroke-width":1.5});
   // 象限浮水印 · quadrant watermarks (serif, like chapter titles)
-  const wm={"font-size":15,fill:ink3,opacity:.55,"text-anchor":"middle","font-weight":600,
+  const wm={"font-size":17,fill:ink3,opacity:.55,"text-anchor":"middle","font-weight":600,
     "font-family":"'Songti TC','Noto Serif TC','Songti SC',Georgia,serif"};
   el("text",Object.assign({x:x(2.5),y:y(2.4)},wm), t("chart.secure"));
   el("text",Object.assign({x:x(5.5),y:y(2.4)},wm), t("chart.anxious"));
   el("text",Object.assign({x:x(2.5),y:y(5.8)},wm), t("chart.avoidant"));
   el("text",Object.assign({x:x(5.5),y:y(5.8)},wm), t("chart.fearful"));
   // 軸標題 · axis titles
-  el("text",{x:m.l+iw/2,y:H-26,"text-anchor":"middle","font-size":12,fill:ink2}, t("chart.xAxis"));
-  const yl=el("text",{x:14,y:m.t+ih/2,"text-anchor":"middle","font-size":12,fill:ink2}, t("chart.yAxis"));
+  el("text",{x:m.l+iw/2,y:H-26,"text-anchor":"middle","font-size":14,fill:ink2}, t("chart.xAxis"));
+  const yl=el("text",{x:14,y:m.t+ih/2,"text-anchor":"middle","font-size":14,fill:ink2}, t("chart.yAxis"));
   yl.setAttribute("transform","rotate(-90 14 "+(m.t+ih/2)+")");
-  el("text",{x:m.l+4,y:H-26,"font-size":11,fill:ink3}, t("chart.mostSecure"));
+  el("text",{x:m.l+4,y:H-26,"font-size":12.5,fill:ink3}, t("chart.mostSecure"));
 
   // 資料點 · data points
   db.people.forEach(p=>{
@@ -75,7 +75,7 @@ function buildChart(opt){
       dot.appendChild(tt);
       if(latest){
         const lx=Math.min(q.cx+10, m.l+iw-4);
-        el("text",{x:lx,y:q.cy-10,"font-size":12,fill:cssVar("--ink-1"),"font-weight":600,
+        el("text",{x:lx,y:q.cy-10,"font-size":14,fill:cssVar("--ink-1"),"font-weight":600,
           "text-anchor": q.cx>m.l+iw-70?"end":"start",
           stroke:surface,"stroke-width":3,"paint-order":"stroke"}, p.name);
       }
