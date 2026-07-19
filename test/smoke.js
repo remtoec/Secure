@@ -46,7 +46,7 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   await page.click('#startBtn');
   await page.waitForSelector('#view-quiz:not(.hide)');
   const gq = await page.textContent('#qtext');
-  console.log('General wording (no 這個人):', !gq.includes('這個人') && gq.includes('親近'));
+  console.log('General wording (no 這個人):', !gq.includes('這個人') && gq.includes('別人'));
   const answers2 = [7, 7, 7, 7, 1, 1, 1, 1, 1]; // avoid = (1*4+1*2)/6 = 1.00, anx = 1.00 → secure
   for (const a of answers2) {
     await page.waitForSelector('#view-quiz:not(.hide)');

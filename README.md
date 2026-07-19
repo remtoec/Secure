@@ -41,7 +41,9 @@ it did not invent it.
 
 Implemented in `js/scoring.js` (`REVERSED`, `scoreAnswers`, `styleOf`).
 The chart draws x = anxiety, y = avoidance, 1–7, dashed lines at 4 — matching
-the book's figures. The checklist deliberately renders **no verdict bands**:
+the book's plotting instructions and figures. (Ch. 5's score-sum tables label
+the axes the other way round; that's an inconsistency in the book itself — the
+plotting instructions and sample graph are the authority we follow.) The checklist deliberately renders **no verdict bands**:
 the book only records a total, so the app shows the total plus any items
 scored ≤3 as discussion prompts (`collabScoreBtn` handler in `js/app.js`).
 
@@ -75,8 +77,9 @@ once per language (`zh` and `en` blocks). Strings with `{name}`-style
 placeholders are filled by `tp()`. Then rebuild (§4).
 
 **Change quiz questions** — `questions` (person-specific) **and**
-`questionsGeneral` (used when 一般依附風格 is selected — worded about "people
-close to me" instead of 「這個人」) in `js/i18n.js`; keep both languages and
+`questionsGeneral` (used when 一般依附風格 is selected — the ECR-RS general
+questionnaire's own wording, about "people" / "others" instead of 「這個人」;
+both variants are printed in ch. 5 of *Secure*) in `js/i18n.js`; keep both languages and
 both variants in the same order. If you change which items are
 reverse-scored, update `REVERSED` in `js/scoring.js`. Keep 9 items with the
 6-avoidance + 3-anxiety structure or the formulas stop being ECR-RS.
