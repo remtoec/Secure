@@ -5,7 +5,7 @@ A bilingual (繁體中文（香港）/ English) attachment-style quiz web app, b
 
 - **Live site:** https://remtoec.github.io/Secure/
 - **Single-file offline version:** https://remtoec.github.io/Secure/dist/single.html
-- **Deploy branch:** `claude/attachment-quiz-traditional-chinese-s99i85` (pushes auto-deploy)
+- **Working branch:** `main` — always commit and push here (pushes auto-deploy)
 
 > For education, self-reflection and book-club discussion only — not a clinical diagnosis.
 
@@ -139,12 +139,13 @@ node build.js        # rebuilds dist/single.html (self-contained) + dist/artifac
 git add -A && git commit -m "..." && git push
 ```
 
-Pushing to `main` **or** `claude/attachment-quiz-traditional-chinese-s99i85`
-triggers `.github/workflows/deploy-pages.yml`, which uploads the whole repo to
+**Always work on `main`.** Pushing to it triggers
+`.github/workflows/deploy-pages.yml`, which uploads the whole repo to
 GitHub Pages (~1 minute). Remember to run `build.js` before committing if you
 changed any source file, or `dist/single.html` will lag behind the modular
-app. `main` mirrors the working branch; prefer committing to `main` going
-forward, and set it as the repo's default branch in Settings → Branches.
+app. The old working branch `claude/attachment-quiz-traditional-chinese-s99i85`
+is historical — don't commit there. Set `main` as the repo's default branch in
+Settings → Branches if it isn't already.
 Pages source must stay set to "GitHub Actions" (repo Settings → Pages).
 
 ---
