@@ -104,9 +104,17 @@ unaffected (legacy Chinese labels from v1 data are migrated in `js/store.js`,
 `css/style.css` (`--s1…--s8` are the per-person series colours; defined for
 light, OS-dark and the in-app toggle). The chart reads them at render time.
 
-**Design language (「安全基地 · Secure Base」)** — sand paper, moss ink, one
-harbour-teal accent; serif (`--serif`) for titles/questions/style names, sans
-(`--sans`) for UI. A 165 KB subset of Noto Serif TC (weight 600, OFL licence
+**Design language (「海圖房 · Chart Room」)** — the product is a topography,
+so the chrome is cartographic: the whole page sits on faint graph paper
+(`--paper-line`), cards are chart "plates" with hairline ink borders and small
+registration ticks at opposite corners (`.card::before/::after`), nav tabs are
+index tabs with an inked top rule, the quiz progress bar is a plotted course
+(dashed route, diamond station marker), score tiles are coordinate readouts
+(label above value, inked left rule), and the style badge is an ink stamp
+(accent outline), not a solid pill. Depth is borders-only — no shadows
+anywhere; corners squared (6–8 px). Paper, moss ink, one deep sea-teal
+accent; serif (`--serif`) for titles/questions/style names, sans (`--sans`)
+for UI. A 165 KB subset of Noto Serif TC (weight 600, OFL licence
 — see `fonts/LICENSE.txt`) is self-hosted so Android renders the serif voice
 too; it covers every character currently in `js/i18n.js`, with per-glyph
 fallback to system fonts if new characters are added (re-subset if wording

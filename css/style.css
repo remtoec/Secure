@@ -1,42 +1,43 @@
-/* ═══════════ 安全基地 · Secure Base ═══════════
-   Design language: a fixed point you can leave and return to.
-   Sand paper, moss ink, one harbour-teal accent; Song-serif voice for
-   the words that matter, quiet sans for the machinery. */
+/* ═══════════ 海圖房 · Chart Room ═══════════
+   Design language: plotting your own coordinates in a quiet chart room.
+   Graph-paper page, hairline ink, plates with registration marks; the
+   Song-serif voice for the words that matter, quiet sans for the machinery.
+   Depth is borders-only — no shadows anywhere. */
 
 :root{
   color-scheme: light;
-  --page:#f4f1ea; --surface-1:#fcfaf5;
-  --ink-1:#262a22; --ink-2:#5c6153; --ink-3:#6a6f63;
-  --grid:#e6e2d5; --axis:#c8c4b4; --ring:rgba(38,42,34,.10);
-  --accent:#2f6e60; --accent-soft:#dce9e2; --accent-ink:#ffffff;
+  --page:#efeade; --surface-1:#faf7ee;
+  --ink-1:#22281f; --ink-2:#565c4d; --ink-3:#6b7261;
+  --grid:#e0d9c6; --axis:#b4ac95; --ring:rgba(34,40,31,.16);
+  --accent:#1f5f54; --accent-soft:#d9e6df; --accent-ink:#ffffff;
+  --paper-line:rgba(34,40,31,.045);
   --s1:#2a78d6; --s2:#008300; --s3:#e87ba4; --s4:#eda100;
   --s5:#1baf7a; --s6:#eb6834; --s7:#4a3aa7; --s8:#e34948;
-  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#c53131;
   --serif:"BF Serif","Songti TC","Noto Serif TC","Songti SC","Source Han Serif TC","PMingLiU",Georgia,"Times New Roman",serif;
   --sans:system-ui,-apple-system,"Segoe UI","PingFang HK","PingFang TC","Microsoft JhengHei",sans-serif;
-  --shadow:0 1px 2px rgba(38,42,34,.05), 0 4px 16px rgba(38,42,34,.04);
 }
 @media (prefers-color-scheme: dark){
   :root:where(:not([data-theme="light"])){
     color-scheme: dark;
-    --page:#111411; --surface-1:#1a1e1a;
+    --page:#10140f; --surface-1:#181d17;
     --ink-1:#edf0e9; --ink-2:#c1c6b9; --ink-3:#8f9486;
-    --grid:#2a2e28; --axis:#41463d; --ring:rgba(237,240,233,.10);
-    --accent:#63b3a1; --accent-soft:#233b34; --accent-ink:#101512;
+    --grid:#272c25; --axis:#454b40; --ring:rgba(237,240,233,.14);
+    --accent:#6fb5a2; --accent-soft:#20362f; --accent-ink:#0e1310;
+    --paper-line:rgba(237,240,233,.035);
     --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
     --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
-    --shadow:none;
   }
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
-  --page:#111411; --surface-1:#1a1e1a;
+  --page:#10140f; --surface-1:#181d17;
   --ink-1:#edf0e9; --ink-2:#c1c6b9; --ink-3:#8f9486;
-  --grid:#2a2e28; --axis:#41463d; --ring:rgba(237,240,233,.10);
-  --accent:#63b3a1; --accent-soft:#233b34; --accent-ink:#101512;
+  --grid:#272c25; --axis:#454b40; --ring:rgba(237,240,233,.14);
+  --accent:#6fb5a2; --accent-soft:#20362f; --accent-ink:#0e1310;
+  --paper-line:rgba(237,240,233,.035);
   --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
   --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
-  --shadow:none;
 }
 
 /* 自載宋體子集（Noto Serif TC 600, OFL）；缺字時逐字回退到系統字型 */
@@ -49,37 +50,47 @@
 *{box-sizing:border-box}
 body{
   margin:0; background:var(--page); color:var(--ink-1);
+  /* 方格紙 · the graph paper the whole room sits on */
+  background-image:
+    linear-gradient(var(--paper-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+  background-size:28px 28px;
   font-family:var(--sans);
   line-height:1.7; -webkit-font-smoothing:antialiased;
 }
 .wrap{max-width:860px;margin:0 auto;padding:16px 16px 96px}
 
-/* ── 頁首 · header ── */
-header.app{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:18px 4px 4px}
+/* ── 頁首：圖版標題欄 · header cartouche ── */
+header.app{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:20px 4px 6px}
 header.app h1{font-family:var(--serif);font-size:1.5rem;font-weight:700;margin:0;letter-spacing:.05em}
-header.app .sub{color:var(--ink-3);font-size:.78rem;letter-spacing:.06em}
+header.app .sub{color:var(--ink-3);font-size:.75rem;letter-spacing:.14em}
 #langBtn,#themeBtn{border:1px solid var(--ring);background:var(--surface-1);color:var(--ink-2);
-  border-radius:99px;padding:4px 12px;font-size:.8rem;cursor:pointer}
+  border-radius:6px;padding:4px 12px;font-size:.8rem;cursor:pointer}
+#langBtn:hover,#themeBtn:hover{border-color:var(--accent);color:var(--accent)}
 #langBtn{margin-left:auto;font-weight:700;min-width:44px}
 
-/* ── 導覽：紅線分頁 · thread tabs ── */
-nav.tabs{display:flex;gap:2px;overflow-x:auto;padding:10px 2px 0;position:sticky;top:0;background:var(--page);z-index:5}
+/* ── 導覽：圖冊索引標籤 · index tabs ── */
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 2px 0;position:sticky;top:0;z-index:5;
+  background:var(--page);border-bottom:1px solid var(--ring)}
 nav.tabs button{
-  flex:0 0 auto;border:none;background:transparent;color:var(--ink-2);
-  padding:10px 14px 12px;font-size:.95rem;cursor:pointer;white-space:nowrap;
-  border-bottom:2px solid transparent;font-family:var(--sans);position:relative;
+  flex:0 0 auto;border:1px solid transparent;border-bottom:none;background:transparent;color:var(--ink-2);
+  padding:9px 16px 11px;font-size:.95rem;cursor:pointer;white-space:nowrap;
+  border-radius:6px 6px 0 0;font-family:var(--sans);
 }
+nav.tabs button:hover{color:var(--accent)}
 nav.tabs button[aria-selected="true"]{
-  color:var(--accent);font-weight:700;border-bottom-color:var(--accent);
-}
-nav.tabs button[aria-selected="true"]::after{
-  content:"";position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);
-  width:6px;height:6px;border-radius:50%;background:var(--accent);
+  color:var(--ink-1);font-weight:700;background:var(--surface-1);
+  border-color:var(--ring);box-shadow:inset 0 2px 0 var(--accent);
 }
 
-/* ── 卡片 · cards ── */
-.card{background:var(--surface-1);border:1px solid var(--ring);border-radius:18px;
-  padding:22px 20px;margin:14px 0;box-shadow:var(--shadow)}
+/* ── 圖版 · plates (cards) ── */
+.card{background:var(--surface-1);border:1px solid var(--ring);border-radius:6px;
+  padding:22px 20px;margin:16px 0;position:relative}
+/* 對位記號 · registration ticks at opposite corners */
+.card::before,.card::after{content:"";position:absolute;width:12px;height:12px;pointer-events:none;
+  border:0 solid var(--axis);opacity:.75}
+.card::before{top:-5px;left:-5px;border-top-width:1px;border-left-width:1px}
+.card::after{bottom:-5px;right:-5px;border-bottom-width:1px;border-right-width:1px}
 .card h2{font-family:var(--serif);font-size:1.15rem;margin:0 0 8px;letter-spacing:.03em}
 .card h3{font-size:.98rem;margin:16px 0 6px;font-weight:600}
 .card.hero{padding:30px 24px 26px}
@@ -88,7 +99,7 @@ nav.tabs button[aria-selected="true"]::after{
 .muted{color:var(--ink-2);font-size:.92rem}
 .tiny{color:var(--ink-3);font-size:.84rem}
 
-/* ── 安全基地 hero 動畫 · out from the base, and back ── */
+/* ── 安全基地 hero 航線 · out from the base, and back ── */
 .thread{display:block;width:100%;max-width:340px;height:56px;margin:14px 0 6px}
 .thread .th-line{stroke:var(--accent);stroke-width:2;stroke-linecap:round;fill:none;
   stroke-dasharray:660;stroke-dashoffset:660;animation:th-draw 2.2s .35s cubic-bezier(.5,0,.3,1) forwards}
@@ -96,37 +107,42 @@ nav.tabs button[aria-selected="true"]::after{
 @keyframes th-draw{to{stroke-dashoffset:0}}
 
 /* ── 按鈕 · buttons ── */
-button{transition:transform .12s ease, background-color .15s ease, color .15s ease, border-color .15s ease}
+button{transition:transform .12s ease, background-color .15s ease, color .15s ease,
+  border-color .15s ease, box-shadow .15s ease}
 button.primary{
-  background:var(--accent);color:var(--accent-ink);border:none;border-radius:99px;
-  padding:13px 26px;font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--sans);
-  box-shadow:var(--shadow);
+  background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent);border-radius:8px;
+  padding:12px 26px;font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--sans);
 }
+button.primary:hover{filter:brightness(1.07)}
 button.ghost{
   background:transparent;color:var(--ink-2);border:1px solid var(--ring);
-  border-radius:99px;padding:10px 18px;font-size:.9rem;cursor:pointer;
+  border-radius:8px;padding:10px 18px;font-size:.9rem;cursor:pointer;
 }
+button.ghost:hover{border-color:var(--accent);color:var(--accent)}
 button:disabled{opacity:.4;cursor:not-allowed}
 button.primary:active,.scale button:active,.likert5 button:active{transform:scale(.96)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-/* ── 選項豆 · chips ── */
+/* ── 選項標籤 · chips ── */
 .chiprow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .chip{border:1px solid var(--ring);background:var(--page);color:var(--ink-2);
-  border-radius:99px;padding:8px 15px;font-size:.9rem;cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+  border-radius:6px;padding:8px 15px;font-size:.9rem;cursor:pointer}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);
+  color:var(--ink-1);font-weight:600;box-shadow:inset 2px 0 0 var(--accent)}
 input[type=text]{
-  width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ring);
+  width:100%;padding:12px 14px;border-radius:8px;border:1px solid var(--ring);
   background:var(--page);color:var(--ink-1);font-size:1rem;font-family:var(--sans);
 }
-input[type=text]:focus{border-color:var(--accent);outline:none}
+input[type=text]:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
 
-/* ── 作答：線與結 · quiz thread & knot ── */
-.progress{height:2px;background:var(--grid);border-radius:99px;margin:16px 0 20px;position:relative}
-.progress>div{height:100%;background:var(--accent);border-radius:99px;transition:width .35s ease;position:relative}
+/* ── 作答：航線與測站 · plotted course & station marker ── */
+.progress{height:2px;margin:16px 0 20px;position:relative;border-radius:0;
+  background:repeating-linear-gradient(90deg, var(--axis) 0 6px, transparent 6px 12px)}
+.progress>div{height:100%;background:var(--accent);transition:width .35s ease;position:relative}
 .progress>div::after{
-  content:"";position:absolute;right:-4px;top:50%;transform:translateY(-50%);
-  width:9px;height:9px;border-radius:50%;background:var(--accent);
+  content:"";position:absolute;right:-4px;top:50%;transform:translateY(-50%) rotate(45deg);
+  width:8px;height:8px;background:var(--accent);
   box-shadow:0 0 0 3px var(--accent-soft);
 }
 .qtext{font-family:var(--serif);font-size:1.35rem;line-height:1.75;font-weight:600;
@@ -134,12 +150,12 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 .qanim{animation:fade-up .38s ease}
 .scale{display:flex;align-items:center;justify-content:space-between;gap:2px;margin:18px 0 0}
 .scale button,.likert5 button{
-  flex:1;background:none;border:none;cursor:pointer;padding:0;border-radius:12px;
+  flex:1;background:none;border:none;cursor:pointer;padding:0;border-radius:8px;
   display:flex;align-items:center;justify-content:center;
 }
 .scale button{height:60px}
 .dotv{display:block;border-radius:50%;border:2px solid var(--axis);background:transparent;
-  transition:border-color .15s ease, background-color .15s ease, transform .15s ease}
+  transition:border-color .15s ease, background-color .15s ease, transform .15s ease, box-shadow .15s ease}
 .scale button:nth-child(1) .dotv{width:42px;height:42px}
 .scale button:nth-child(2) .dotv{width:34px;height:34px}
 .scale button:nth-child(3) .dotv{width:27px;height:27px}
@@ -147,23 +163,28 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 .scale button:nth-child(5) .dotv{width:27px;height:27px}
 .scale button:nth-child(6) .dotv{width:34px;height:34px}
 .scale button:nth-child(7) .dotv{width:42px;height:42px}
-.scale button:hover .dotv,.likert5 button:hover .dotv{border-color:var(--accent)}
+.scale button:hover .dotv,.likert5 button:hover .dotv{border-color:var(--accent);background:var(--accent-soft)}
 .scale button[aria-pressed="true"] .dotv,.likert5 button[aria-pressed="true"] .dotv{
-  background:var(--accent);border-color:var(--accent);transform:scale(1.08)}
+  background:var(--accent);border-color:var(--accent);transform:scale(1.08);
+  box-shadow:0 0 0 3px var(--accent-soft)}
 .scale button:disabled{opacity:1;cursor:default}
 .scalelabel{text-align:center;font-size:.88rem;color:var(--accent);font-weight:600;min-height:1.5em;margin:4px 0 0}
 .anchors{display:flex;justify-content:space-between;font-size:.78rem;color:var(--ink-3)}
 .quiznav{display:flex;justify-content:space-between;margin-top:20px;gap:10px}
 
-/* ── 結果 · result ── */
+/* ── 結果：座標讀數 · coordinate readouts ── */
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
-.tile{background:var(--page);border:1px solid var(--ring);border-radius:14px;padding:13px 15px}
+.tile{background:var(--page);border:1px solid var(--ring);border-radius:8px;padding:12px 16px;
+  position:relative;display:flex;flex-direction:column-reverse;gap:2px;
+  box-shadow:inset 2px 0 0 var(--accent)}
 .tile .v{font-size:1.9rem;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
-.tile .l{font-size:.8rem;color:var(--ink-2)}
-.badge{display:inline-block;padding:6px 16px;border-radius:99px;font-weight:700;font-size:1.02rem;
-  background:var(--accent);color:var(--accent-ink);font-family:var(--serif);letter-spacing:.06em;
+.tile .l{font-size:.74rem;color:var(--ink-3);letter-spacing:.08em}
+/* 風格印章 · the style stamp */
+.badge{display:inline-block;padding:5px 15px;border-radius:6px;font-weight:700;font-size:1.02rem;
+  background:transparent;color:var(--accent);border:1.5px solid var(--accent);
+  font-family:var(--serif);letter-spacing:.08em;
   animation:badge-in .5s cubic-bezier(.2,.9,.3,1.2)}
-.badge-sm{padding:2px 10px;font-size:.85rem;animation:none}
+.badge-sm{padding:1px 9px;font-size:.85rem;animation:none}
 @keyframes badge-in{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
 
 /* ── 地形圖 · chart ── */
@@ -171,17 +192,22 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 figure.viz{margin:8px 0}
 figure.viz svg{display:block;max-width:100%;height:auto}
 .legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
-.legend button{display:flex;align-items:center;gap:6px;border:1px solid var(--ring);border-radius:99px;
+.legend button{display:flex;align-items:center;gap:6px;border:1px solid var(--ring);border-radius:6px;
   background:var(--page);color:var(--ink-2);padding:5px 12px;font-size:.85rem;cursor:pointer}
+.legend button:hover{border-color:var(--accent)}
 .legend button[aria-pressed="false"]{opacity:.35}
 .legend .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
-.pointinfo{border:1px dashed var(--axis);border-radius:12px;padding:10px 14px;margin-top:10px;font-size:.9rem;color:var(--ink-2)}
+.pointinfo{border:1px dashed var(--axis);border-radius:8px;padding:10px 14px;margin-top:10px;
+  font-size:.9rem;color:var(--ink-2);background:var(--page)}
 
 /* ── 紀錄 · records ── */
 table{width:100%;border-collapse:collapse;font-size:.9rem}
 th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
-th{color:var(--ink-3);font-weight:600;font-size:.78rem;letter-spacing:.04em}
+th{color:var(--ink-3);font-weight:600;font-size:.74rem;letter-spacing:.1em}
+tbody tr:hover td{background:var(--page)}
 td .del{color:var(--crit);background:none;border:none;cursor:pointer;font-size:.85rem}
+td .del:hover,h3 .del:hover{text-decoration:underline}
+h3 .del{color:var(--crit);background:none;border:none;cursor:pointer;font-size:.85rem}
 
 /* ── 檢核表 · checklist ── */
 .likert5{display:flex;align-items:center;justify-content:space-between;gap:2px;margin:8px 0 0}
@@ -195,12 +221,12 @@ td .del{color:var(--crit);background:none;border:none;cursor:pointer;font-size:.
 .clitem p{margin:0 0 4px;font-size:.95rem}
 
 /* ── 其他 · misc ── */
-dialog{border:1px solid var(--ring);border-radius:18px;background:var(--surface-1);color:var(--ink-1);max-width:420px;padding:22px}
-dialog::backdrop{background:rgba(14,18,14,.5)}
+dialog{border:1px solid var(--ring);border-radius:6px;background:var(--surface-1);color:var(--ink-1);max-width:420px;padding:22px}
+dialog::backdrop{background:rgba(10,14,10,.55)}
 dialog h2{font-family:var(--serif)}
 .hide{display:none !important}
 footer.app{margin-top:30px;color:var(--ink-3);font-size:.78rem;line-height:1.8;
-  border-top:1px solid var(--grid);padding-top:16px}
+  border-top:1px solid var(--ring);padding-top:16px}
 a{color:var(--accent)}
 
 /* ── 進場 · view entrance ── */
