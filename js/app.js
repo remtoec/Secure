@@ -73,7 +73,7 @@ function renderHome(){
     db.people.forEach(p=>{
       const b=document.createElement("button");
       b.type="button"; b.className="chip";
-      b.textContent = p.name+" · "+p.results.length+" "+t("home.times");
+      b.textContent = p.name+" · "+p.results.length+" "+t(p.results.length===1?"home.recordOne":"home.recordMany");
       b.setAttribute("aria-pressed", selExisting===p.id?"true":"false");
       b.addEventListener("click",()=>{ selExisting = selExisting===p.id?null:p.id; renderHome(); });
       ex.appendChild(b);
