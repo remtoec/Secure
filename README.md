@@ -25,10 +25,14 @@ The app serves three connected purposes:
 3. Interested readers are pointed to Levine's official *Secure* page for the
    full argument, examples, and practices.
 
-Users answer 9 questions (1–7 Likert) about their general pattern or **one
-specific relationship**, get anxiety and avoidance scores, and see the result
-on a four-quadrant attachment-topography map. Multiple people each get a colour
-on one shared map; retakes draw a dated trajectory. The separate 15-item
+Users choose either **一般依附模式 / General pattern** or **指定一個人 /
+One specific person**, then answer 9 questions (1–7 Likert), get anxiety and
+avoidance scores, and see the result on a four-quadrant attachment-topography
+map. The named-person mode asks for a name because the same person-specific
+ECR-RS wording applies whether that person is a partner, parent, friend, or
+colleague. Each named person keeps one colour on the shared map; repeat
+measurements use lighter-to-deeper versions of that colour and draw a dated
+trajectory. The separate 15-item
 **Collaborative Assessment Scale (CAS)** from Chapter 11 gives a 15–75 total,
 shows Levine's published interpretation, and lists lower-scoring items for
 discussion. Everything stays in browser localStorage, with JSON backup and PNG
@@ -51,10 +55,10 @@ routes**:
 The glimpse of the book must remain distinctive. Levine presents attachment as
 context-sensitive and environmentally responsive: childhood is one influence,
 while the brain keeps learning from present relationships and everyday
-interactions. The topography makes that visible by plotting one person
-differently across a partner, parent, friend, or colleague. Avoid reverting to
-the familiar pop-therapy frame of a fixed identity, a childhood verdict, or a
-label that explains everything.
+interactions. The topography makes that visible by comparing a general pattern
+with named relationships, or several named relationships with one another.
+Avoid reverting to the familiar pop-therapy frame of a fixed identity, a
+childhood verdict, or a label that explains everything.
 
 Content that enables the tool belongs here: exact questions, scoring, concise
 quadrant interpretations, essential term definitions, and privacy/instructions.
@@ -141,11 +145,14 @@ never introduce a claim or compete with the questionnaire. Native HTML/CSS/SVG
 is preferred so diagrams remain bilingual, accessible, dark-mode aware, and
 usable from `file://`.
 
-**Change quiz questions** — `questions` (person-specific) **and**
-`questionsGeneral` (used when 一般依附風格 is selected — the ECR-RS general
-questionnaire's own wording, about "people" / "others" instead of 「這個人」;
-both variants are printed in ch. 5 of *Secure*) in `js/i18n.js`; keep both languages and
-both variants in the same order. If you change which items are
+**Change quiz questions** — `questions` (used for 指定一個人 / One specific
+person) **and** `questionsGeneral` (used for 一般依附模式 / General pattern —
+the ECR-RS general questionnaire's own wording, about "people" / "others"
+instead of 「這個人」; both variants are printed in ch. 5 of *Secure*) in
+`js/i18n.js`; keep both languages and both variants in the same order. The setup
+has only these two modes: relationship categories do not alter the nine
+person-specific items, so do not reintroduce a category picker unless the
+instrument itself changes. If you change which items are
 reverse-scored, update `REVERSED` in `js/scoring.js`. Keep 9 items with the
 6-avoidance + 3-anxiety structure or the formulas stop being ECR-RS.
 The general mode also uses `quiz.whoGeneral`, `quiz.generalReminder`,
@@ -157,10 +164,10 @@ Chapter 11's Collaborative Assessment Scale and are locked by
 `test/content.test.js`; do not paraphrase them casually. The result view uses
 the book's score ranges and lists items scored ≤3 for discussion.
 
-**Add a relationship type** — add the key to `REL_KEYS` in `js/i18n.js` and a
-`rel.<key>` label in both languages. Types are stored as keys, so old data is
-unaffected (legacy Chinese labels from v1 data are migrated in `js/store.js`,
-`LEGACY_TYPES`).
+**Legacy relationship types** — older records may still contain `partner`,
+`parent`, `family`, `friend`, `colleague`, or `other`; `js/store.js` preserves
+and migrates them so historical exports remain readable. New named-person
+records use `other`, but the UI deliberately asks only for the person's name.
 
 **Add a third language** — add a top-level block to `I18N` in `js/i18n.js`
 (copy the `en` block as a template), then extend the `langBtn` click handler in
@@ -197,6 +204,13 @@ quadrant tinting on purpose — the labels state the facts, the chart doesn't
 rank. All motion sits behind `prefers-reduced-motion`; series colours are a
 separate, CVD-validated palette. Result badges use their own fixed dark
 palette for contrast, unrelated to the per-person chart colours.
+
+Question text sits in a responsive `.question-stage`: its reading edge stays
+fixed while the stage absorbs differences in line count, so moving between
+questions does not make the controls jump. Use `text-wrap: pretty`, not
+`balance`, for paragraph-like question copy. At very narrow widths the
+Collaboration tab displays the compact `CAS` / `合作` label while retaining its
+full accessible name; all four tabs must fit without a horizontal scrollbar.
 
 **Copy rules** — read both `docs/translation-principles.md` and
 `docs/editorial-source-and-content-design.md` before editing. Use concrete verbs
@@ -245,7 +259,7 @@ it isn't already.
 {
   "version": 1,
   "people": [
-    { "id": "…", "name": "阿明", "type": "partner", "slot": 0,
+    { "id": "…", "name": "阿明", "type": "other", "slot": 0,
       "results": [ { "date": "ISO-8601", "answers": [1–7 ×9],
                      "anxiety": 3.67, "avoidance": 2.5, "style": "secure" } ] }
   ],
@@ -259,6 +273,8 @@ it isn't already.
   merge (match person by id, then by name; dedupe results by date) or replace.
   `normalizeDb()` in `js/store.js` sanitises anything imported, so extend it if
   you ever change the schema — and bump `version` + add a migration there.
+  It also repairs duplicate legacy `slot` values on load/import so different
+  people receive different palette colours until all eight slots are used.
 
 ---
 
@@ -269,12 +285,14 @@ npm install playwright          # once; then: npx playwright install chromium
 node test/smoke.js              # or CHROMIUM_PATH=/path/to/chromium node test/smoke.js
 ```
 
-Drives the real app headlessly through: landing → quizzes in both languages
-(verifying exact expected scores, e.g. answers `[6,6,6,6,3,3,6,6,6]` →
-anxiety 6.00 / avoidance 2.33 / anxious), retake trajectories, map rendering,
-PNG + JSON export, wipe → import-merge round trip, checklist total, language
-persistence, dark mode. Every line should print `true` / `none`; screenshots
-land in `test/`. Run it before pushing anything non-trivial.
+Drives the real app headlessly through: landing → both questionnaire modes in
+both languages (including required-name validation and exact expected scores,
+e.g. answers `[6,6,6,6,3,3,6,6,6]` → anxiety 6.00 / avoidance 2.33 / anxious),
+retake trajectories, distinct per-person hues, same-person depth changes, map
+rendering, PNG + JSON export, wipe → import-merge round trip, checklist total,
+language persistence, stable question layout, 320 px tab fit, and dark mode.
+Every line should print `true` / `none`; screenshots land in `test/`. Run it
+before pushing anything non-trivial.
 
 ---
 
@@ -286,8 +304,11 @@ land in `test/`. Run it before pushing anything non-trivial.
 - **The chart must keep presentational attributes** (fill/stroke set as SVG
   attributes, plus the `font-family` attribute on the `<svg>` root): the PNG
   export serialises the SVG into an `<img>`, where external CSS doesn't apply.
-- **Series colours cap at 8**; a 9th person reuses slot 1's colour. Every point
-  carries a direct name label, so identity never depends on colour alone.
+- **Series colours cap at 8**; a 9th person must reuse a palette colour. Each
+  person's `slot` determines the hue; that person's earlier measurements are
+  lighter and the latest is full-depth. `normalizeDb()` repairs duplicate
+  legacy slots before rendering. Every point carries a direct name label, so
+  identity never depends on colour alone.
 - **localStorage is per-origin**: records made on the Pages site, on a local
   file, or in the Claude artifact preview are three separate stores. Moving
   between them is what export/import is for.
