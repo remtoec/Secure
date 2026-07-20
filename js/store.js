@@ -19,12 +19,42 @@ function loadDb(){
     const raw = localStorage.getItem(LS_KEY);
     if(raw){
       const d = JSON.parse(raw);
-      if(d && Array.isArray(d.people)) return normalizeDb(d);
+      if(d && Array.isArray(d.people)){
+        const normalized = normalizeDb(d);
+        try{ localStorage.setItem(LS_KEY, JSON.stringify(normalized)); }catch(e){}
+        return normalized;
+      }
     }
   }catch(e){}
   return {version:1, people:[], collab:[]};
 }
 function saveDb(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(db)); }catch(e){} }
+
+function normalizeSlot(slot){
+  if(!Number.isInteger(slot)) return null;
+  return ((slot % SLOT_VARS.length) + SLOT_VARS.length) % SLOT_VARS.length;
+}
+
+function nextAvailableSlot(used, fallbackIndex){
+  for(let slot=0; slot<SLOT_VARS.length; slot++){
+    if(!used.has(slot)) return slot;
+  }
+  return normalizeSlot(fallbackIndex) || 0;
+}
+
+function repairPeopleSlots(people){
+  const used = new Set();
+  let changed = false;
+  people.forEach((person,index)=>{
+    const stored = normalizeSlot(person.slot);
+    const slot = stored===null || used.has(stored)
+      ? nextAvailableSlot(used,index)
+      : stored;
+    if(person.slot!==slot){ person.slot=slot; changed=true; }
+    used.add(slot);
+  });
+  return changed;
+}
 
 function normalizeDb(d){
   d.version = 1;
@@ -37,6 +67,7 @@ function normalizeDb(d){
       .map(r=>({date:r.date||new Date().toISOString(), answers:r.answers||[],
         anxiety:r.anxiety, avoidance:r.avoidance, style:r.style||styleOf(r.anxiety,r.avoidance)})),
   }));
+  repairPeopleSlots(d.people);
   d.collab = (d.collab||[]).filter(c=>typeof c.total==="number");
   return d;
 }
@@ -46,7 +77,8 @@ function mergeDb(incoming){
   incoming.people.forEach(np=>{
     const mine = db.people.find(p=>p.id===np.id || p.name===np.name);
     if(!mine){
-      np.slot = db.people.length % SLOT_VARS.length;
+      const used = new Set(db.people.map(p=>normalizeSlot(p.slot)).filter(slot=>slot!==null));
+      np.slot = nextAvailableSlot(used,db.people.length);
       db.people.push(np);
     }else{
       (np.results||[]).forEach(r=>{
