@@ -178,6 +178,14 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   await page.click('#themeBtn');
   await page.screenshot({ path: nodePath.join(__dirname, 'map-light.png'), fullPage: false });
 
+  // ── Narrow mobile landing remains inside the viewport
+  await page.setViewportSize({ width: 320, height: 800 });
+  await page.click('#homeLink');
+  await page.waitForSelector('#view-landing:not(.hide)');
+  const noMobileOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
+  console.log('320px no overflow:', noMobileOverflow);
+  if (!noMobileOverflow) throw new Error('Landing page overflows at 320px');
+
   console.log('JS errors:', errors.length ? errors : 'none');
   await browser.close();
 })();

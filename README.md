@@ -131,6 +131,16 @@ no framework, no dependencies, works from `file://` as well as a web server.
 once per language (`zh` and `en` blocks). Strings with `{name}`-style
 placeholders are filled by `tp()`. Then rebuild (§4).
 
+**Change the landing visuals** — semantic structure lives in `index.html`, all
+meaningful labels and descriptions stay in `js/i18n.js`, and the responsive
+chart-room treatment lives in `css/style.css`. The hero route and contour lines
+are atmosphere; the two-path attachment frame, three purpose routes, privacy
+disclosure, snapshot markers, and CAS glossary carry information. Keep that
+division explicit: atmosphere may improve orientation and hierarchy, but must
+never introduce a claim or compete with the questionnaire. Native HTML/CSS/SVG
+is preferred so diagrams remain bilingual, accessible, dark-mode aware, and
+usable from `file://`.
+
 **Change quiz questions** — `questions` (person-specific) **and**
 `questionsGeneral` (used when 一般依附風格 is selected — the ECR-RS general
 questionnaire's own wording, about "people" / "others" instead of 「這個人」;
@@ -175,7 +185,12 @@ for UI. A compact subset of Noto Serif TC (weight 600, OFL licence
 too; it covers every character currently in `js/i18n.js`, with per-glyph
 fallback to system fonts if new characters are added (re-subset if wording
 changes a lot). The hero line draws a path that leaves a base dot and returns
-to it — Levine's secure-base image. Other signature elements: the quiz
+to it — Levine's secure-base image. The landing infographic uses paired
+line-and-node paths to show how repeated unreliable or reliable interactions
+can update the brain's expectations; neither path is coloured as failure or
+success. Its three numbered route cards mirror the product's three purposes,
+while privacy is a compact trust strip rather than another essay. Other
+signature elements: the quiz
 progress line with a knot (`.progress`) and the graduated dot scale (`.dotv`;
 the tapped answer's verbal label shows in `#scaleLabel`). The map has no
 quadrant tinting on purpose — the labels state the facts, the chart doesn't
