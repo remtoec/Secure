@@ -220,6 +220,10 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   await page.click('#startBtn');
   await page.waitForSelector('#view-quiz:not(.hide)');
   console.log('EN question:', (await page.textContent('#qtext')).includes('turn to this person'));
+  const englishQuestionFont = await page.locator('#qtext').evaluate(element => getComputedStyle(element).fontFamily);
+  const westernSerif = /^Georgia\b/i.test(englishQuestionFont.replace(/["']/g, ''));
+  console.log('EN question western serif:', westernSerif);
+  if (!westernSerif) throw new Error('English questions need a Western serif punctuation width');
   // scale is now 7 unlabelled dots with verbal labels: tap one, label appears
   await page.click('#scale7 button:nth-child(6)');
   console.log('EN scale label:', (await page.textContent('#scaleLabel')).includes('Agree'));
@@ -228,6 +232,14 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   console.log('EN persists after reload:', (await page.textContent('nav.tabs')).includes('Records'));
   await page.click('#langBtn');
   console.log('Back to zh:', (await page.textContent('nav.tabs')).includes('測驗'));
+  await page.setViewportSize({ width: 320, height: 800 });
+  const chineseNavFits = await page.evaluate(() => {
+    const nav = document.querySelector('nav.tabs');
+    return nav.scrollWidth <= nav.clientWidth;
+  });
+  console.log('ZH 320px tabs fit:', chineseNavFits);
+  if (!chineseNavFits) throw new Error('Chinese mobile tabs must fit without horizontal scrolling');
+  await page.setViewportSize({ width: 420, height: 900 });
 
   // ── Dark mode toggle re-renders without error
   await page.click('#themeBtn');

@@ -275,6 +275,7 @@ input[type=text]:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 
 .question-stage{display:grid;align-items:center;min-height:7.2rem;margin:5px 0 4px}
 .qtext{font-family:var(--serif);font-size:1.35rem;line-height:1.75;font-weight:600;
   margin:0;text-align:start;text-wrap:pretty;overflow-wrap:break-word}
+html[lang^="en"] .qtext{font-family:Georgia,"Times New Roman",serif}
 .qanim{animation:fade-up .38s ease}
 .scale{display:flex;align-items:center;justify-content:space-between;gap:2px;margin:18px 0 0}
 .scale button,.likert5 button{
@@ -376,10 +377,10 @@ section{animation:fade-up .4s ease}
 }
 
 @media (max-width:390px){
-  html[lang^="en"] nav.tabs{gap:3px}
-  html[lang^="en"] nav.tabs button{padding-left:14px;padding-right:14px}
-  html[lang^="en"] .nav-collab-long{display:none}
-  html[lang^="en"] .nav-collab-short{display:inline}
+  nav.tabs{gap:3px}
+  nav.tabs button{padding-left:14px;padding-right:14px}
+  .nav-collab-long{display:none}
+  .nav-collab-short{display:inline}
 }
 
 @media (max-width:520px){
