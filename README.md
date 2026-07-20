@@ -118,7 +118,6 @@ build.js                      node build.js → dist/single.html + dist/artifact
 dist/                         built bundles (committed so Pages serves single.html)
 test/content.test.js          exact ECR-RS/CAS wording + CAS band source locks
 test/smoke.js                 end-to-end headless browser test suite
-.github/workflows/deploy-pages.yml   auto-deploy to GitHub Pages
 ```
 
 Plain `<script>` files loaded in order (i18n → scoring → store → chart → app);
@@ -201,18 +200,25 @@ the different source.
 ## 4 · Build & deploy
 
 ```sh
-node build.js        # rebuilds dist/single.html (self-contained) + dist/artifact.html
-git add -A && git commit -m "..." && git push
+node build.js                 # rebuild committed standalone bundles
+node test/content.test.js     # verify source wording and score bands
+node test/smoke.js            # exercise the complete browser flow
+git add <intended-files>
+git commit -m "..."
+git push origin main
 ```
 
-**Always work on `main`.** Pushing to it triggers
-`.github/workflows/deploy-pages.yml`, which uploads the whole repo to
-GitHub Pages (~1 minute). Remember to run `build.js` before committing if you
-changed any source file, or `dist/single.html` will lag behind the modular
-app. The old working branch `claude/attachment-quiz-traditional-chinese-s99i85`
-is historical — don't commit there. Set `main` as the repo's default branch in
-Settings → Branches if it isn't already.
-Pages source must stay set to "GitHub Actions" (repo Settings → Pages).
+**Always work on `main`.** This project is released from a locally authenticated
+checkout: build and test locally, commit only the intended files, then push
+`main`. GitHub Pages publishes directly from the branch, so repo Settings →
+Pages should use **Deploy from a branch**, branch `main`, folder `/ (root)`.
+There is no project-specific deployment workflow to run or maintain.
+
+Remember to run `build.js` before committing if you changed any source file, or
+`dist/single.html` will lag behind the modular app. The old working branch
+`claude/attachment-quiz-traditional-chinese-s99i85` is historical — don't
+commit there. Set `main` as the repo's default branch in Settings → Branches if
+it isn't already.
 
 ---
 
