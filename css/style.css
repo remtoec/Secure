@@ -359,6 +359,9 @@ h3 .del{color:var(--crit);background:none;border:none;cursor:pointer;font-size:.
 .clitem{padding:13px 0;border-bottom:1px solid var(--grid)}
 .clitem p{margin:0 0 4px;font-size:.95rem}
 #collabQuestionStage #collabItems{width:100%}
+#collabQuestionStage{min-height:10rem}
+#collabItems .clitem{padding:0;border-bottom:0}
+#collabItems .qtext{margin:0;font-size:1.28rem;line-height:1.7}
 .quiz-glossary{margin:18px 0 0;border-top:1px solid var(--grid);padding-top:10px}
 .quiz-glossary summary{cursor:pointer;color:var(--ink-2);font-size:.84rem;font-weight:600}
 .quiz-glossary .term-grid{margin:10px 0 0}
@@ -405,6 +408,7 @@ section{animation:fade-up .4s ease}
   .snapshot-markers{grid-template-columns:minmax(0,1fr)}
   .snapshot-marker{grid-template-columns:27px minmax(0,1fr);align-items:center;gap:7px}
   .term-grid{grid-template-columns:minmax(0,1fr)}
+  #collabQuestionStage{min-height:13rem}
 }
 
 @media (max-width:360px){
@@ -412,6 +416,7 @@ section{animation:fade-up .4s ease}
   .card{padding-left:15px;padding-right:15px}
   .herotitle{font-size:1.48rem}
   .question-stage{min-height:10rem}
+  #collabQuestionStage{min-height:15rem}
   .qtext{font-size:1.25rem;line-height:1.7}
   .hero-actions button,.purpose-card .buttonlink,.purpose-card button{width:100%;text-align:center;margin-right:0}
   .axis-pair>div{font-size:.77rem}

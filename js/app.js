@@ -15,7 +15,7 @@ function show(view){
   if(view==="map") renderMap();
   if(view==="records"){ renderRecords(); renderDataStats(); }
   if(view==="home") renderHome();
-  if(view==="collab"){ renderCollabSetup(); renderCollabHistory(); }
+  if(view==="collab") renderCollabView();
   window.scrollTo({top:0});
 }
 document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
@@ -37,10 +37,10 @@ document.getElementById("langBtn").addEventListener("click",()=>{
 function refreshLang(){
   applyI18n();
   renderHome();
-  renderCollabSetup();
   renderDataStats();
   if(currentView==="quiz" && quiz) renderQuestion();
   else if(currentView==="result" && lastResult) renderResult(lastResult);
+  else if(currentView==="collab") renderCollabView();
   else show(currentView);
 }
 
@@ -290,6 +290,7 @@ function personTypeSuffix(person){
 
 /* ── 合作關係評估量表 · Collaborative Assessment Scale ── */
 let collabSelection = {personId:null, other:false};
+let collabQuiz=null, lastCollabResult=null;
 function eligibleCollabPeople(){
   return db.people.filter(person=>person.type!=="general" && person.results.length);
 }
@@ -303,6 +304,25 @@ function selectedCollabName(){
 function clearCollabSetupErrors(){
   document.getElementById("collabSelectionError").classList.add("hide");
   document.getElementById("collabNameError").classList.add("hide");
+}
+function showCollabStage(stage){
+  document.getElementById("collabSetup").classList.toggle("hide",stage!=="setup");
+  document.getElementById("collabQuiz").classList.toggle("hide",stage!=="quiz");
+  document.getElementById("collabResultCard").classList.toggle("hide",stage!=="result");
+  document.getElementById("collabHistoryCard").classList.toggle("hide",stage==="quiz" || !db.collab.length);
+}
+function renderCollabView(){
+  renderCollabHistory();
+  if(collabQuiz){
+    showCollabStage("quiz");
+    renderCollabQuestion();
+  }else if(lastCollabResult){
+    showCollabStage("result");
+    renderCollabResult(lastCollabResult);
+  }else{
+    showCollabStage("setup");
+    renderCollabSetup();
+  }
 }
 function renderCollabSetup(){
   const people=eligibleCollabPeople();
@@ -347,8 +367,115 @@ document.getElementById("collabStartBtn").addEventListener("click",()=>{
   if(!selectedCollabName()){
     document.getElementById("collabNameError").classList.remove("hide");
     document.getElementById("collabName").focus();
+    return;
   }
+  clearCollabSetupErrors();
+  collabQuiz={name:selectedCollabName(),i:0,answers:Array(15).fill(0)};
+  lastCollabResult=null;
+  showCollabStage("quiz");
+  renderCollabQuestion();
 });
+function renderCollabQuestion(){
+  if(!collabQuiz) return;
+  document.getElementById("collabWho").textContent=tp("collab.who",{name:collabQuiz.name});
+  document.getElementById("collabQnum").textContent=tp("collab.qnum",{n:collabQuiz.i+1});
+  document.getElementById("collabPbar").style.width=((collabQuiz.i+1)/15*100)+"%";
+  document.getElementById("collabPrevBtn").disabled=collabQuiz.i===0;
+  const item=document.createElement("div");
+  item.className="clitem";
+  const question=document.createElement("p");
+  question.className="qtext qanim";
+  question.textContent=t("collabItems")[collabQuiz.i];
+  item.appendChild(question);
+  const items=document.getElementById("collabItems");
+  items.innerHTML="";
+  items.appendChild(item);
+
+  const labels=t("scale5Labels");
+  const label=document.getElementById("collabScaleLabel");
+  label.textContent=collabQuiz.answers[collabQuiz.i] ? labels[collabQuiz.answers[collabQuiz.i]-1] : " ";
+  const scale=document.getElementById("collabScale");
+  scale.innerHTML="";
+  for(let value=1;value<=5;value++){
+    const button=document.createElement("button");
+    button.type="button";
+    button.setAttribute("aria-label",value+" · "+labels[value-1]);
+    button.setAttribute("aria-pressed",collabQuiz.answers[collabQuiz.i]===value?"true":"false");
+    const dot=document.createElement("span");
+    dot.className="dotv";
+    button.appendChild(dot);
+    button.addEventListener("click",()=>{
+      collabQuiz.answers[collabQuiz.i]=value;
+      label.textContent=labels[value-1];
+      scale.querySelectorAll("button").forEach((other,index)=>{
+        other.setAttribute("aria-pressed",index+1===value?"true":"false");
+        other.disabled=true;
+      });
+      const at=collabQuiz.i;
+      const delay=matchMedia("(prefers-reduced-motion: reduce)").matches?0:260;
+      setTimeout(()=>{
+        if(!collabQuiz || collabQuiz.i!==at) return;
+        if(collabQuiz.i<14){ collabQuiz.i++; renderCollabQuestion(); }
+        else finishCollab();
+      },delay);
+    });
+    scale.appendChild(button);
+  }
+}
+document.getElementById("collabPrevBtn").addEventListener("click",()=>{
+  if(collabQuiz && collabQuiz.i>0){ collabQuiz.i--; renderCollabQuestion(); }
+});
+document.getElementById("collabExitBtn").addEventListener("click",()=>{
+  if(!collabQuiz) return;
+  if(collabQuiz.answers.some(Boolean) && !confirm(t("collab.exitConfirm"))) return;
+  collabQuiz=null;
+  lastCollabResult=null;
+  showCollabStage("setup");
+  renderCollabSetup();
+});
+function finishCollab(){
+  if(!collabQuiz || collabQuiz.answers.some(value=>!value)) return;
+  const record={
+    id:uid(),name:collabQuiz.name,date:new Date().toISOString(),
+    answers:collabQuiz.answers.slice(),total:collabQuiz.answers.reduce((sum,value)=>sum+value,0)
+  };
+  db.collab.push(record);
+  saveDb();
+  collabQuiz=null;
+  lastCollabResult=record;
+  renderCollabHistory();
+  showCollabStage("result");
+  renderCollabResult(record);
+}
+function renderCollabResult(record){
+  const band=collabBand(record.total);
+  const items=t("collabItems");
+  const lows=record.answers.map((value,index)=>({value,index})).filter(item=>item.value<=3);
+  const review=lows.length
+    ? '<h3>'+t("collab.lowTitle")+'</h3><p class="muted">'+t("collab.lowIntro")+"</p><ul class='muted'>"+
+      lows.map(item=>"<li>"+(item.index+1)+". "+items[item.index]+'（'+item.value+" / 5）</li>").join("")+"</ul>"
+    : '<p class="muted">'+t("collab.allHigh")+"</p>";
+  document.getElementById("collabResult").innerHTML=
+    '<div class="tile" style="margin-top:14px"><div class="v">'+record.total+' <span class="tiny">/ 75</span></div>'+
+    '<div class="l">'+tp("collab.resultLabel",{name:esc(record.name)})+"</div></div>"+
+    '<h3>'+t("collab.band."+band+"Title")+'</h3><p class="muted">'+t("collab.band."+band+"Body")+"</p>"+
+    review+
+    '<p class="tiny">'+t("collab.discussion")+"</p>"+
+    '<p class="tiny">'+t("collab.totalNote")+"</p>"+
+    '<p><button class="ghost" id="collabClearBtn" type="button">'+t("collab.clear")+"</button></p>";
+  document.getElementById("collabClearBtn").addEventListener("click",resetCollab);
+}
+function resetCollab(){
+  collabQuiz=null;
+  lastCollabResult=null;
+  collabSelection={personId:null,other:false};
+  document.getElementById("collabName").value="";
+  document.getElementById("collabResult").innerHTML="";
+  clearCollabSetupErrors();
+  renderCollabHistory();
+  showCollabStage("setup");
+  renderCollabSetup();
+}
 function renderCollabHistory(){
   const box=document.getElementById("collabHistory");
   const card=document.getElementById("collabHistoryCard");
