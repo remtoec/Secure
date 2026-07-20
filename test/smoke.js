@@ -39,10 +39,20 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   console.log('Snapshot markers:', snapshotMarkers === 3);
   if (snapshotMarkers !== 3) throw new Error('Snapshot markers are not exposed as a three-item list');
 
-  // ── Quiz 1: new person "阿明" (伴侶), answers chosen to land in ANXIOUS quadrant
+  const modeCount = await page.locator('#quizModes .mode-choice').count();
+  console.log('Two questionnaire modes:', modeCount === 2);
+  if (modeCount !== 2) throw new Error('Questionnaire setup must offer only general and specific modes');
+
+  // ── Quiz 1: new specific person "阿明", answers chosen to land in ANXIOUS quadrant
   // supportive items 1-4 answered 6 (reverse → 2), items 5-6 answered 3, anxiety items 7-9 answered 6
   // avoidance = (2*4 + 3*2)/6 = 14/6 = 2.33 ; anxiety = 18/3 = 6.00 → anxious
-  await page.click('#relTypes .chip:has-text("伴侶")');
+  await page.click('#quizModes .mode-choice[data-mode="specific"]');
+  await page.fill('#personName', '   ');
+  await page.click('#startBtn');
+  const blankBlocked = await page.locator('#view-home:not(.hide)').count() === 1 &&
+    !(await page.locator('#nameError').evaluate(element => element.classList.contains('hide')));
+  console.log('Blank specific alias blocked:', blankBlocked);
+  if (!blankBlocked) throw new Error('Blank specific alias must be blocked');
   await page.fill('#personName', '阿明');
   await page.click('#startBtn');
   const answers1 = [6, 6, 6, 6, 3, 3, 6, 6, 6];
@@ -63,7 +73,7 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
 
   // ── Quiz 2: general style, all 1s on anxiety, all supportive high → secure
   await page.click('#againBtn');
-  await page.click('#relTypes .chip:has-text("一般依附風格")');
+  await page.click('#quizModes .mode-choice[data-mode="general"]');
   await page.click('#startBtn');
   await page.waitForSelector('#view-quiz:not(.hide)');
   const gq = await page.textContent('#qtext');
@@ -95,6 +105,25 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   const pathCount = await page.locator('#mapChart svg path').count();
   const circleCount = await page.locator('#mapChart svg circle').count();
   console.log('Map legend=2:', legendCount === 2, '| trajectory path:', pathCount >= 1, '| dots=3:', circleCount === 3);
+  const colourSemantics = await page.evaluate(() => {
+    const people = db.people.map(person => ({ name: person.name, colour: slotColor(person.slot) }));
+    const pointData = [...document.querySelectorAll('#mapChart svg circle')]
+      .filter(circle => circle.querySelector('title'))
+      .map(circle => ({
+        name: circle.querySelector('title').textContent.split(' · ')[0],
+        fill: circle.getAttribute('fill'),
+        opacity: circle.getAttribute('opacity'),
+      }));
+    const ahMing = pointData.filter(point => point.name === '阿明');
+    return {
+      differentPeople: new Set(people.map(person => person.colour)).size === people.length,
+      retestSameHue: ahMing.length === 2 && ahMing[0].fill === ahMing[1].fill,
+      retestDifferentDepth: ahMing.length === 2 && ahMing[0].opacity !== ahMing[1].opacity,
+    };
+  });
+  console.log('Different-name colours:', colourSemantics.differentPeople,
+    '| retest hue:', colourSemantics.retestSameHue,
+    '| retest depth:', colourSemantics.retestDifferentDepth);
 
   // point click → info panel
   await page.locator('#mapChart svg circle').last().click();
@@ -153,8 +182,8 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   const navTxt = await page.textContent('nav.tabs');
   console.log('EN nav:', navTxt.includes('Quiz') && navTxt.includes('Map'));
   await page.click('nav.tabs button[data-view="home"]');
-  console.log('EN rel chips:', (await page.textContent('#relTypes')).includes('Partner'));
-  await page.click('#relTypes .chip:has-text("Partner")');
+  console.log('EN quiz modes:', (await page.textContent('#quizModes')).includes('Specific relationship'));
+  await page.click('#quizModes .mode-choice[data-mode="specific"]');
   await page.fill('#personName', 'Alex');
   await page.click('#startBtn');
   await page.waitForSelector('#view-quiz:not(.hide)');

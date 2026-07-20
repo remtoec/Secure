@@ -237,6 +237,19 @@ button.primary:active,.scale button:active,.likert5 button:active{transform:scal
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* ── 選項標籤 · chips ── */
+.mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:8px 0 13px}
+.mode-choice{
+  min-width:0;min-height:82px;padding:13px 14px;text-align:left;border:1px solid var(--ring);
+  border-radius:6px;background:var(--page);color:var(--ink-2);cursor:pointer;
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+}
+.mode-choice strong{color:var(--ink-1);font-family:var(--serif);font-size:.95rem;line-height:1.4}
+.mode-choice span{font-size:.78rem;line-height:1.45}
+.mode-choice:hover{border-color:var(--accent)}
+.mode-choice[aria-pressed="true"]{
+  border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent);
+}
+.field-error{margin:6px 0 0;color:var(--crit);font-size:.82rem;font-weight:600}
 .chiprow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .chip{border:1px solid var(--ring);background:var(--page);color:var(--ink-2);
   border-radius:6px;padding:8px 15px;font-size:.9rem;cursor:pointer}
@@ -362,6 +375,8 @@ section{animation:fade-up .4s ease}
 
 @media (max-width:520px){
   .card.hero{padding:25px 20px 22px}
+  .mode-grid{grid-template-columns:minmax(0,1fr)}
+  .mode-choice{min-height:0}
   .snapshot-markers{grid-template-columns:minmax(0,1fr)}
   .snapshot-marker{grid-template-columns:27px minmax(0,1fr);align-items:center;gap:7px}
   .term-grid{grid-template-columns:minmax(0,1fr)}

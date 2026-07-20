@@ -128,11 +128,12 @@
     <h2 data-i18n="home.title"></h2>
     <p class="muted" data-i18n-html="home.body"></p>
     <h3 data-i18n="home.q1"></h3>
-    <div class="chiprow" id="relTypes"></div>
-    <div id="nameRow">
+    <div class="mode-grid" id="quizModes"></div>
+    <div id="nameRow" class="hide">
       <h3 data-i18n="home.q2"></h3>
       <input type="text" id="personName" maxlength="20" data-i18n-ph="home.namePh" autocomplete="off">
       <p class="tiny" data-i18n="home.nameHint"></p>
+      <p class="field-error hide" id="nameError" role="alert" data-i18n="home.nameRequired"></p>
     </div>
     <div id="existingRow" class="hide">
       <h3 data-i18n="home.retestTitle"></h3>

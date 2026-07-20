@@ -54,19 +54,29 @@ document.getElementById("themeBtn").addEventListener("click",()=>{
 });
 
 /* ── 測驗首頁 · quiz home ── */
-let selType = "general", selExisting = null;
+let selectedMode = "general", selExisting = null;
 function renderHome(){
-  const tr = document.getElementById("relTypes");
-  tr.innerHTML = "";
-  REL_KEYS.forEach(k=>{
+  const modes = document.getElementById("quizModes");
+  modes.innerHTML = "";
+  ["general","specific"].forEach(mode=>{
     const b=document.createElement("button");
-    b.type="button"; b.className="chip"; b.textContent=t("rel."+k);
-    b.setAttribute("aria-pressed", k===selType && !selExisting ? "true":"false");
-    b.addEventListener("click",()=>{ selType=k; selExisting=null;
-      if(k==="general") document.getElementById("personName").value=t("rel.general.short");
-      renderHome(); });
-    tr.appendChild(b);
+    b.type="button"; b.className="mode-choice"; b.dataset.mode=mode;
+    b.setAttribute("aria-pressed", mode===selectedMode && !selExisting ? "true":"false");
+    const title=document.createElement("strong");
+    title.textContent=t("home.mode"+(mode==="general"?"General":"Specific"));
+    const body=document.createElement("span");
+    body.textContent=t("home.mode"+(mode==="general"?"GeneralBody":"SpecificBody"));
+    b.append(title,body);
+    b.addEventListener("click",()=>{
+      selectedMode=mode; selExisting=null;
+      const input=document.getElementById("personName");
+      if(mode==="general") input.value="";
+      document.getElementById("nameError").classList.add("hide");
+      renderHome();
+    });
+    modes.appendChild(b);
   });
+  document.getElementById("nameRow").classList.toggle("hide", selectedMode!=="specific" || !!selExisting);
   const ex = document.getElementById("existingPeople");
   const row = document.getElementById("existingRow");
   ex.innerHTML="";
@@ -90,11 +100,20 @@ document.getElementById("startBtn").addEventListener("click",()=>{
   if(selExisting){
     person = db.people.find(p=>p.id===selExisting);
   }else{
-    const name = document.getElementById("personName").value.trim() ||
-                 (selType==="general" ? t("rel.general.short") : t("rel."+selType));
-    person = db.people.find(p=>p.name===name);
+    const isGeneral = selectedMode==="general";
+    const input = document.getElementById("personName");
+    const name = isGeneral ? t("rel.general.short") : input.value.trim();
+    if(!isGeneral && !name){
+      document.getElementById("nameError").classList.remove("hide");
+      input.focus();
+      return;
+    }
+    document.getElementById("nameError").classList.add("hide");
+    person = db.people.find(p=>p.name===name && (isGeneral ? p.type==="general" : p.type!=="general"));
     if(!person){
-      person = {id:uid(), name, type:selType, slot: db.people.length % SLOT_VARS.length, results:[]};
+      const used = new Set(db.people.map(p=>normalizeSlot(p.slot)).filter(slot=>slot!==null));
+      person = {id:uid(), name, type:isGeneral?"general":"other",
+        slot:nextAvailableSlot(used,db.people.length), results:[]};
     }
   }
   quiz = {person, i:0, answers:Array(9).fill(0), isNew: !db.people.some(p=>p.id===person.id)};
@@ -103,12 +122,15 @@ document.getElementById("startBtn").addEventListener("click",()=>{
 });
 document.getElementById("quitBtn").addEventListener("click",()=>{ quiz=null; show("home"); });
 document.getElementById("prevBtn").addEventListener("click",()=>{ if(quiz && quiz.i>0){ quiz.i--; renderQuestion(); } });
+document.getElementById("personName").addEventListener("input",()=>{
+  document.getElementById("nameError").classList.add("hide");
+});
 
 function renderQuestion(){
   // 一般依附風格用整體版題目與提示，避免「這個人」的矛盾
   const isGen = quiz.person.type==="general";
   document.getElementById("quizWho").textContent = isGen ? t("quiz.whoGeneral")
-    : tp("quiz.who",{name:quiz.person.name, type:t("rel."+quiz.person.type)});
+    : tp("quiz.who",{name:quiz.person.name});
   document.getElementById("quizReminder").textContent = isGen ? t("quiz.generalReminder") : t("quiz.specificReminder");
   document.getElementById("qnum").textContent = tp("quiz.qnum",{n:quiz.i+1});
   const qt = document.getElementById("qtext");
@@ -166,7 +188,7 @@ function renderResult({person, rec}){
   const st = t("styles")[rec.style];
   const isGen = person.type==="general";
   document.getElementById("resultCard").innerHTML =
-    '<p class="tiny">'+esc(person.name)+"（"+t("rel."+person.type)+"）· "+fmtDate(rec.date)+"</p>"+
+    '<p class="tiny">'+esc(person.name)+" · "+fmtDate(rec.date)+"</p>"+
     "<h2>"+t(isGen?"result.styleIsGeneral":"result.styleIs")+'<span class="badge">'+st.name+"</span></h2>"+
     '<div class="tiles">'+
       '<div class="tile"><div class="v">'+rec.anxiety.toFixed(2)+'</div><div class="l">'+t("result.anxLabel")+"</div></div>"+
@@ -215,7 +237,7 @@ function showPointInfo(p, r){
   const el=document.getElementById("pointInfo");
   const st=t("styles")[r.style];
   el.classList.remove("hide");
-  el.innerHTML="<strong>"+esc(p.name)+"</strong>（"+t("rel."+p.type)+"）· "+fmtDate(r.date)+
+  el.innerHTML="<strong>"+esc(p.name)+"</strong>"+personTypeSuffix(p)+" · "+fmtDate(r.date)+
     ' <span class="badge badge-sm">'+st.name+"</span> "+
     t("th.anx")+" "+r.anxiety.toFixed(2)+"、"+t("th.avd")+" "+r.avoidance.toFixed(2);
 }
@@ -232,7 +254,7 @@ function renderRecords(){
   let h="";
   db.people.forEach(p=>{
     h+='<h3><span class="dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+slotColor(p.slot)+'"></span> '+
-       esc(p.name)+' <span class="tiny">（'+t("rel."+p.type)+'）</span> '+
+       esc(p.name)+' <span class="tiny">'+personTypeSuffix(p)+'</span> '+
        '<button class="del" data-delp="'+p.id+'">'+t("records.deletePerson")+"</button></h3>";
     if(p.results.length){
       h+="<table><thead><tr><th>"+t("th.date")+"</th><th>"+t("th.anx")+"</th><th>"+t("th.avd")+"</th><th>"+t("th.style")+"</th><th></th></tr></thead><tbody>";
@@ -258,6 +280,12 @@ function renderRecords(){
       }
     }
   }));
+}
+
+function personTypeSuffix(person){
+  return person.type && person.type!=="general" && person.type!=="other"
+    ? "（"+t("rel."+person.type)+"）"
+    : "";
 }
 
 /* ── 合作關係評估量表 · Collaborative Assessment Scale ── */
