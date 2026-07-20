@@ -147,7 +147,7 @@ and glossary disclosure. Keep all exact item arrays untouched.
 ```css
 .identity-panel{
   margin:12px 0 16px;padding:14px;border:1px solid var(--axis);border-radius:6px;
-  background:linear-gradient(135deg,var(--page),var(--surface-1));
+  background:var(--page);
   box-shadow:inset 2px 0 0 var(--accent)
 }
 .field-coordinate{font-size:.68rem;letter-spacing:.16em;color:var(--accent);font-weight:700}
