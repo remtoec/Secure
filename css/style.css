@@ -416,7 +416,7 @@ section{animation:fade-up .4s ease}
   .card{padding-left:15px;padding-right:15px}
   .herotitle{font-size:1.48rem}
   .question-stage{min-height:10rem}
-  #collabQuestionStage{min-height:15rem}
+  #collabQuestionStage{min-height:13rem}
   .qtext{font-size:1.25rem;line-height:1.7}
   .hero-actions button,.purpose-card .buttonlink,.purpose-card button{width:100%;text-align:center;margin-right:0}
   .axis-pair>div{font-size:.77rem}

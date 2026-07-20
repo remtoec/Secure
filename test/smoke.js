@@ -244,6 +244,10 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
 
   // ── Language toggle: switch to English, verify UI + questions, persists
   await page.click('#langBtn');
+  const englishCasSetup = (await page.textContent('#collabSetup')).includes('Choose one relationship first') &&
+    (await page.textContent('#collabOther')).includes('Assess someone else');
+  console.log('EN CAS setup:', englishCasSetup);
+  if (!englishCasSetup) throw new Error('CAS setup needs complete English copy');
   const navTxt = await page.textContent('nav.tabs');
   console.log('EN nav:', navTxt.includes('Quiz') && navTxt.includes('Map'));
   await page.setViewportSize({ width: 320, height: 800 });
