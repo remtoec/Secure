@@ -55,6 +55,23 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   if (!blankBlocked) throw new Error('Blank specific alias must be blocked');
   await page.fill('#personName', '阿明');
   await page.click('#startBtn');
+  const questionLayout = await page.evaluate(() => {
+    const stage = document.querySelector('#questionStage');
+    const question = document.querySelector('#qtext');
+    if (!stage || !question) return null;
+    const stageStyle = getComputedStyle(stage);
+    const questionStyle = getComputedStyle(question);
+    return {
+      centred: (stageStyle.display === 'grid' && stageStyle.alignItems === 'center') ||
+        (stageStyle.display === 'flex' && stageStyle.alignItems === 'center'),
+      wrap: questionStyle.textWrap,
+      align: questionStyle.textAlign,
+    };
+  });
+  const stableQuestionLayout = questionLayout && questionLayout.centred &&
+    questionLayout.wrap === 'pretty' && ['start', 'left'].includes(questionLayout.align);
+  console.log('Stable question layout:', Boolean(stableQuestionLayout));
+  if (!stableQuestionLayout) throw new Error('Question stage must centre naturally wrapped, reading-edge text');
   const answers1 = [6, 6, 6, 6, 3, 3, 6, 6, 6];
   for (const a of answers1) {
     await page.waitForSelector('#view-quiz:not(.hide)');
@@ -181,6 +198,21 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   await page.click('#langBtn');
   const navTxt = await page.textContent('nav.tabs');
   console.log('EN nav:', navTxt.includes('Quiz') && navTxt.includes('Map'));
+  await page.setViewportSize({ width: 320, height: 800 });
+  const mobileEnglishNav = await page.evaluate(() => {
+    const nav = document.querySelector('nav.tabs');
+    const collab = nav.querySelector('button[data-view="collab"]');
+    const shortLabel = collab.querySelector('.nav-collab-short');
+    return {
+      fits: nav.scrollWidth <= nav.clientWidth,
+      shortVisible: shortLabel && getComputedStyle(shortLabel).display !== 'none',
+      accessible: (collab.getAttribute('aria-label') || '').includes('Collaborative Assessment Scale'),
+    };
+  });
+  const mobileEnglishNavPass = mobileEnglishNav.fits && mobileEnglishNav.shortVisible && mobileEnglishNav.accessible;
+  console.log('EN 320px tabs fit:', mobileEnglishNavPass);
+  if (!mobileEnglishNavPass) throw new Error('English mobile tabs must fit with an accessible CAS label');
+  await page.setViewportSize({ width: 420, height: 900 });
   await page.click('nav.tabs button[data-view="home"]');
   console.log('EN quiz modes:', (await page.textContent('#quizModes')).includes('Specific relationship'));
   await page.click('#quizModes .mode-choice[data-mode="specific"]');

@@ -25,7 +25,10 @@
   <button role="tab" data-view="home" aria-selected="false" data-i18n="nav.quiz">測驗</button>
   <button role="tab" data-view="map" aria-selected="false" data-i18n="nav.map">地形圖</button>
   <button role="tab" data-view="records" aria-selected="false" data-i18n="nav.records">紀錄</button>
-  <button role="tab" data-view="collab" aria-selected="false" data-i18n="nav.collab">合作評估</button>
+  <button role="tab" data-view="collab" aria-selected="false" data-i18n-aria="nav.collabAria">
+    <span class="nav-collab-long" data-i18n="nav.collab">合作評估</span>
+    <span class="nav-collab-short" data-i18n="nav.collabShort">合作</span>
+  </button>
 </nav>
 
 <!-- ═════════ 歡迎頁 · Landing ═════════ -->
@@ -159,7 +162,9 @@
     <div class="progress"><div id="pbar" style="width:0%"></div></div>
     <p class="tiny" id="qnum"></p>
     <p class="tiny" id="quizReminder"></p>
-    <p class="qtext" id="qtext"></p>
+    <div class="question-stage" id="questionStage">
+      <p class="qtext" id="qtext"></p>
+    </div>
     <div class="scale" id="scale7"></div>
     <div class="anchors"><span data-i18n="quiz.anchorLow"></span><span data-i18n="quiz.anchorMid"></span><span data-i18n="quiz.anchorHigh"></span></div>
     <p class="scalelabel" id="scaleLabel">&nbsp;</p>

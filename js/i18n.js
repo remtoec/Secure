@@ -19,6 +19,7 @@ zh: {
   "btn.lang": "EN",
 
   "nav.quiz": "測驗", "nav.map": "地形圖", "nav.records": "紀錄", "nav.collab": "合作評估",
+  "nav.collabShort": "合作", "nav.collabAria": "合作關係評估量表",
 
   "rel.general": "一般依附風格", "rel.partner": "伴侶", "rel.mother": "母親", "rel.father": "父親",
   "rel.family": "家人", "rel.friend": "朋友", "rel.colleague": "同事", "rel.other": "其他",
@@ -255,6 +256,7 @@ en: {
   "btn.lang": "中",
 
   "nav.quiz": "Quiz", "nav.map": "Map", "nav.records": "Records", "nav.collab": "Collaboration",
+  "nav.collabShort": "CAS", "nav.collabAria": "Collaborative Assessment Scale",
 
   "rel.general": "General attachment style", "rel.partner": "Partner", "rel.mother": "Mother", "rel.father": "Father",
   "rel.family": "Family", "rel.friend": "Friend", "rel.colleague": "Colleague", "rel.other": "Other",
@@ -508,4 +510,5 @@ function applyI18n(){
   document.querySelectorAll("[data-i18n]").forEach(el=>{ el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll("[data-i18n-html]").forEach(el=>{ el.innerHTML = t(el.dataset.i18nHtml); });
   document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ el.placeholder = t(el.dataset.i18nPh); });
+  document.querySelectorAll("[data-i18n-aria]").forEach(el=>{ el.setAttribute("aria-label", t(el.dataset.i18nAria)); });
 }

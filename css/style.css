@@ -82,6 +82,7 @@ nav.tabs button[aria-selected="true"]{
   color:var(--ink-1);font-weight:700;background:var(--surface-1);
   border-color:var(--ring);box-shadow:inset 0 2px 0 var(--accent);
 }
+.nav-collab-short{display:none}
 
 /* ── 圖版 · plates (cards) ── */
 .card{background:var(--surface-1);border:1px solid var(--ring);border-radius:6px;
@@ -271,8 +272,9 @@ input[type=text]:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 
   width:8px;height:8px;background:var(--accent);
   box-shadow:0 0 0 3px var(--accent-soft);
 }
+.question-stage{display:grid;align-items:center;min-height:7.2rem;margin:5px 0 4px}
 .qtext{font-family:var(--serif);font-size:1.35rem;line-height:1.75;font-weight:600;
-  min-height:4.6em;margin:10px 0 4px;text-wrap:balance}
+  margin:0;text-align:start;text-wrap:pretty;overflow-wrap:break-word}
 .qanim{animation:fade-up .38s ease}
 .scale{display:flex;align-items:center;justify-content:space-between;gap:2px;margin:18px 0 0}
 .scale button,.likert5 button{
@@ -373,10 +375,18 @@ section{animation:fade-up .4s ease}
   .purpose-card{padding:14px 15px}
 }
 
+@media (max-width:390px){
+  html[lang^="en"] nav.tabs{gap:3px}
+  html[lang^="en"] nav.tabs button{padding-left:14px;padding-right:14px}
+  html[lang^="en"] .nav-collab-long{display:none}
+  html[lang^="en"] .nav-collab-short{display:inline}
+}
+
 @media (max-width:520px){
   .card.hero{padding:25px 20px 22px}
   .mode-grid{grid-template-columns:minmax(0,1fr)}
   .mode-choice{min-height:0}
+  .question-stage{min-height:8.6rem}
   .snapshot-markers{grid-template-columns:minmax(0,1fr)}
   .snapshot-marker{grid-template-columns:27px minmax(0,1fr);align-items:center;gap:7px}
   .term-grid{grid-template-columns:minmax(0,1fr)}
@@ -386,6 +396,8 @@ section{animation:fade-up .4s ease}
   .wrap{padding-left:10px;padding-right:10px}
   .card{padding-left:15px;padding-right:15px}
   .herotitle{font-size:1.48rem}
+  .question-stage{min-height:10rem}
+  .qtext{font-size:1.25rem;line-height:1.7}
   .hero-actions button,.purpose-card .buttonlink,.purpose-card button{width:100%;text-align:center;margin-right:0}
   .axis-pair>div{font-size:.77rem}
 }
