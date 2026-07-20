@@ -34,9 +34,11 @@ colleague. Each named person keeps one colour on the shared map; repeat
 measurements use lighter-to-deeper versions of that colour and draw a dated
 trajectory. The separate 15-item
 **Collaborative Assessment Scale (CAS)** from Chapter 11 gives a 15–75 total,
-shows Levine's published interpretation, and lists lower-scoring items for
-discussion. Everything stays in browser localStorage, with JSON backup and PNG
-map export.
+shows one statement at a time, and advances automatically after each response.
+Participants can reuse a named person already plotted on the attachment map or
+enter someone else. The result shows Levine's published interpretation and
+lists lower-scoring items for discussion. Everything stays in browser
+localStorage, with JSON backup and PNG map export.
 
 ### Product and editorial direction
 
@@ -162,7 +164,12 @@ The general mode also uses `quiz.whoGeneral`, `quiz.generalReminder`,
 **Change CAS items** — `collabItems` in `js/i18n.js`. The English items reproduce
 Chapter 11's Collaborative Assessment Scale and are locked by
 `test/content.test.js`; do not paraphrase them casually. The result view uses
-the book's score ranges and lists items scored ≤3 for discussion.
+the book's score ranges and lists items scored ≤3 for discussion. CAS has three
+explicit stages in `index.html` / `js/app.js`: `collabSetup`, `collabQuiz`, and
+`collabResultCard`. Setup offers non-general people with attachment results as
+chips, plus a required “someone else” field. The quiz renders exactly one item
+and advances after 260 ms; item 15 scores and saves automatically. Back keeps
+previous answers; Exit never saves a partial checklist.
 
 **Legacy relationship types** — older records may still contain `partner`,
 `parent`, `family`, `friend`, `colleague`, or `other`; `js/store.js` preserves
@@ -208,7 +215,10 @@ palette for contrast, unrelated to the per-person chart colours.
 Question text sits in a responsive `.question-stage`: its reading edge stays
 fixed while the stage absorbs differences in line count, so moving between
 questions does not make the controls jump. Use `text-wrap: pretty`, not
-`balance`, for paragraph-like question copy. At very narrow widths the
+`balance`, for paragraph-like question copy. Both questionnaires use this
+station-and-course pattern. A required relationship name sits inside an
+`.identity-panel`, with a bound label, coordinate marker, helper copy, and
+inline error; do not reduce it to an unlabelled text box. At very narrow widths the
 Collaboration tab displays the compact `CAS` / `合作` label while retaining its
 full accessible name; all four tabs must fit without a horizontal scrollbar.
 
@@ -269,6 +279,9 @@ it isn't already.
 ```
 
 - Key `attachment-lang`: `"zh"` or `"en"`.
+- Selecting an existing attachment person in CAS copies the current display
+  name into a normal CAS record. It does not add a person ID or mutate/link the
+  attachment record, so the export shape remains backward-compatible.
 - The **export file is exactly this object**, pretty-printed. Import offers
   merge (match person by id, then by name; dedupe results by date) or replace.
   `normalizeDb()` in `js/store.js` sanitises anything imported, so extend it if
@@ -289,10 +302,12 @@ Drives the real app headlessly through: landing → both questionnaire modes in
 both languages (including required-name validation and exact expected scores,
 e.g. answers `[6,6,6,6,3,3,6,6,6]` → anxiety 6.00 / avoidance 2.33 / anxious),
 retake trajectories, distinct per-person hues, same-person depth changes, map
-rendering, PNG + JSON export, wipe → import-merge round trip, checklist total,
-language persistence, stable question layout, 320 px tab fit, and dark mode.
-Every line should print `true` / `none`; screenshots land in `test/`. Run it
-before pushing anything non-trivial.
+rendering, PNG + JSON export, wipe → import-merge round trip, the labelled
+relationship-name panel, CAS person reuse, one-item auto-progression, Back
+restoration, new-name validation, automatic checklist total, language
+persistence, stable question layout, 320 px tab fit, and dark mode. Every line
+should print `true` / `none`; screenshots land in `test/`. Run it before pushing
+anything non-trivial.
 
 ---
 
