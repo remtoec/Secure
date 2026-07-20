@@ -20,7 +20,9 @@ function show(view){
 }
 document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
 document.getElementById("homeLink").addEventListener("click",e=>{ e.preventDefault(); show("landing"); });
-document.getElementById("landingStart").addEventListener("click",()=>show("home"));
+document.querySelectorAll(".js-start-quiz").forEach(button=>{
+  button.addEventListener("click",()=>show("home"));
+});
 document.getElementById("landingMap").addEventListener("click",()=>show("map"));
 function renderLanding(){
   const has = db.people.some(p=>p.results.length);

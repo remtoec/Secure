@@ -22,9 +22,10 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   console.log('Framework infographic:', await page.locator('#attachmentFrame').count() === 1);
   console.log('Three purpose routes:', await page.locator('.purpose-card').count() === 3);
   console.log('Compact privacy:', await page.locator('#privacyDetails').count() === 1);
+  console.log('Route start action:', await page.locator('#routeStart').count() === 1);
   console.log('Official book link:', await page.locator('a[href="https://amirlevinemd.com/books/secure/"]').count() === 1);
   console.log('Bookfort contact link:', await page.locator('a[href="https://www.instagram.com/reel/DaHcPUuOLx7"]').count() === 1);
-  await page.click('#landingStart');
+  await page.click('#routeStart');
   await page.waitForSelector('#view-home:not(.hide)');
 
   // ── Quiz 1: new person "阿明" (伴侶), answers chosen to land in ANXIOUS quadrant

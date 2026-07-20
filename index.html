@@ -31,33 +31,95 @@
 <!-- ═════════ 歡迎頁 · Landing ═════════ -->
 <section id="view-landing">
   <div class="card hero">
-    <p class="eyebrow" data-i18n="landing.eyebrow"></p>
-    <h2 class="herotitle" data-i18n="landing.title"></h2>
-    <svg class="thread" viewBox="0 0 340 56" aria-hidden="true">
-      <circle class="th-dot" cx="18" cy="42" r="5"/>
-      <path class="th-line" d="M23 40 C 70 10, 170 2, 240 12 C 312 22, 318 44, 236 46 C 158 48, 66 46, 30 43"/>
-    </svg>
-    <p class="muted" data-i18n-html="landing.body"></p>
-    <p style="margin-top:18px">
-      <button class="primary" id="landingStart" type="button" data-i18n="landing.start"></button>
-      <button class="ghost hide" id="landingMap" type="button" data-i18n="landing.viewMap"></button>
-    </p>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="landing.eyebrow"></p>
+        <h2 class="herotitle" data-i18n="landing.title"></h2>
+        <p class="muted hero-body" data-i18n="landing.body"></p>
+        <div class="axis-pair" aria-label="questionnaire dimensions">
+          <div><span class="axis-mark">X</span><span data-i18n="landing.axisAnxiety"></span></div>
+          <div><span class="axis-mark">Y</span><span data-i18n="landing.axisAvoidance"></span></div>
+        </div>
+        <p class="hero-actions">
+          <button class="primary js-start-quiz" id="landingStart" type="button" data-i18n="landing.start"></button>
+          <button class="ghost hide" id="landingMap" type="button" data-i18n="landing.viewMap"></button>
+        </p>
+      </div>
+      <figure class="hero-route">
+        <svg viewBox="0 0 360 250" aria-hidden="true">
+          <g class="route-contours">
+            <path d="M20 54c54-40 114-38 160-6s104 35 160-4"/>
+            <path d="M12 86c64-35 122-28 166 2s104 31 170-2"/>
+            <path d="M18 206c58 28 116 24 158-8s104-36 166-4"/>
+          </g>
+          <circle class="route-base-ring" cx="54" cy="176" r="20"/>
+          <circle class="route-base" cx="54" cy="176" r="7"/>
+          <path class="route-line" d="M62 171C108 116 177 86 247 104c64 16 65 72 11 92-59 22-139 5-194-15"/>
+          <circle class="route-station" cx="248" cy="104" r="6"/>
+        </svg>
+        <figcaption data-i18n="landing.routeCaption"></figcaption>
+      </figure>
+    </div>
   </div>
-  <div class="card">
+  <div class="card frame-card" id="attachmentFrame">
     <h2 data-i18n="landing.frameTitle"></h2>
-    <p class="muted" data-i18n-html="landing.frameBody"></p>
+    <p class="muted frame-intro" data-i18n="landing.frameIntro"></p>
+    <div class="frame-grid">
+      <article class="frame-path frame-alarm">
+        <p class="path-kicker" data-i18n="landing.pathAlarmKicker"></p>
+        <h3 data-i18n="landing.pathAlarmTitle"></h3>
+        <div class="path-nodes" role="list">
+          <span role="listitem" data-i18n="landing.pathAlarm1"></span>
+          <span role="listitem" data-i18n="landing.pathAlarm2"></span>
+          <span role="listitem" data-i18n="landing.pathAlarm3"></span>
+        </div>
+        <p data-i18n="landing.pathAlarmBody"></p>
+      </article>
+      <article class="frame-path frame-safety">
+        <p class="path-kicker" data-i18n="landing.pathSafetyKicker"></p>
+        <h3 data-i18n="landing.pathSafetyTitle"></h3>
+        <div class="path-nodes" role="list">
+          <span role="listitem" data-i18n="landing.pathSafety1"></span>
+          <span role="listitem" data-i18n="landing.pathSafety2"></span>
+          <span role="listitem" data-i18n="landing.pathSafety3"></span>
+        </div>
+        <p data-i18n="landing.pathSafetyBody"></p>
+      </article>
+    </div>
+    <p class="same-person" data-i18n="landing.samePerson"></p>
+    <p class="tiny frame-note" data-i18n="landing.frameNote"></p>
   </div>
-  <div class="card">
+  <div class="card purpose-section">
     <h2 data-i18n="landing.invitationTitle"></h2>
-    <p class="muted" data-i18n-html="landing.invitationBody"></p>
-    <p class="actionrow">
-      <a class="buttonlink primary" href="https://amirlevinemd.com/books/secure/" target="_blank" rel="noopener noreferrer" data-i18n="landing.bookCta"></a>
-      <a class="buttonlink ghost" href="https://www.instagram.com/p/DYclS9klJWw/" target="_blank" rel="noopener noreferrer" data-i18n="landing.clubCta"></a>
-    </p>
+    <p class="muted" data-i18n="landing.invitationBody"></p>
+    <div class="purpose-grid">
+      <article class="purpose-card purpose-prepare">
+        <span class="purpose-no">01</span>
+        <h3 data-i18n="landing.routePrepareTitle"></h3>
+        <p data-i18n="landing.routePrepareBody"></p>
+        <button class="primary js-start-quiz" id="routeStart" type="button" data-i18n="landing.routePrepareCta"></button>
+      </article>
+      <article class="purpose-card">
+        <span class="purpose-no">02</span>
+        <h3 data-i18n="landing.routeClubTitle"></h3>
+        <p data-i18n="landing.routeClubBody"></p>
+        <a class="buttonlink ghost" href="https://www.instagram.com/reel/DaHcPUuOLx7" target="_blank" rel="noopener noreferrer" data-i18n="landing.clubCta"></a>
+      </article>
+      <article class="purpose-card">
+        <span class="purpose-no">03</span>
+        <h3 data-i18n="landing.routeBookTitle"></h3>
+        <p data-i18n="landing.routeBookBody"></p>
+        <a class="buttonlink ghost" href="https://amirlevinemd.com/books/secure/" target="_blank" rel="noopener noreferrer" data-i18n="landing.bookCta"></a>
+      </article>
+    </div>
   </div>
-  <div class="card">
+  <div class="card privacy-card">
     <h2 data-i18n="landing.privacyTitle"></h2>
-    <p class="muted" data-i18n-html="landing.privacyBody"></p>
+    <p class="privacy-lead" data-i18n-html="landing.privacyLead"></p>
+    <details id="privacyDetails">
+      <summary data-i18n="landing.privacyMore"></summary>
+      <p class="muted" data-i18n-html="landing.privacyBody"></p>
+    </details>
     <p class="tiny" data-i18n="landing.disclaimer"></p>
   </div>
 </section>
@@ -80,9 +142,13 @@
     </div>
     <p><button class="primary" id="startBtn" type="button" data-i18n="home.start"></button></p>
   </div>
-  <div class="card">
+  <div class="card snapshot-card">
     <h2 data-i18n="home.stylesTitle"></h2>
-    <p class="muted" data-i18n-html="home.stylesBody"></p>
+    <div class="snapshot-markers">
+      <div class="snapshot-marker"><span>01</span><strong data-i18n="home.markerRelationship"></strong></div>
+      <div class="snapshot-marker"><span>02</span><strong data-i18n="home.markerNow"></strong></div>
+      <div class="snapshot-marker"><span>03</span><strong data-i18n="home.markerMove"></strong></div>
+    </div>
     <p class="tiny" data-i18n="home.stylesNote"></p>
   </div>
 </section>
@@ -155,6 +221,13 @@
   <div class="card">
     <h2 data-i18n="collab.title"></h2>
     <p class="muted" data-i18n-html="collab.body"></p>
+    <h3 class="term-heading" id="collabGlossaryTitle" data-i18n="collab.glossaryTitle"></h3>
+    <div class="term-grid" role="list" aria-labelledby="collabGlossaryTitle">
+      <div class="term-card" role="listitem"><strong>Cyberballing</strong><span data-i18n="collab.termCyberballing"></span></div>
+      <div class="term-card" role="listitem"><strong>stillfacing</strong><span data-i18n="collab.termStillfacing"></span></div>
+      <div class="term-card" role="listitem"><strong>SIMIs</strong><span data-i18n="collab.termSIMIs"></span></div>
+      <div class="term-card" role="listitem"><strong>CARRP</strong><span data-i18n="collab.termCARRP"></span></div>
+    </div>
     <h3 data-i18n="collab.whoTitle"></h3>
     <input type="text" id="collabName" maxlength="20" data-i18n-ph="collab.whoPh" autocomplete="off">
     <div id="collabItems"></div>
