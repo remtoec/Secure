@@ -19,8 +19,11 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   const landingText = await page.textContent('#view-landing');
   console.log('Secure frame:', landingText.includes('大腦會繼續因應眼前的關係改變'));
   console.log('Sharing invitation:', landingText.includes('當日分享紀錄'));
+  console.log('Framework infographic:', await page.locator('#attachmentFrame').count() === 1);
+  console.log('Three purpose routes:', await page.locator('.purpose-card').count() === 3);
+  console.log('Compact privacy:', await page.locator('#privacyDetails').count() === 1);
   console.log('Official book link:', await page.locator('a[href="https://amirlevinemd.com/books/secure/"]').count() === 1);
-  console.log('Bookfort contact link:', await page.locator('a[href="https://www.instagram.com/p/DYclS9klJWw/"]').count() === 1);
+  console.log('Bookfort contact link:', await page.locator('a[href="https://www.instagram.com/reel/DaHcPUuOLx7"]').count() === 1);
   await page.click('#landingStart');
   await page.waitForSelector('#view-home:not(.hide)');
 
@@ -123,6 +126,7 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
 
   // ── Collab checklist: answer all 15 with 4 → total 60 (high band)
   await page.click('nav.tabs button[data-view="collab"]');
+  console.log('CAS glossary:', await page.locator('.term-grid .term-card').count() === 4);
   await page.fill('#collabName', '阿明');
   for (let i = 1; i <= 15; i++) {
     await page.click(`#collabItems .clitem:nth-child(${i}) .likert5 button:nth-child(4)`);

@@ -67,6 +67,16 @@ assert.strictEqual(collabBand(26), "mixed");
 assert.strictEqual(collabBand(59), "high");
 assert.strictEqual(collabBand(60), "strong");
 
+for (const lang of [I18N.zh, I18N.en]) {
+  assert.ok(lang["landing.pathAlarmTitle"]);
+  assert.ok(lang["landing.pathSafetyTitle"]);
+  assert.ok(lang["landing.samePerson"]);
+  assert.ok(lang["landing.routePrepareTitle"]);
+  assert.ok(lang["landing.routeClubTitle"]);
+  assert.ok(lang["landing.routeBookTitle"]);
+  assert.ok(lang["collab.termCARRP"]);
+}
+
 const english = JSON.stringify(I18N.en);
 assert.ok(!english.includes("worth continuing to invest in"));
 assert.ok(!english.includes("sets no pass mark"));
