@@ -32,19 +32,8 @@
 <section id="view-landing">
   <div class="card hero">
     <div class="hero-grid">
-      <div class="hero-copy">
-        <p class="eyebrow" data-i18n="landing.eyebrow"></p>
-        <h2 class="herotitle" data-i18n="landing.title"></h2>
-        <p class="muted hero-body" data-i18n="landing.body"></p>
-        <div class="axis-pair" aria-label="questionnaire dimensions">
-          <div><span class="axis-mark">X</span><span data-i18n="landing.axisAnxiety"></span></div>
-          <div><span class="axis-mark">Y</span><span data-i18n="landing.axisAvoidance"></span></div>
-        </div>
-        <p class="hero-actions">
-          <button class="primary js-start-quiz" id="landingStart" type="button" data-i18n="landing.start"></button>
-          <button class="ghost hide" id="landingMap" type="button" data-i18n="landing.viewMap"></button>
-        </p>
-      </div>
+      <p class="eyebrow" data-i18n="landing.eyebrow"></p>
+      <h2 class="herotitle" data-i18n="landing.title"></h2>
       <figure class="hero-route">
         <svg viewBox="0 0 360 250" aria-hidden="true">
           <g class="route-contours">
@@ -59,6 +48,15 @@
         </svg>
         <figcaption data-i18n="landing.routeCaption"></figcaption>
       </figure>
+      <p class="muted hero-body" data-i18n="landing.body"></p>
+      <div class="axis-pair" aria-label="questionnaire dimensions">
+        <div><span class="axis-mark">X</span><span data-i18n="landing.axisAnxiety"></span></div>
+        <div><span class="axis-mark">Y</span><span data-i18n="landing.axisAvoidance"></span></div>
+      </div>
+      <p class="hero-actions">
+        <button class="primary js-start-quiz" id="landingStart" type="button" data-i18n="landing.start"></button>
+        <button class="ghost hide" id="landingMap" type="button" data-i18n="landing.viewMap"></button>
+      </p>
     </div>
   </div>
   <div class="card frame-card" id="attachmentFrame">
@@ -144,10 +142,10 @@
   </div>
   <div class="card snapshot-card">
     <h2 data-i18n="home.stylesTitle"></h2>
-    <div class="snapshot-markers">
-      <div class="snapshot-marker"><span>01</span><strong data-i18n="home.markerRelationship"></strong></div>
-      <div class="snapshot-marker"><span>02</span><strong data-i18n="home.markerNow"></strong></div>
-      <div class="snapshot-marker"><span>03</span><strong data-i18n="home.markerMove"></strong></div>
+    <div class="snapshot-markers" role="list">
+      <div class="snapshot-marker" role="listitem"><span>01</span><strong data-i18n="home.markerRelationship"></strong></div>
+      <div class="snapshot-marker" role="listitem"><span>02</span><strong data-i18n="home.markerNow"></strong></div>
+      <div class="snapshot-marker" role="listitem"><span>03</span><strong data-i18n="home.markerMove"></strong></div>
     </div>
     <p class="tiny" data-i18n="home.stylesNote"></p>
   </div>

@@ -25,8 +25,19 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   console.log('Route start action:', await page.locator('#routeStart').count() === 1);
   console.log('Official book link:', await page.locator('a[href="https://amirlevinemd.com/books/secure/"]').count() === 1);
   console.log('Bookfort contact link:', await page.locator('a[href="https://www.instagram.com/reel/DaHcPUuOLx7"]').count() === 1);
+  const visualLayout = await page.evaluate(() => {
+    const displays = ['.hero-grid', '.frame-grid', '.purpose-grid'].map(selector =>
+      getComputedStyle(document.querySelector(selector)).display
+    );
+    return displays.every(display => display === 'grid');
+  });
+  console.log('Visual grids active:', visualLayout);
+  if (!visualLayout) throw new Error('Visual information grids are not active');
   await page.click('#routeStart');
   await page.waitForSelector('#view-home:not(.hide)');
+  const snapshotMarkers = await page.locator('.snapshot-markers[role="list"] .snapshot-marker[role="listitem"]').count();
+  console.log('Snapshot markers:', snapshotMarkers === 3);
+  if (snapshotMarkers !== 3) throw new Error('Snapshot markers are not exposed as a three-item list');
 
   // ── Quiz 1: new person "阿明" (伴侶), answers chosen to land in ANXIOUS quadrant
   // supportive items 1-4 answered 6 (reverse → 2), items 5-6 answered 3, anxiety items 7-9 answered 6
