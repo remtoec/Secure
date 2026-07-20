@@ -192,7 +192,7 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
 
   // ── Guided CAS: reuse an attachment person, answer one item at a time, auto-score
   await page.click('nav.tabs button[data-view="collab"]');
-  console.log('CAS glossary:', await page.locator('.term-grid .term-card').count() === 4);
+  console.log('CAS glossary:', await page.locator('#collabSetup .term-grid .term-card').count() === 4);
   const collabChoices = await page.locator('#collabPeople .chip[data-person-id]').allTextContents();
   const reusablePerson = collabChoices.some(text => text.includes('阿明')) &&
     !collabChoices.some(text => text.includes('一般'));

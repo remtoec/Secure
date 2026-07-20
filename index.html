@@ -132,10 +132,15 @@
     <p class="muted" data-i18n-html="home.body"></p>
     <h3 data-i18n="home.q1"></h3>
     <div class="mode-grid" id="quizModes"></div>
-    <div id="nameRow" class="hide">
-      <h3 data-i18n="home.q2"></h3>
-      <input type="text" id="personName" maxlength="20" data-i18n-ph="home.namePh" autocomplete="off">
-      <p class="tiny" data-i18n="home.nameHint"></p>
+    <div id="nameRow" class="identity-panel hide">
+      <div class="field-coordinate" data-i18n="home.personCoordinate"></div>
+      <div class="field-label-row">
+        <label for="personName" data-i18n="home.q2"></label>
+        <span class="required-tag" data-i18n="form.required"></span>
+      </div>
+      <input type="text" id="personName" maxlength="20" data-i18n-ph="home.namePh" autocomplete="off"
+        aria-required="true" aria-describedby="nameHint nameError">
+      <p class="tiny field-hint" id="nameHint" data-i18n="home.nameHint"></p>
       <p class="field-error hide" id="nameError" role="alert" data-i18n="home.nameRequired"></p>
     </div>
     <div id="existingRow" class="hide">
@@ -222,7 +227,7 @@
 
 <!-- ═════════ 合作評估 · Collaborative Assessment Scale ═════════ -->
 <section id="view-collab" class="hide">
-  <div class="card">
+  <div class="card" id="collabSetup">
     <h2 data-i18n="collab.title"></h2>
     <p class="muted" data-i18n-html="collab.body"></p>
     <h3 class="term-heading" id="collabGlossaryTitle" data-i18n="collab.glossaryTitle"></h3>
@@ -232,11 +237,53 @@
       <div class="term-card" role="listitem"><strong>SIMIs</strong><span data-i18n="collab.termSIMIs"></span></div>
       <div class="term-card" role="listitem"><strong>CARRP</strong><span data-i18n="collab.termCARRP"></span></div>
     </div>
-    <h3 data-i18n="collab.whoTitle"></h3>
-    <input type="text" id="collabName" maxlength="20" data-i18n-ph="collab.whoPh" autocomplete="off">
-    <div id="collabItems"></div>
-    <p style="margin-top:16px"><button class="primary" id="collabScoreBtn" type="button" data-i18n="collab.calc"></button></p>
+    <h3 data-i18n="collab.selectionTitle"></h3>
+    <p class="tiny" data-i18n="collab.selectionHint"></p>
+    <div class="chiprow" id="collabPeople"></div>
+    <button class="chip" id="collabOther" type="button" aria-pressed="false" data-i18n="collab.other"></button>
+    <p class="field-error hide" id="collabSelectionError" role="alert" data-i18n="collab.selectionRequired"></p>
+    <div class="identity-panel hide" id="collabNameRow">
+      <div class="field-coordinate" data-i18n="collab.nameCoordinate"></div>
+      <div class="field-label-row">
+        <label for="collabName" data-i18n="collab.nameLabel"></label>
+        <span class="required-tag" data-i18n="form.required"></span>
+      </div>
+      <input type="text" id="collabName" maxlength="20" data-i18n-ph="collab.whoPh" autocomplete="off"
+        aria-required="true" aria-describedby="collabNameHint collabNameError">
+      <p class="tiny field-hint" id="collabNameHint" data-i18n="collab.nameHint"></p>
+      <p class="field-error hide" id="collabNameError" role="alert" data-i18n="collab.nameRequired"></p>
+    </div>
+    <p><button class="primary" id="collabStartBtn" type="button" data-i18n="collab.start"></button></p>
+  </div>
+
+  <div class="card hide" id="collabQuiz">
+    <p class="eyebrow" id="collabWho"></p>
+    <p class="muted" data-i18n="collab.reminder"></p>
+    <p class="tiny" id="collabQnum"></p>
+    <div class="progress" aria-hidden="true"><div id="collabPbar"></div></div>
+    <div class="question-stage" id="collabQuestionStage"><div id="collabItems"></div></div>
+    <div class="likert5" id="collabScale"></div>
+    <div class="scalelabel" id="collabScaleLabel" aria-live="polite">&nbsp;</div>
+    <div class="anchors"><span data-i18n="collab.anchorLow"></span><span data-i18n="collab.anchorHigh"></span></div>
+    <details class="quiz-glossary">
+      <summary data-i18n="collab.glossaryToggle"></summary>
+      <div class="term-grid" role="list">
+        <div class="term-card" role="listitem"><strong>Cyberballing</strong><span data-i18n="collab.termCyberballing"></span></div>
+        <div class="term-card" role="listitem"><strong>stillfacing</strong><span data-i18n="collab.termStillfacing"></span></div>
+        <div class="term-card" role="listitem"><strong>SIMIs</strong><span data-i18n="collab.termSIMIs"></span></div>
+        <div class="term-card" role="listitem"><strong>CARRP</strong><span data-i18n="collab.termCARRP"></span></div>
+      </div>
+    </details>
+    <div class="quiznav">
+      <button class="ghost" id="collabPrevBtn" type="button" data-i18n="collab.prev"></button>
+      <button class="ghost" id="collabExitBtn" type="button" data-i18n="collab.exit"></button>
+    </div>
+  </div>
+
+  <div class="card hide" id="collabResultCard">
     <div id="collabResult"></div>
+  </div>
+  <div class="card hide" id="collabHistoryCard">
     <div id="collabHistory"></div>
   </div>
 </section>

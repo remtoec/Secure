@@ -15,7 +15,7 @@ function show(view){
   if(view==="map") renderMap();
   if(view==="records"){ renderRecords(); renderDataStats(); }
   if(view==="home") renderHome();
-  if(view==="collab") renderCollabHistory();
+  if(view==="collab"){ renderCollabSetup(); renderCollabHistory(); }
   window.scrollTo({top:0});
 }
 document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
@@ -37,7 +37,7 @@ document.getElementById("langBtn").addEventListener("click",()=>{
 function refreshLang(){
   applyI18n();
   renderHome();
-  renderCollabItems();
+  renderCollabSetup();
   renderDataStats();
   if(currentView==="quiz" && quiz) renderQuestion();
   else if(currentView==="result" && lastResult) renderResult(lastResult);
@@ -289,72 +289,70 @@ function personTypeSuffix(person){
 }
 
 /* ── 合作關係評估量表 · Collaborative Assessment Scale ── */
-let collabAns = Array(15).fill(0);
-function renderCollabItems(){
-  const box=document.getElementById("collabItems");
-  box.innerHTML="";
-  const labels5 = t("scale5Labels");
-  t("collabItems").forEach((txt,i)=>{
-    const d=document.createElement("div");
-    d.className="clitem";
-    d.innerHTML="<p>"+(i+1)+". "+txt+"</p>";
-    const row=document.createElement("div");
-    row.className="likert5";
-    for(let v=1; v<=5; v++){
-      const b=document.createElement("button");
-      b.type="button";
-      b.setAttribute("aria-label", v+" · "+labels5[v-1]);
-      b.setAttribute("aria-pressed", collabAns[i]===v?"true":"false");
-      const dot=document.createElement("span");
-      dot.className="dotv";
-      b.appendChild(dot);
-      b.addEventListener("click",()=>{
-        collabAns[i]=v;
-        row.querySelectorAll("button").forEach((bb,idx)=>bb.setAttribute("aria-pressed", idx+1===v?"true":"false"));
-      });
-      row.appendChild(b);
-    }
-    d.appendChild(row);
-    const a=document.createElement("div");
-    a.className="anchors";
-    a.innerHTML="<span>"+t("collab.anchorLow")+"</span><span>"+t("collab.anchorHigh")+"</span>";
-    d.appendChild(a);
-    box.appendChild(d);
-  });
+let collabSelection = {personId:null, other:false};
+function eligibleCollabPeople(){
+  return db.people.filter(person=>person.type!=="general" && person.results.length);
 }
-document.getElementById("collabScoreBtn").addEventListener("click",()=>{
-  if(collabAns.some(v=>!v)){ alert(t("collab.unanswered")); return; }
-  const total=collabAns.reduce((a,b)=>a+b,0);
-  const name=document.getElementById("collabName").value.trim()||t("collab.unnamed");
-  db.collab.push({id:uid(), name, date:new Date().toISOString(), answers:collabAns.slice(), total});
-  saveDb();
-  const band=collabBand(total);
-  const items=t("collabItems");
-  const lows=collabAns.map((v,i)=>({v,i})).filter(q=>q.v<=3);
-  let review;
-  if(lows.length){
-    review='<h3>'+t("collab.lowTitle")+'</h3><p class="muted">'+t("collab.lowIntro")+"</p><ul class='muted'>"+
-      lows.map(q=>"<li>"+(q.i+1)+". "+items[q.i]+'（'+q.v+" / 5）</li>").join("")+"</ul>";
-  }else{
-    review='<p class="muted">'+t("collab.allHigh")+"</p>";
+function selectedCollabName(){
+  if(collabSelection.personId){
+    const person=db.people.find(p=>p.id===collabSelection.personId);
+    return person ? person.name : "";
   }
-  document.getElementById("collabResult").innerHTML=
-    '<div class="tile" style="margin-top:14px"><div class="v">'+total+' <span class="tiny">/ 75</span></div>'+
-    '<div class="l">'+tp("collab.resultLabel",{name:esc(name)})+"</div></div>"+
-    '<h3>'+t("collab.band."+band+"Title")+'</h3><p class="muted">'+t("collab.band."+band+"Body")+"</p>"+
-    review+
-    '<p class="tiny">'+t("collab.discussion")+"</p>"+
-    '<p class="tiny">'+t("collab.totalNote")+"</p>"+
-    '<p><button class="ghost" id="collabClearBtn" type="button">'+t("collab.clear")+"</button></p>";
-  document.getElementById("collabClearBtn").addEventListener("click",()=>{
-    collabAns=Array(15).fill(0);
-    document.getElementById("collabResult").innerHTML="";
-    renderCollabItems();
+  return collabSelection.other ? document.getElementById("collabName").value.trim() : "";
+}
+function clearCollabSetupErrors(){
+  document.getElementById("collabSelectionError").classList.add("hide");
+  document.getElementById("collabNameError").classList.add("hide");
+}
+function renderCollabSetup(){
+  const people=eligibleCollabPeople();
+  if(!people.length && !collabSelection.personId) collabSelection.other=true;
+  if(collabSelection.personId && !people.some(p=>p.id===collabSelection.personId)){
+    collabSelection={personId:null,other:!people.length};
+  }
+  const box=document.getElementById("collabPeople");
+  box.innerHTML="";
+  people.forEach(person=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="chip";
+    button.dataset.personId=person.id;
+    button.textContent=person.name+" · "+person.results.length+" "+t(person.results.length===1?"home.recordOne":"home.recordMany");
+    button.setAttribute("aria-pressed",collabSelection.personId===person.id?"true":"false");
+    button.addEventListener("click",()=>{
+      collabSelection={personId:collabSelection.personId===person.id?null:person.id,other:false};
+      clearCollabSetupErrors();
+      renderCollabSetup();
+    });
+    box.appendChild(button);
   });
-  renderCollabHistory();
+  document.getElementById("collabOther").setAttribute("aria-pressed",collabSelection.other?"true":"false");
+  document.getElementById("collabNameRow").classList.toggle("hide",!collabSelection.other);
+}
+document.getElementById("collabOther").addEventListener("click",()=>{
+  collabSelection={personId:null,other:!collabSelection.other};
+  clearCollabSetupErrors();
+  renderCollabSetup();
+  if(collabSelection.other) document.getElementById("collabName").focus();
+});
+document.getElementById("collabName").addEventListener("input",()=>{
+  document.getElementById("collabNameError").classList.add("hide");
+});
+document.getElementById("collabStartBtn").addEventListener("click",()=>{
+  if(!collabSelection.personId && !collabSelection.other){
+    document.getElementById("collabSelectionError").classList.remove("hide");
+    document.getElementById("collabOther").focus();
+    return;
+  }
+  if(!selectedCollabName()){
+    document.getElementById("collabNameError").classList.remove("hide");
+    document.getElementById("collabName").focus();
+  }
 });
 function renderCollabHistory(){
   const box=document.getElementById("collabHistory");
+  const card=document.getElementById("collabHistoryCard");
+  card.classList.toggle("hide",!db.collab.length);
   if(!db.collab.length){ box.innerHTML=""; return; }
   let h="<h3>"+t("collab.historyTitle")+"</h3><table><thead><tr><th>"+t("th.date")+"</th><th>"+t("th.person")+"</th><th>"+t("th.total")+"</th><th></th></tr></thead><tbody>";
   db.collab.forEach((c,i)=>{
@@ -423,5 +421,6 @@ document.getElementById("wipeBtn").addEventListener("click",()=>{
 applyI18n();
 renderLanding();
 renderHome();
-renderCollabItems();
+renderCollabSetup();
+renderCollabHistory();
 renderDataStats();
