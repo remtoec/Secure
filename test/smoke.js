@@ -47,6 +47,14 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   // supportive items 1-4 answered 6 (reverse → 2), items 5-6 answered 3, anxiety items 7-9 answered 6
   // avoidance = (2*4 + 3*2)/6 = 14/6 = 2.33 ; anxiety = 18/3 = 6.00 → anxious
   await page.click('#quizModes .mode-choice[data-mode="specific"]');
+  const nameAffordance = await page.locator('#nameRow').evaluate(row => {
+    const input = row.querySelector('#personName');
+    const label = row.querySelector('label[for="personName"]');
+    return row.classList.contains('identity-panel') && Boolean(label) &&
+      input.getAttribute('aria-describedby') === 'nameHint nameError';
+  });
+  console.log('Relationship name affordance:', nameAffordance);
+  if (!nameAffordance) throw new Error('Specific-person name needs a labelled identity panel');
   await page.fill('#personName', '   ');
   await page.click('#startBtn');
   const blankBlocked = await page.locator('#view-home:not(.hide)').count() === 1 &&
@@ -182,17 +190,57 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   await page.waitForFunction(() => JSON.parse(localStorage.getItem('attachment-topography-v1')).people.length === 2);
   console.log('Import-merge restored 2 people: true');
 
-  // ── Collab checklist: answer all 15 with 4 → total 60 (high band)
+  // ── Guided CAS: reuse an attachment person, answer one item at a time, auto-score
   await page.click('nav.tabs button[data-view="collab"]');
   console.log('CAS glossary:', await page.locator('.term-grid .term-card').count() === 4);
-  await page.fill('#collabName', '阿明');
-  for (let i = 1; i <= 15; i++) {
-    await page.click(`#collabItems .clitem:nth-child(${i}) .likert5 button:nth-child(4)`);
+  const collabChoices = await page.locator('#collabPeople .chip[data-person-id]').allTextContents();
+  const reusablePerson = collabChoices.some(text => text.includes('阿明')) &&
+    !collabChoices.some(text => text.includes('一般'));
+  console.log('CAS reuses named attachment person:', reusablePerson);
+  if (!reusablePerson) throw new Error('CAS must offer named attachment people and exclude the general pattern');
+  await page.click('#collabPeople .chip[data-person-id]:has-text("阿明")');
+  await page.click('#collabStartBtn');
+  await page.waitForSelector('#collabQuiz:not(.hide)');
+  const oneCasItem = await page.locator('#collabItems .clitem').count() === 1;
+  console.log('CAS one item at a time:', oneCasItem);
+  if (!oneCasItem) throw new Error('Guided CAS must render exactly one item');
+  await page.click('#collabScale button:nth-child(4)');
+  await page.waitForFunction(() => document.querySelector('#collabQnum').textContent.includes('2 / 15'));
+  await page.click('#collabPrevBtn');
+  const restoredCasAnswer = await page.locator('#collabScale button:nth-child(4)').getAttribute('aria-pressed') === 'true';
+  console.log('CAS Back restores answer:', restoredCasAnswer);
+  if (!restoredCasAnswer) throw new Error('CAS Back must restore the prior answer');
+  await page.click('#collabScale button:nth-child(4)');
+  for (let question = 2; question <= 15; question++) {
+    await page.waitForFunction(n => document.querySelector('#collabQnum').textContent.includes(`${n} / 15`), question);
+    await page.click('#collabScale button:nth-child(4)');
   }
-  await page.click('#collabScoreBtn');
+  await page.waitForSelector('#collabResultCard:not(.hide)');
   const cr = await page.textContent('#collabResult');
   console.log('Collab total 60:', cr.includes('60'));
   console.log('Collab 60+ interpretation:', cr.includes('合作得非常好'));
+  const savedCollab = await page.evaluate(() => JSON.parse(localStorage.getItem('attachment-topography-v1')).collab.at(-1));
+  const reusedNameSaved = savedCollab.name === '阿明' && savedCollab.total === 60;
+  console.log('CAS reused name saved:', reusedNameSaved);
+  if (!reusedNameSaved) throw new Error('CAS must save the selected attachment person name');
+
+  // A CAS subject can still be someone who has not taken the attachment questionnaire
+  await page.click('#collabClearBtn');
+  await page.click('#collabOther');
+  await page.fill('#collabName', '   ');
+  await page.click('#collabStartBtn');
+  const blankCollabBlocked = !(await page.locator('#collabNameError').evaluate(element => element.classList.contains('hide'))) &&
+    await page.evaluate(() => document.activeElement && document.activeElement.id === 'collabName');
+  console.log('Blank CAS name blocked:', blankCollabBlocked);
+  if (!blankCollabBlocked) throw new Error('Someone-else CAS needs a required name');
+  await page.fill('#collabName', '小美');
+  await page.click('#collabStartBtn');
+  await page.waitForSelector('#collabQuiz:not(.hide)');
+  const newCasName = (await page.textContent('#collabWho')).includes('小美');
+  console.log('New CAS name accepted:', newCasName);
+  if (!newCasName) throw new Error('CAS must accept a new relationship name');
+  await page.click('#collabExitBtn');
+  await page.waitForSelector('#collabSetup:not(.hide)');
 
   // ── Language toggle: switch to English, verify UI + questions, persists
   await page.click('#langBtn');
