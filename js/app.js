@@ -171,7 +171,8 @@ function renderResult({person, rec}){
       '<div class="tile"><div class="v">'+rec.avoidance.toFixed(2)+'</div><div class="l">'+t("result.avdLabel")+"</div></div>"+
     "</div>"+
     '<p class="muted">'+t(isGen?"result.snapshotNoteGeneral":"result.snapshotNote")+"</p>"+
-    "<p>"+((isGen && st.descGeneral) ? st.descGeneral : st.desc)+"</p><h3>"+t("result.tipTitle")+"</h3><p class='muted'>"+st.tip+"</p>"+
+    "<p>"+((isGen && st.descGeneral) ? st.descGeneral : st.desc)+"</p><h3>"+t("result.promptTitle")+"</h3><p class='muted'>"+
+    t(isGen?"result.promptGeneral":"result.promptSpecific")+"</p>"+
     (person.results.length>1 ? '<p class="tiny">'+tp("result.nth",{name:esc(person.name), n:person.results.length})+"</p>" : "");
   const box=document.getElementById("resultChart");
   box.innerHTML="";
@@ -257,7 +258,7 @@ function renderRecords(){
   }));
 }
 
-/* ── 關係檢核表 · relationship checklist ── */
+/* ── 合作關係評估量表 · Collaborative Assessment Scale ── */
 let collabAns = Array(15).fill(0);
 function renderCollabItems(){
   const box=document.getElementById("collabItems");
@@ -297,7 +298,7 @@ document.getElementById("collabScoreBtn").addEventListener("click",()=>{
   const name=document.getElementById("collabName").value.trim()||t("collab.unnamed");
   db.collab.push({id:uid(), name, date:new Date().toISOString(), answers:collabAns.slice(), total});
   saveDb();
-  // 不下判決：總分之外，列出分數較低的題目，留給讀書會討論
+  const band=collabBand(total);
   const items=t("collabItems");
   const lows=collabAns.map((v,i)=>({v,i})).filter(q=>q.v<=3);
   let review;
@@ -310,8 +311,9 @@ document.getElementById("collabScoreBtn").addEventListener("click",()=>{
   document.getElementById("collabResult").innerHTML=
     '<div class="tile" style="margin-top:14px"><div class="v">'+total+' <span class="tiny">/ 75</span></div>'+
     '<div class="l">'+tp("collab.resultLabel",{name:esc(name)})+"</div></div>"+
+    '<h3>'+t("collab.band."+band+"Title")+'</h3><p class="muted">'+t("collab.band."+band+"Body")+"</p>"+
     review+
-    '<p class="tiny">'+t("collab.bookOrder")+"</p>"+
+    '<p class="tiny">'+t("collab.discussion")+"</p>"+
     '<p class="tiny">'+t("collab.totalNote")+"</p>"+
     '<p><button class="ghost" id="collabClearBtn" type="button">'+t("collab.clear")+"</button></p>";
   document.getElementById("collabClearBtn").addEventListener("click",()=>{

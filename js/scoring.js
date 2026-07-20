@@ -23,3 +23,11 @@ function styleOf(anx, avd){
   if(anx<4 && avd>=4) return "avoidant";
   return "fearful";
 }
+
+/* 《Secure》第 11 章合作關係評估量表分段 · Chapter 11 CAS bands */
+function collabBand(total){
+  if(total<=25) return "low";
+  if(total<=50) return "mixed";
+  if(total<60) return "high";
+  return "strong";
+}

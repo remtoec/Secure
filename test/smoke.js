@@ -16,6 +16,11 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   // landing page shows first; privacy note present; start quiz from CTA
   console.log('Landing visible:', !(await page.locator('#view-landing').evaluate(e => e.classList.contains('hide'))));
   console.log('Privacy note:', (await page.textContent('#view-landing')).includes('只儲存在此裝置'));
+  const landingText = await page.textContent('#view-landing');
+  console.log('Secure frame:', landingText.includes('大腦會繼續因應眼前的關係改變'));
+  console.log('Sharing invitation:', landingText.includes('當日分享紀錄'));
+  console.log('Official book link:', await page.locator('a[href="https://amirlevinemd.com/books/secure/"]').count() === 1);
+  console.log('Bookfort contact link:', await page.locator('a[href="https://www.instagram.com/p/DYclS9klJWw/"]').count() === 1);
   await page.click('#landingStart');
   await page.waitForSelector('#view-home:not(.hide)');
 
@@ -35,6 +40,7 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   console.log('R1 anxiety 6.00:', resultText.includes('6.00'));
   console.log('R1 avoidance 2.33:', resultText.includes('2.33'));
   console.log('R1 style 焦慮型:', resultText.includes('焦慮型'));
+  console.log('Sharing handoff:', resultText.includes('帶住呢個位置去分享會'));
 
   // chart rendered with labelled point
   const svgCount = await page.locator('#resultChart svg').count();
@@ -124,6 +130,7 @@ const INDEX = pathToFileURL(nodePath.resolve(__dirname, '..', 'index.html')).hre
   await page.click('#collabScoreBtn');
   const cr = await page.textContent('#collabResult');
   console.log('Collab total 60:', cr.includes('60'));
+  console.log('Collab 60+ interpretation:', cr.includes('合作得非常好'));
 
   // ── Language toggle: switch to English, verify UI + questions, persists
   await page.click('#langBtn');

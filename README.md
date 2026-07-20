@@ -1,7 +1,8 @@
 # 依附地形圖 · Attachment Topography
 
-A bilingual (繁體中文（香港）/ English) attachment-style quiz web app, built for the
-書識圈 Bookfort book club's reading of Dr. Amir Levine's *Secure* (2026).
+A bilingual (繁體中文（香港）/ English) pre-sharing companion for 書識圈
+Bookfort's reading of Dr. Amir Levine's *Secure* (2026). It is deliberately a
+tool and trailer, not a compressed replacement for the book or the sharing.
 
 - **Live site:** https://remtoec.github.io/Secure/
 - **Single-file offline version:** https://remtoec.github.io/Secure/dist/single.html
@@ -13,23 +14,72 @@ A bilingual (繁體中文（香港）/ English) attachment-style quiz web app, b
 
 ## 1 · What it does
 
-Users answer 9 questions (1–7 Likert) about **one specific relationship**, get an
-anxiety score and an avoidance score, and see the relationship plotted on a
-four-quadrant "attachment topography" map. Multiple people each get a colour on
-one shared map; retakes draw a dated trajectory. A separate 15-item checklist
-("is this relationship worth investing in?") gives a 15–75 total and lists
-the lower-scoring items as discussion prompts — no verdict bands. Everything is
-stored in the browser's localStorage — no accounts, no server — with JSON
-export/import for backup and a PNG export of the map.
+The app serves three connected purposes:
+
+1. Sharing participants complete the attachment questionnaire and map before
+   the session, then bring one observation into the discussion.
+2. Other Bookfort members get a concise glimpse of the book's distinctive
+   context-sensitive, environmentally responsive attachment frame and an
+   invitation to contact Bookfort about membership, the sharing record, and
+   notes.
+3. Interested readers are pointed to Levine's official *Secure* page for the
+   full argument, examples, and practices.
+
+Users answer 9 questions (1–7 Likert) about their general pattern or **one
+specific relationship**, get anxiety and avoidance scores, and see the result
+on a four-quadrant attachment-topography map. Multiple people each get a colour
+on one shared map; retakes draw a dated trajectory. The separate 15-item
+**Collaborative Assessment Scale (CAS)** from Chapter 11 gives a 15–75 total,
+shows Levine's published interpretation, and lists lower-scoring items for
+discussion. Everything stays in browser localStorage, with JSON backup and PNG
+map export.
+
+### Product and editorial direction
+
+The intended journey is **hook → useful tool → discussion handoff → two onward
+routes**:
+
+1. A short Chapter 5 situation creates recognition without summarising the
+   book.
+2. The questionnaire and map give participants something concrete to bring to
+   the sharing.
+3. The result names the measured position and asks one Bookfort discussion
+   question. It does not teach the style-specific programs from later chapters.
+4. The closing invitation points people either to Bookfort Zone for the session
+   record/notes or to *Secure* for the complete argument and practices.
+
+The glimpse of the book must remain distinctive. Levine presents attachment as
+context-sensitive and environmentally responsive: childhood is one influence,
+while the brain keeps learning from present relationships and everyday
+interactions. The topography makes that visible by plotting one person
+differently across a partner, parent, friend, or colleague. Avoid reverting to
+the familiar pop-therapy frame of a fixed identity, a childhood verdict, or a
+label that explains everything.
+
+Content that enables the tool belongs here: exact questions, scoring, concise
+quadrant interpretations, essential term definitions, and privacy/instructions.
+The fuller neuroscience, case stories, style-specific practices, and coaching
+methods belong mainly to the live sharing and the book. When considering a new
+screen or paragraph, ask whether it prepares a better observation or merely
+replaces something the organiser should unfold in person.
+
+The visual and verbal design follow the same direction. The app is a quiet
+**chart room**, not a diagnostic dashboard: coordinates, plotted paths, dates,
+paper, ink, and neutral quadrant fields invite comparison over time without
+turning one result into a badge of virtue. Copy stays warm, concrete, and
+scientifically curious. It preserves the adaptive logic and cost of every
+attachment position, distinguishes Bookfort prompts from Levine's claims, and
+always leaves the participant with somewhere further to go.
 
 ### Method & attribution
 
-The **anxiety × avoidance two-dimension model** comes from adult-attachment
-research; the quiz items are the freely available **ECR-RS** scale (Fraley,
-Heffernan, Vicary & Brumbaugh, 2011). The topography exercise (scoring one
-relationship at a time and mapping it) is discussed in detail in *Secure*.
-Keep this framing if you edit any credits: the book *discusses* the method,
-it did not invent it.
+The full 2026 book is the authority for Levine's claims, terminology, examples,
+questionnaire presentation, and CAS wording. The whole-book chapter summary is
+an orientation aid; the Chapter 5 agent-friendly extract is a working aid; both
+must be checked against the book. The **anxiety × avoidance two-dimension
+model** and quiz items come from the **ECR-RS** (Fraley, Heffernan, Vicary &
+Brumbaugh, 2011). The book discusses the topography method; it did not invent
+the underlying research scale. See `docs/editorial-source-and-content-design.md`.
 
 ### Scoring (do not change casually)
 
@@ -43,9 +93,14 @@ Implemented in `js/scoring.js` (`REVERSED`, `scoreAnswers`, `styleOf`).
 The chart draws x = anxiety, y = avoidance, 1–7, dashed lines at 4 — matching
 the book's plotting instructions and figures. (Ch. 5's score-sum tables label
 the axes the other way round; that's an inconsistency in the book itself — the
-plotting instructions and sample graph are the authority we follow.) The checklist deliberately renders **no verdict bands**:
-the book only records a total, so the app shows the total plus any items
-scored ≤3 as discussion prompts (`collabScoreBtn` handler in `js/app.js`).
+plotting instructions and sample graph are the authority we follow.)
+
+The Chapter 11 CAS uses these published interpretations: **0–25** (fraught with
+problems), **26–50** (some parts work, with room to improve), and **51–75**
+(working well to extremely well); Levine gives **60+** special emphasis as a
+particularly effective collaboration. The app shows the applicable concise
+interpretation plus items scored ≤3 as discussion material. `collabBand()` in
+`js/scoring.js` selects the display copy; it does not change saved data.
 
 ---
 
@@ -58,10 +113,11 @@ js/i18n.js                    ★ ALL UI copy, questions, style descriptions, bo
 js/scoring.js                 scoring formulas & quadrant logic
 js/store.js                   localStorage load/save, normalisation, import merge, helpers
 js/chart.js                   SVG quadrant chart + PNG export
-js/app.js                     views, quiz flow, records, checklist, backup UI, toggles
+js/app.js                     views, quiz flow, records, CAS, backup UI, toggles
 build.js                      node build.js → dist/single.html + dist/artifact.html
 dist/                         built bundles (committed so Pages serves single.html)
-test/smoke.js                 headless browser test suite (~25 checks)
+test/content.test.js          exact ECR-RS/CAS wording + CAS band source locks
+test/smoke.js                 end-to-end headless browser test suite
 .github/workflows/deploy-pages.yml   auto-deploy to GitHub Pages
 ```
 
@@ -87,9 +143,10 @@ The general mode also uses `quiz.whoGeneral`, `quiz.generalReminder`,
 `result.styleIsGeneral`, `result.snapshotNoteGeneral` and each style's
 `descGeneral`.
 
-**Change checklist items** — `collabItems` in `js/i18n.js`. The result view
-lists items scored ≤3 (threshold in the `collabScoreBtn` handler in
-`js/app.js`); it deliberately gives no pass/fail verdict.
+**Change CAS items** — `collabItems` in `js/i18n.js`. The English items reproduce
+Chapter 11's Collaborative Assessment Scale and are locked by
+`test/content.test.js`; do not paraphrase them casually. The result view uses
+the book's score ranges and lists items scored ≤3 for discussion.
 
 **Add a relationship type** — add the key to `REL_KEYS` in `js/i18n.js` and a
 `rel.<key>` label in both languages. Types are stored as keys, so old data is
@@ -114,7 +171,7 @@ index tabs with an inked top rule, the quiz progress bar is a plotted course
 (accent outline), not a solid pill. Depth is borders-only — no shadows
 anywhere; corners squared (6–8 px). Paper, moss ink, one deep sea-teal
 accent; serif (`--serif`) for titles/questions/style names, sans (`--sans`)
-for UI. A 165 KB subset of Noto Serif TC (weight 600, OFL licence
+for UI. A compact subset of Noto Serif TC (weight 600, OFL licence
 — see `fonts/LICENSE.txt`) is self-hosted so Android renders the serif voice
 too; it covers every character currently in `js/i18n.js`, with per-glyph
 fallback to system fonts if new characters are added (re-subset if wording
@@ -127,13 +184,14 @@ rank. All motion sits behind `prefers-reduced-motion`; series colours are a
 separate, CVD-validated palette. Result badges use their own fixed dark
 palette for contrast, unrelated to the per-person chart colours.
 
-**Copy rules** — all UI copy follows `docs/translation-principles.md`
-(supplied by the club): concrete verbs and situations over abstractions, a
-situation → mechanism → consequence progression, no template profundity
-(「不是A而是B」 and kin), every attachment style keeps its dignity and its
-cost. Content is grounded in Levine's *Secure* and his Big Brains interview
-(secure base, dependency paradox, protest behaviour, CARRP, SIMIs, <10%
-childhood correlation). Read the principles file before editing wording.
+**Copy rules** — read both `docs/translation-principles.md` and
+`docs/editorial-source-and-content-design.md` before editing. Use concrete verbs
+and situations, natural Hong Kong Traditional Chinese, and a clear situation →
+mechanism → consequence progression. Every attachment position keeps its
+adaptive logic and cost. Keep source layers explicit: Levine's book, the ECR-RS
+research wording, and Bookfort's own navigation/invitation/discussion prompts.
+Do not import a claim from an interview into the book's voice without labelling
+the different source.
 
 **Rename the club branding** — search `書識圈` / `Bookfort` in `js/i18n.js`
 (`app.club`, `landing.eyebrow`, `chart.imgCredit`).
@@ -216,7 +274,7 @@ land in `test/`. Run it before pushing anything non-trivial.
 
 ## 8 · Licence & content notes
 
-Quiz items are the ECR-RS, distributed free for research/education use — keep
-the Fraley et al. (2011) citation. The checklist is a paraphrase for personal
-book-club use of an exercise discussed in *Secure*; don't market or
-commercialise this app's content. Code may be reused freely by the club.
+Quiz items are the ECR-RS — keep the Fraley et al. (2011) citation. The English
+CAS items reproduce the Chapter 11 exercise and the Chinese items are a faithful
+Bookfort translation for personal, non-commercial book-club use. Do not market
+or commercialise the book-derived content. Code may be reused by the club.

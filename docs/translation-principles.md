@@ -2,8 +2,10 @@
 
 本專案所有中文（及英文）介面文案，依照書會提供的轉譯原則撰寫與檢查。
 修改 `js/i18n.js` 任何字句前，請先讀一次本檔。
-文案的思想依據：Amir Levine《Secure》(2026) 及其 Big Brains 訪談
-（https://news.uchicago.edu/big-brains-podcast-anxious-avoidant-how-build-more-secure-relationships-amir-levine）。
+文案的首要思想依據是 Amir Levine《Secure》(2026) 完整原書；全書章節摘要只供定位，
+不能代替原書作引文或細節判斷。ECR-RS 題目以研究量表及書中版本為準；書識圈自行加入的
+導覽、邀請和討論問題必須清楚標示為編輯內容。完整來源層級和內容界線見
+`docs/editorial-source-and-content-design.md`。
 
 ## 核心目標
 
